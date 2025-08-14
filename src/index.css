@@ -1,0 +1,104 @@
+/* index.css */
+/* Global CSS styles for the Janasiksha Prochar Kendra NGO website. */
+/* Applies base styles, resets, and font imports for a modern, accessible look. */
+
+:root {
+  /* Brand color variables */
+  --color-primary: #005B96;
+  /* Blue */
+  --color-accent: #FF7F11;
+  /* Orange */
+  --color-bg: #FFFFFF;
+  /* White */
+  --color-text: #1F2937;
+  /* Slate-800 for good contrast */
+
+  font-family: "Raleway", sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: var(--color-primary);
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: var(--color-accent);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: inherit;
+}
+
+:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+/* Add accessible color contrast and spacing */
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  cursor: pointer;
+  transition: border-color 0.25s, background-color 0.25s, color 0.25s;
+}
+
+button:hover {
+  border-color: var(--color-accent);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto var(--color-accent);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: var(--color-text);
+    background-color: var(--color-bg);
+  }
+
+  a:hover {
+    color: var(--color-accent);
+  }
+
+  button {
+    background-color: var(--color-primary);
+  }
+}
