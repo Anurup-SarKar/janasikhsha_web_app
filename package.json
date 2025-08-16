@@ -1,16 +1,16 @@
 {
-  "name": "copilot-agent-mode-test",
+  "name": "janasikhsha-web-app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://sukb1980.github.io/copilot-agent-mode-test",
+  "homepage": "https://anurup-sarkar.github.io/janasikhsha_web_app",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist -b gh-pages"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
