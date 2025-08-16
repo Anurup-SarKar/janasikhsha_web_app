@@ -76,7 +76,10 @@ export default function HeroBanner({ onDonateClick }) {
         variant="contained"
         color="secondary"
         size="large"
-        onClick={onDonateClick}
+        onClick={onDonateClick || (() => {
+          const el = document.getElementById('donate');
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        })}
         sx={{
           fontFamily: 'Raleway, sans-serif',
           fontWeight: 700,
@@ -86,15 +89,12 @@ export default function HeroBanner({ onDonateClick }) {
           borderRadius: 3,
           boxShadow: '0 2px 12px rgba(0, 91, 150, 0.2)',
           mb: 2,
-          background: `linear-gradient(90deg, ${theme.palette.secondary.main} 0%, #FFFFFF 100%)`,
-          color: theme.palette.text.primary,
           '&:hover': {
-            background: `linear-gradient(90deg, #FFFFFF 0%, ${theme.palette.secondary.main} 100%)`,
-            color: theme.palette.text.primary,
+            filter: 'brightness(0.95)'
           },
         }}
       >
-        Donate Now
+        Support Us
       </Button>
       <Typography
         variant="body1"

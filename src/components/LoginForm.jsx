@@ -5,7 +5,6 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import { Box, Typography, TextField, Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 
 /**
  * LoginForm component
@@ -19,18 +18,13 @@ export default function LoginForm({ onBack, onLogin }) {
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const emailRef = useRef(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    // Blur any active element before focusing email
-    if (document.activeElement && typeof document.activeElement.blur === 'function') {
-      document.activeElement.blur();
+    // Avoid auto-scrolling the page on initial load by not auto-focusing.
+    // Only focus when the URL explicitly targets the login section.
+    if (window.location.hash === '#login' && emailRef.current) {
+      setTimeout(() => emailRef.current?.focus(), 100);
     }
-    setTimeout(() => {
-      if (emailRef.current) {
-        emailRef.current.focus();
-      }
-    }, 100);
   }, []);
 
   // Handle input changes
@@ -39,21 +33,27 @@ export default function LoginForm({ onBack, onLogin }) {
     setError('');
   }
 
+  // Smooth scroll helper
+  const scrollToId = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   // Handle form submit
   function handleSubmit(e) {
     e.preventDefault();
     // Check for user in localStorage
     const users = JSON.parse(localStorage.getItem('jpk_users') || '{}');
     if (users[form.email] && users[form.email] === form.password) {
-      onLogin();
-      navigate('/aboutus');
+      onLogin?.();
+      scrollToId('aboutus');
       return;
     }
-    // Fallback to default validation
+    // Fallback to basic validation
     const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
     if (emailValid && form.password) {
-      onLogin();
-      navigate('/aboutus');
+      onLogin?.();
+      scrollToId('aboutus');
     } else {
       setError('Please enter a valid email and password.');
       return;
@@ -67,6 +67,7 @@ export default function LoginForm({ onBack, onLogin }) {
       <Typography variant="h4" mb={2}>User Login</Typography>
       <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={2}>
         <TextField
+          id="login-email"
           name="email"
           label="Email"
           type="email"
@@ -80,7 +81,7 @@ export default function LoginForm({ onBack, onLogin }) {
         {error && <Typography color="error" textAlign="center">{error}</Typography>}
         <Box display="flex" gap={2} justifyContent="center">
           <Button type="submit" variant="contained" color="primary">Login</Button>
-          <Button type="button" variant="outlined" color="secondary" onClick={onBack}>Back</Button>
+          <Button type="button" variant="outlined" color="secondary" onClick={onBack || (() => scrollToId('home'))}>Back</Button>
         </Box>
       </Box>
     </Box>

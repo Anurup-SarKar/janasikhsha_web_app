@@ -27,6 +27,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Respect reduced motion and enable smooth scrolling otherwise */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 a {
   font-weight: 500;
   color: var(--color-primary);

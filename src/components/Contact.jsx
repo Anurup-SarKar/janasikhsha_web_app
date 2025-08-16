@@ -5,7 +5,6 @@
 
 import React from 'react';
 import { Box, Typography, Link } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
 
 /**
  * Contact page component.
@@ -14,6 +13,11 @@ import { Link as RouterLink } from 'react-router-dom';
  * @returns {JSX.Element} The rendered Contact page.
  */
 export default function Contact() {
+  const go = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
     <Box sx={{ bgcolor: (theme) => theme.palette.background.paper, borderRadius: 3, boxShadow: 2, p: { xs: 2, md: 4 }, mb: 3 }}>
       {/* Contact header */}
@@ -50,14 +54,14 @@ export default function Contact() {
           Quick Links
         </Typography>
         <Box component="ul" sx={{ pl: 2, fontFamily: 'Raleway, sans-serif' }}>
-          <li><Link component={RouterLink} to="/aboutus" underline="hover">About Us</Link></li>
-          <li><Link component={RouterLink} to="/whatwedo" underline="hover">What We Do</Link></li>
-          <li><Link component={RouterLink} to="/latestprojects" underline="hover">Our Latest Projects</Link></li>
-          <li><Link component={RouterLink} to="/newsroom" underline="hover">News Room</Link></li>
-          <li><Link component={RouterLink} to="/casehistory" underline="hover">Case History</Link></li>
-          <li><Link component={RouterLink} to="/successstory" underline="hover">Success Story</Link></li>
-          <li><Link component={RouterLink} to="/supportus" underline="hover">Support Us</Link></li>
-          <li><Link component={RouterLink} to="/location" underline="hover">Location</Link></li>
+          <li><Link component="button" onClick={() => go('aboutus')} underline="hover">About Us</Link></li>
+          <li><Link component="button" onClick={() => go('whatwedo')} underline="hover">What We Do</Link></li>
+          <li><Link component="button" onClick={() => go('latestprojects')} underline="hover">Our Latest Projects</Link></li>
+          <li><Link component="button" onClick={() => go('newsroom')} underline="hover">News Room</Link></li>
+          <li><Link component="button" onClick={() => go('casehistory')} underline="hover">Case History</Link></li>
+          <li><Link component="button" onClick={() => go('successstory')} underline="hover">Success Story</Link></li>
+          <li><Link component="button" onClick={() => go('supportus')} underline="hover">Support Us</Link></li>
+          <li><Link component="button" onClick={() => go('location')} underline="hover">Location</Link></li>
         </Box>
       </Box>
       {/* Footer note */}

@@ -1,7 +1,6 @@
 // ResponsiveNavbar.jsx
 // Responsive navigation bar for the Janasiksha Prochar Kendra website.
-// Handles navigation, login/logout, and drawer menu for mobile.
-// Follows accessible, modern, and empathetic design.
+// Updated for single-page navigation via smooth scrolling.
 
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Typography, Button, IconButton, Drawer, List, ListItem, ListItemText, useMediaQuery, Box, Divider, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Snackbar, Alert } from '@mui/material';
@@ -11,7 +10,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { styled } from '@mui/material/styles';
 import theme from '../theme';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 // Styled components for a clean, branded look
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
@@ -56,9 +54,9 @@ const Brand = styled(Typography)(({ theme }) => ({
 }));
 
 const aboutMenuItems = [
-  { label: 'Who We Are', page: 'whoweare' },
-  { label: 'Our Manifesto', page: 'ourmanifesto' },
-  { label: 'Our Team', page: 'ourteam' },
+  { label: 'Who We Are', id: 'whoweare' },
+  { label: 'Our Manifesto', id: 'ourmanifesto' },
+  { label: 'Our Team', id: 'ourteam' },
 ];
 
 /**
@@ -68,9 +66,10 @@ const aboutMenuItems = [
  * @param {Function} props.onLogin - Callback for login
  * @param {Function} props.onLogout - Callback for logout
  * @param {boolean} props.isLoggedIn - User authentication state
+ * @param {Function} props.onNavigate - Callback for navigation
  * @returns {JSX.Element} The rendered navigation bar
  */
-export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
+export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout, onNavigate }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [aboutAnchorEl, setAboutAnchorEl] = React.useState(null);
   const [createUserOpen, setCreateUserOpen] = useState(false);
@@ -78,17 +77,16 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
   const [createUserMsg, setCreateUserMsg] = useState('');
   const [createUserError, setCreateUserError] = useState('');
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const navigate = useNavigate();
   const navItems = [
-    { label: 'About Us', page: 'aboutus' },
-    { label: 'What We Do', page: 'whatwedo' },
-    { label: 'Gallery', page: 'gallery' },
-    { label: 'News Room', page: 'newsroom' },
-    { label: 'Case History', page: 'casehistory' },
-    { label: 'Support Us', page: 'supportus' },
-    { label: 'Contact', page: 'contact' },
+    { label: 'About Us', id: 'aboutus' },
+    { label: 'What We Do', id: 'whatwedo' },
+    { label: 'Gallery', id: 'gallery' },
+    { label: 'News Room', id: 'newsroom' },
+    { label: 'Case History', id: 'casehistory' },
+    { label: 'Support Us', id: 'supportus' },
+    { label: 'Contact', id: 'contact' },
   ];
-  if (isLoggedIn) navItems.push({ label: 'Live CCTV', page: 'livecctv' });
+  if (isLoggedIn) navItems.push({ label: 'Live CCTV', id: 'livecctv' });
 
   // Blur active element for accessibility
   function blurActiveElement() {
@@ -98,18 +96,25 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
   }
 
   // Handle login/logout button
-  function handleLoginLogout(e) {
+  function handleLoginLogout() {
     blurActiveElement();
     setDrawerOpen(false); // Ensure drawer closes on login/logout
     if (isLoggedIn) {
       onLogout();
     } else {
-      navigate('/login');
+      onLogin?.();
     }
   }
 
   const handleAboutMenuOpen = (event) => setAboutAnchorEl(event.currentTarget);
   const handleAboutMenuClose = () => setAboutAnchorEl(null);
+
+  // Handle navigation to section
+  const handleNav = (id) => {
+    onNavigate?.(id);
+    setDrawerOpen(false);
+    handleAboutMenuClose();
+  };
 
   // Handle create user dialog open/close
   const handleOpenCreateUser = () => { setCreateUserOpen(true); setNewUser({ username: '', password: '' }); setCreateUserError(''); };
@@ -146,7 +151,7 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
               <MenuIcon sx={{ color: theme.palette.secondary.main, fontSize: 26 }} />
             </IconButton>
           )}
-          <Brand component={RouterLink} to="/">Janasiksha Prochar Kendra</Brand>
+          <Brand onClick={() => handleNav('home')}>Janasiksha Prochar Kendra</Brand>
           {!isMobile && (
             <>
               <NavButton
@@ -168,10 +173,8 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
               >
                 {aboutMenuItems.map((item) => (
                   <MenuItem
-                    key={item.page}
-                    component={RouterLink}
-                    to={`/${item.page}`}
-                    onClick={handleAboutMenuClose}
+                    key={item.id}
+                    onClick={() => handleNav(item.id)}
                     sx={{ fontFamily: 'Raleway, sans-serif', color: theme.palette.primary.main, fontWeight: 500 }}
                   >
                     {item.label}
@@ -179,7 +182,7 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                 ))}
               </Menu>
               {navItems.filter(item => item.label !== 'About Us').map(item => (
-                <NavButton key={item.page} component={RouterLink} to={`/${item.page}`}>{item.label}</NavButton>
+                <NavButton key={item.id} onClick={() => handleNav(item.id)}>{item.label}</NavButton>
               ))}
               {isLoggedIn && (
                 <NavButton onClick={handleOpenCreateUser}>Create User</NavButton>
@@ -210,10 +213,8 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
               {drawerOpen && aboutMenuItems.map(item => (
                 <ListItem
                   button
-                  key={item.page}
-                  component={RouterLink}
-                  to={`/${item.page}`}
-                  onClick={() => setDrawerOpen(false)}
+                  key={item.id}
+                  onClick={() => handleNav(item.id)}
                   sx={{ pl: 4 }}
                 >
                   <ListItemText primary={item.label} primaryTypographyProps={{ sx: { fontFamily: 'Raleway, sans-serif', color: theme.palette.primary.main, fontWeight: 500 } }} />
@@ -223,10 +224,8 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
               {navItems.filter(item => item.label !== 'About Us').map(item => (
                 <ListItem
                   button
-                  key={item.page}
-                  component={RouterLink}
-                  to={`/${item.page}`}
-                  onClick={() => setDrawerOpen(false)}
+                  key={item.id}
+                  onClick={() => handleNav(item.id)}
                 >
                   <ListItemText primary={item.label} primaryTypographyProps={{ sx: { fontFamily: 'Raleway, sans-serif', color: theme.palette.primary.main, fontWeight: 500 } }} />
                 </ListItem>

@@ -5,7 +5,6 @@
 
 import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
 
 /**
  * NotFound page component
@@ -19,11 +18,10 @@ export default function NotFound() {
       <Button
         variant="contained"
         color="primary"
-        component={RouterLink}
-        to="/"
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         sx={{ mt: 2 }}
       >
-        Go to Home Page
+        Go to Top
       </Button>
     </Box>
   );
