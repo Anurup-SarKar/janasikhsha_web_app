@@ -70,8 +70,7 @@ export default function SinglePage({ isLoggedIn }) {
                 <Box id="livecctv"><LiveCCTV /></Box>
             )}
 
-            {/* Login form (for convenience in the single page) */}
-            <Box id="login"><LoginForm onLogin={() => { }} /></Box>
+            {/* Login form removed: now shown as modal from App.jsx */}
         </Box>
     );
 }

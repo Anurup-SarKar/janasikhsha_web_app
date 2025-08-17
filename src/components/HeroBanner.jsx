@@ -37,6 +37,7 @@ export default function HeroBanner({ onDonateClick }) {
       <Typography
         variant="h2"
         fontWeight={700}
+        marginTop={10}
         sx={{
           fontFamily: 'Raleway, sans-serif',
           color: theme.palette.primary.main,

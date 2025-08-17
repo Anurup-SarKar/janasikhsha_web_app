@@ -102,6 +102,7 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout, onNavi
     if (isLoggedIn) {
       onLogout();
     } else {
+      // Open login modal (handled by App)
       onLogin?.();
     }
   }

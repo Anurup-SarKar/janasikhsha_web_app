@@ -9,6 +9,7 @@ import ResponsiveNavbar from './components/ResponsiveNavbar';
 import HeroBanner from './components/HeroBanner';
 import SinglePage from './pages/SinglePage';
 import ScrollTopButton from './components/ScrollTopButton';
+import LoginDialog from './components/LoginDialog';
 
 /**
  * Main App component for the NGO website.
@@ -18,6 +19,8 @@ import ScrollTopButton from './components/ScrollTopButton';
 function App() {
   // User authentication state
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Login dialog state
+  const [loginOpen, setLoginOpen] = useState(false);
 
   // Keep page at the top on first load when no hash is present
   useEffect(() => {
@@ -41,14 +44,20 @@ function App() {
         {/* Responsive navigation bar with login/logout and menu */}
         <ResponsiveNavbar
           isLoggedIn={isLoggedIn}
-          onLogin={() => setIsLoggedIn(true)}
+          onLogin={() => setLoginOpen(true)}
           onLogout={() => setIsLoggedIn(false)}
           onNavigate={scrollToId}
+        />
+        {/* Login modal dialog */}
+        <LoginDialog
+          open={loginOpen}
+          onClose={() => setLoginOpen(false)}
+          onLogin={() => { setIsLoggedIn(true); setLoginOpen(false); }}
         />
         {/* Main content area with hero banner and single-page sections */}
         <Box tabIndex={-1} sx={{ outline: 'none' }}>
           <HeroBanner onDonateClick={() => scrollToId('donate')} />
-          <SinglePage isLoggedIn={isLoggedIn} onLogin={() => setIsLoggedIn(true)} />
+          <SinglePage isLoggedIn={isLoggedIn} />
         </Box>
         {/* Footer with contact info and copyright */}
         <Box component="footer" sx={{
