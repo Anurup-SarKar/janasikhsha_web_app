@@ -144,7 +144,8 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout, onNavi
 
   return (
     <>
-      <StyledAppBar position="static" elevation={2}>
+  <StyledAppBar position="fixed" elevation={2}>
+// NOTE: If your main content is hidden behind the navbar, add a top margin or padding to your main content (e.g., marginTop: 72 or 80px)
         <StyledToolbar>
           {isMobile && (
             <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => setDrawerOpen(true)}>
