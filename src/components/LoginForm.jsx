@@ -5,6 +5,7 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import { Box, Typography, TextField, Button } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 
 /**
  * LoginForm component
@@ -73,7 +74,7 @@ export default function LoginForm({ onBack, onLogin, hideBackButton, embedded, l
       mx: 'auto'
     }}>
       {!embedded && <Typography variant="h4" mb={2}>User Login</Typography>}
-      <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={2}>
+      <Box component="form" onSubmit={handleSubmit} autoComplete="off" display="flex" flexDirection="column" gap={2}>
         <TextField
           id="login-email"
           name="email"
@@ -83,7 +84,9 @@ export default function LoginForm({ onBack, onLogin, hideBackButton, embedded, l
           onChange={handleChange}
           required
           fullWidth
+          autoComplete="off"
           inputRef={emailRef}
+          inputProps={{ autoComplete: 'off', autoCorrect: 'off', autoCapitalize: 'none', spellCheck: false }}
         />
         <TextField name="password" label="Password" type="password" value={form.password} onChange={handleChange} required fullWidth />
         {error && <Typography color="error" textAlign="center">{error}</Typography>}
@@ -93,14 +96,17 @@ export default function LoginForm({ onBack, onLogin, hideBackButton, embedded, l
             variant="contained"
             color={loginColor}
             fullWidth
-            sx={{
+            sx={(theme) => ({
               fontFamily: 'Raleway, sans-serif',
               fontWeight: 700,
               fontSize: '1.05rem',
               borderRadius: 3,
-              boxShadow: '0 2px 12px rgba(0, 91, 150, 0.2)',
-              '&:hover': { filter: 'brightness(0.95)' }
-            }}
+              boxShadow: `0 2px 12px ${alpha((theme.palette[loginColor]?.main) || theme.palette.primary.main, 0.2)}`,
+              '&:hover': {
+                filter: 'brightness(0.98)',
+                boxShadow: `0 4px 16px ${alpha((theme.palette[loginColor]?.main) || theme.palette.primary.main, 0.28)}`,
+              }
+            })}
           >
             Login
           </Button>

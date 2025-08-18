@@ -64,7 +64,7 @@ function Carousel({ items, renderItem }) {
     }
   };
   return (
-    <Box sx={{ position: 'relative', width: '100%', mb: 2 }}>
+    <Box sx={{ position: 'relative', width: '100%', mb: 2, overflow: 'hidden' }}>
       {/* Left arrow button for scrolling */}
       <IconButton
         aria-label="scroll left"
@@ -82,7 +82,7 @@ function Carousel({ items, renderItem }) {
           gap: 2,
           scrollSnapType: 'x mandatory',
           py: 2,
-          px: 5,
+          px: { xs: 1, sm: 5 },
           scrollbarWidth: 'thin',
           '&::-webkit-scrollbar': { height: 8 },
           '&::-webkit-scrollbar-thumb': { bgcolor: 'grey.300', borderRadius: 4 },
@@ -92,8 +92,9 @@ function Carousel({ items, renderItem }) {
           <Box
             key={idx}
             sx={{
-              minWidth: { xs: 240, sm: 320 },
-              maxWidth: 400,
+              minWidth: { xs: 140, sm: 240, md: 320 },
+              maxWidth: { xs: 220, sm: 320, md: 400 },
+              width: { xs: '60vw', sm: '30vw', md: '320px' },
               flex: '0 0 auto',
               scrollSnapAlign: 'center',
               borderRadius: 2,

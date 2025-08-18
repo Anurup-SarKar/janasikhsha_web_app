@@ -32,8 +32,8 @@ export default function LoginDialog({ open, onClose, onLogin }) {
         }
       }}
     >
-      <Box sx={{ position: 'relative', p: 2.5, bgcolor: 'secondary.main' }}>
-        <DialogTitle sx={{ p: 0, m: 0, color: 'secondary.contrastText' }}>
+      <Box sx={{ position: 'relative', p: 2.5, bgcolor: 'primary.main' }}>
+        <DialogTitle sx={{ p: 0, m: 0, color: 'primary.contrastText' }}>
           <Typography variant="h5" sx={{ fontWeight: 800, lineHeight: 1.2, color: 'inherit' }}>User Login</Typography>
           <Typography variant="body2" sx={{ mt: 0.5, color: 'inherit', opacity: 0.9 }}>Access your account to continue</Typography>
         </DialogTitle>
@@ -44,7 +44,7 @@ export default function LoginDialog({ open, onClose, onLogin }) {
             position: 'absolute',
             right: 8,
             top: 8,
-            color: 'secondary.contrastText',
+            color: (theme) => theme.palette.primary.main,
             bgcolor: alpha('#FFFFFF', 0.9),
             border: (theme) => `1px solid ${alpha(theme.palette.common.black, 0.12)}`,
             '&:hover': { bgcolor: alpha('#FFFFFF', 1) }
@@ -55,7 +55,7 @@ export default function LoginDialog({ open, onClose, onLogin }) {
       </Box>
       <Divider />
       <DialogContent sx={{ p: 3 }}>
-        <LoginForm onLogin={onLogin} onBack={onClose} hideBackButton embedded loginColor="secondary" />
+        <LoginForm onLogin={() => { onLogin?.(); onClose?.(); }} onBack={onClose} hideBackButton embedded loginColor="secondary" />
       </DialogContent>
     </Dialog>
   );

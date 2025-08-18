@@ -17,18 +17,35 @@ import { aboutImages } from '../assets/CarouselImages';
 export default function AboutUs() {
   return (
     <Box sx={{ p: { xs: 2, md: 4 } }}>
-      <ImageCarousel images={aboutImages} height={320} borderRadius={16} />
-      <Typography variant="h3" sx={{ color: 'primary.main', fontFamily: 'Raleway, sans-serif', mb: 2 }}>
+      <Typography
+        variant="h3"
+        sx={{
+          color: 'primary.main',
+          fontFamily: 'Raleway, sans-serif',
+          mb: 2,
+          fontWeight: 700,
+          fontSize: { xs: '1.2rem', sm: '1.5rem', md: '2rem' }, // reduced
+          lineHeight: 1.15,
+        }}
+      >
         About Us
       </Typography>
       <Typography variant="body1" sx={{ fontFamily: 'Raleway, sans-serif' }}>
-        {/* Add Who We Are, Manifesto, Team sections here */}
-        Bengal Presidency Council of Women & the All Bengal Women's Conference formed an independent organization for Suppression of Immoral Traffic. This society came into being as Janasiksha Prochar Kendra.<br /><br />
-        Janasiksha Prochar Kendra is dedicated to the right to survive and thrive. Let's stand for children's rights together.<br /><br />
-        <strong>Address:</strong> 89, Elliot Road, Kolkata - 700016, West Bengal, India<br />
-        <strong>Phone:</strong> +91 33 2229 3292<br />
+        We are a non-profit organization committed to the welfare, education, and rehabilitation of girl children and survivors of sexual violence. Our mission is to create a safe, nurturing environment and empower them to lead fulfilling lives.
+        <br /><br />
+        Bengal Presidency Council of Women & the All Bengal Women's Conference formed an independent organization for Suppression of Immoral Traffic. This society came into being as Janasiksha Prochar Kendra.
+        <br /><br />
+        Janasiksha Prochar Kendra is dedicated to the right to survive and thrive. Let's stand for children's rights together.
+        <br /><br />
+        <strong>Address:</strong> 89, Elliot Road, Kolkata - 700016, West Bengal, India
+        <br />
+        <strong>Phone:</strong> +91 33 2229 3292
+        <br />
         <strong>Email:</strong> info@jpk.org
       </Typography>
+      <Box sx={{ mt: 2 }}>
+        <ImageCarousel images={aboutImages} height={320} borderRadius={16} />
+      </Box>
     </Box>
   );
 }

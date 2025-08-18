@@ -27,7 +27,20 @@ export default function ImageCarousel({ images, height = 340, borderRadius = 16 
         sx={{ borderRadius, overflow: 'hidden', boxShadow: 2 }}
       >
         {images.map((img, idx) => (
-          <Box key={idx} component="img" src={img} alt="carousel" sx={{ width: '100%', height, objectFit: 'cover', borderRadius }} />
+          <Box
+            key={idx}
+            component="img"
+            src={img}
+            alt="carousel"
+            sx={{
+              width: '100%',
+              maxWidth: '100vw',
+              height: { xs: 180, sm: 240, md: height },
+              objectFit: 'cover',
+              borderRadius,
+              display: 'block',
+            }}
+          />
         ))}
       </Carousel>
     </Box>
