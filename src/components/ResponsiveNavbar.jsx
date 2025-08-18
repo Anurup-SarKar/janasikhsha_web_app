@@ -32,7 +32,7 @@ const NavButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.main,
   background: 'none',
   borderRadius: 8,
-  padding: '8px 18px',
+  padding: '6px 10px', // reduced from 8px 18px
   margin: '0 2px',
   textTransform: 'none',
   letterSpacing: 0.5,
@@ -51,6 +51,25 @@ const Brand = styled(Typography)(({ theme }) => ({
   textShadow: '0 2px 8px rgba(0, 91, 150, 0.1)',
   flexGrow: 1,
   cursor: 'pointer',
+}));
+const LoginTextButton = styled(Button)(({ theme }) => ({
+  fontFamily: 'Raleway, sans-serif',
+  fontWeight: 600, // reduced from 800
+  fontSize: '1.05rem',
+  background: theme.palette.primary.main,
+  color: '#fff',
+  borderRadius: 20,
+  boxShadow: '0 2px 8px rgba(0,91,150,0.18)',
+  padding: '6px 14px',
+  marginLeft: theme.spacing(2),
+  textTransform: 'none',
+  letterSpacing: 0.5,
+  '&:hover': {
+    background: theme.palette.primary.dark || '#004080',
+    color: '#fff',
+    boxShadow: '0 4px 16px rgba(0,91,150,0.22)',
+    filter: 'brightness(0.97)'
+  },
 }));
 
 const aboutMenuItems = [
@@ -145,8 +164,7 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout, onNavi
 
   return (
     <>
-  <StyledAppBar position="fixed" elevation={2}>
-// NOTE: If your main content is hidden behind the navbar, add a top margin or padding to your main content (e.g., marginTop: 72 or 80px)
+      <StyledAppBar position="fixed" elevation={2}>
         <StyledToolbar>
           {isMobile && (
             <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => setDrawerOpen(true)}>
@@ -191,9 +209,12 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout, onNavi
               )}
             </>
           )}
-          <IconButton color="inherit" onClick={handleLoginLogout} sx={{ ml: 2 }} aria-label={isLoggedIn ? 'Logout' : 'Login'}>
-            {isLoggedIn ? <LogoutIcon sx={{ color: theme.palette.secondary.main }} /> : <LoginIcon sx={{ color: theme.palette.secondary.main }} />}
-          </IconButton>
+          <LoginTextButton
+            onClick={handleLoginLogout}
+            aria-label={isLoggedIn ? 'Logout' : 'Login'}
+          >
+            {isLoggedIn ? 'Logout' : 'Login'}
+          </LoginTextButton>
         </StyledToolbar>
         <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
           <Box sx={{ width: 250, bgcolor: theme.palette.background.paper, height: '100%' }} role="presentation">
