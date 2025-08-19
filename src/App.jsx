@@ -8,7 +8,6 @@ import { ThemeProvider, Container, Box } from '@mui/material';
 import { BrowserRouter, Routes, Route, Navigate, Link as RouterLink } from 'react-router-dom';
 import theme from './theme';
 import ResponsiveNavbar from './components/ResponsiveNavbar';
-import HeroBanner from './components/HeroBanner';
 import Gallery from './components/Gallery';
 import Contact from './components/Contact';
 import DonationForm from './components/DonationForm';
@@ -52,9 +51,8 @@ function App() {
         <Container maxWidth={false} disableGutters sx={{ width: '100vw', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', px: { xs: 0, md: 0 } }}>
           {/* Responsive navigation bar with login/logout and menu */}
           <ResponsiveNavbar isLoggedIn={isLoggedIn} onLogin={() => setIsLoggedIn(true)} onLogout={() => setIsLoggedIn(false)} />
-          {/* Main content area with hero banner and routed pages */}
-          <Box tabIndex={-1} sx={{ outline: 'none' }}>
-            <HeroBanner onDonateClick={() => window.location.assign('/donate')} />
+          {/* Main content area with routed pages — grows to fill available space so footer stays at bottom */}
+          <Box tabIndex={-1} sx={{ outline: 'none', flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/aboutus" element={<AboutUs />} />

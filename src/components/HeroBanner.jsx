@@ -24,12 +24,9 @@ export default function HeroBanner({ onDonateClick }) {
         bgcolor: theme.palette.background.paper,
         color: theme.palette.primary.main,
         py: { xs: 4, md: 7 },
-        borderRadius: '0 0 32px 32px',
         textAlign: 'center',
         boxShadow: 3,
         mb: 3,
-        border: `2px solid ${theme.palette.secondary.main}`,
-        backgroundImage: 'linear-gradient(90deg, rgba(0,91,150,0.03) 0%, rgba(255,127,17,0.06) 100%)',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -75,7 +72,6 @@ export default function HeroBanner({ onDonateClick }) {
       </Typography>
       <Button
         variant="contained"
-        color="secondary"
         size="large"
         onClick={onDonateClick}
         sx={{
@@ -87,11 +83,10 @@ export default function HeroBanner({ onDonateClick }) {
           borderRadius: 3,
           boxShadow: '0 2px 12px rgba(0, 91, 150, 0.2)',
           mb: 2,
-          background: `linear-gradient(90deg, ${theme.palette.secondary.main} 0%, #FFFFFF 100%)`,
-          color: theme.palette.text.primary,
+          backgroundColor: theme.palette.secondary.main,
+          color: '#fff',
           '&:hover': {
-            background: `linear-gradient(90deg, #FFFFFF 0%, ${theme.palette.secondary.main} 100%)`,
-            color: theme.palette.text.primary,
+            backgroundColor: theme.palette.secondary.dark || theme.palette.secondary.main,
           },
         }}
       >

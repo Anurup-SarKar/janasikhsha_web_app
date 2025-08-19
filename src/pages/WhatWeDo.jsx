@@ -5,8 +5,6 @@
 
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import ImageCarousel from '../components/ImageCarousel';
-import { whatWeDoImages } from '../assets/CarouselImages';
 
 /**
  * WhatWeDo page component
@@ -17,8 +15,7 @@ import { whatWeDoImages } from '../assets/CarouselImages';
 export default function WhatWeDo() {
   return (
     <Box>
-      <ImageCarousel images={whatWeDoImages} height={320} borderRadius={16} />
-      <Box sx={{ bgcolor: (theme) => theme.palette.background.paper, borderRadius: 3, boxShadow: 2, p: { xs: 2, md: 5 }, mb: 3, border: (theme) => `2px solid ${theme.palette.secondary.main}`, maxWidth: 900, mx: 'auto' }}>
+      <Box sx={{ width: '100%', maxWidth: '100%', mx: 0, bgcolor: (theme) => theme.palette.background.paper, boxShadow: 2, p: { xs: 2, md: 5 }, mb: 3 }}>
         <Typography variant="h3" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 700, mb: 2, textAlign: 'center', textShadow: '0 2px 8px rgba(0, 91, 150, 0.12)' }}>
           What We Do: Child Protection
         </Typography>
