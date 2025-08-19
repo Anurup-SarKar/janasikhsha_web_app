@@ -6,11 +6,12 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Typography, Button, IconButton, Drawer, List, ListItem, ListItemText, useMediaQuery, Box, Divider, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Snackbar, Alert } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import LoginIcon from '@mui/icons-material/Login';
-import LogoutIcon from '@mui/icons-material/Logout';
+// Removed LoginIcon/LogoutIcon imports
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { styled } from '@mui/material/styles';
 import theme from '../theme';
+import LoginDialog from './LoginDialog';
+import LoginForm from './LoginForm';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 // Styled components for a clean, branded look
@@ -88,6 +89,7 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [aboutAnchorEl, setAboutAnchorEl] = React.useState(null);
   const [createUserOpen, setCreateUserOpen] = useState(false);
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [newUser, setNewUser] = useState({ username: '', password: '' });
   const [createUserMsg, setCreateUserMsg] = useState('');
   const [createUserError, setCreateUserError] = useState('');
@@ -116,9 +118,11 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
     blurActiveElement();
     setDrawerOpen(false); // Ensure drawer closes on login/logout
     if (isLoggedIn) {
-      onLogout();
+      onLogout && onLogout();
+      setLoginDialogOpen(false);
+      navigate('/');
     } else {
-      navigate('/login');
+      setLoginDialogOpen(true);
     }
   }
 
@@ -200,9 +204,54 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
               )}
             </>
           )}
-          <IconButton color="inherit" onClick={handleLoginLogout} sx={{ ml: 2 }} aria-label={isLoggedIn ? 'Logout' : 'Login'}>
-            {isLoggedIn ? <LogoutIcon sx={{ color: theme.palette.secondary.main }} /> : <LoginIcon sx={{ color: theme.palette.secondary.main }} />}
-          </IconButton>
+          {isLoggedIn ? (
+            // Replace icon with text button for Logout
+            <Button
+              onClick={handleLoginLogout}
+              sx={{
+                ml: 2,
+                color: '#fff',
+                backgroundColor: theme.palette.primary.main,
+                fontWeight: 700,
+                fontFamily: 'Raleway, sans-serif',
+                borderRadius: 3,
+                textTransform: 'none',
+                boxShadow: '0 2px 8px rgba(0, 91, 150, 0.18)',
+                '&:hover': {
+                  backgroundColor: theme.palette.primary.dark,
+                },
+              }}
+              aria-label="Logout"
+            >
+              Logout
+            </Button>
+          ) : (
+            <Button
+              onClick={handleLoginLogout}
+              sx={{
+                ml: 2,
+                color: '#fff',
+                backgroundColor: theme.palette.primary.main,
+                fontWeight: 700,
+                fontFamily: 'Raleway, sans-serif',
+                borderRadius: 3,
+                textTransform: 'none',
+                boxShadow: '0 2px 8px rgba(0, 91, 150, 0.18)',
+                '&:hover': {
+                  backgroundColor: theme.palette.primary.dark,
+                },
+              }}
+              aria-label="Login"
+            >
+              Login
+            </Button>
+          )}
+          {/* Login Dialog (from separate component) */}
+          <LoginDialog
+            open={loginDialogOpen}
+            onClose={() => setLoginDialogOpen(false)}
+            onLogin={() => { setLoginDialogOpen(false); onLogin && onLogin(); }}
+          />
         </StyledToolbar>
         <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
           <Box sx={{ width: 250, bgcolor: theme.palette.background.paper, height: '100%' }} role="presentation">
@@ -248,7 +297,7 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
               <Divider sx={{ my: 1 }} />
               <ListItem button onClick={handleLoginLogout}>
                 <ListItemText primary={isLoggedIn ? 'Logout' : 'Login'} primaryTypographyProps={{ sx: { fontFamily: 'Raleway, sans-serif', color: theme.palette.secondary.main, fontWeight: 700 } }} />
-                {isLoggedIn ? <LogoutIcon sx={{ color: theme.palette.secondary.main }} /> : <LoginIcon sx={{ color: theme.palette.secondary.main }} />}
+                {/* Removed trailing icons to show text only */}
               </ListItem>
               {isLoggedIn && (
                 <ListItem button onClick={handleOpenCreateUser}>
