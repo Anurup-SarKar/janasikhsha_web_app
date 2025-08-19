@@ -41,6 +41,7 @@ export default function HeroBanner({ onDonateClick }) {
           fontFamily: 'Raleway, sans-serif',
           color: theme.palette.primary.main,
           mb: 1,
+          marginTop:5,
           textShadow: '0 2px 8px rgba(0, 91, 150, 0.12)',
           letterSpacing: 1,
         }}

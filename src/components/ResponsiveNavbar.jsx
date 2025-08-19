@@ -18,6 +18,11 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   background: theme.palette.background.paper,
   borderBottom: `3px solid ${theme.palette.secondary.main}`,
   boxShadow: '0 2px 12px rgba(0, 91, 150, 0.15)',
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100vw',
+  zIndex: 1201, // above drawer and content
 }));
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   minHeight: 72,

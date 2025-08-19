@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { ThemeProvider, Container, Box } from '@mui/material';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Link as RouterLink } from 'react-router-dom';
 import theme from './theme';
 import ResponsiveNavbar from './components/ResponsiveNavbar';
 import HeroBanner from './components/HeroBanner';
@@ -103,33 +103,33 @@ function App() {
               <Box sx={{ minWidth: 180, mb: { xs: 2, md: 0 } }}>
                 <Box sx={{ fontWeight: 700, fontSize: '1.1rem', mb: 1, color: 'secondary.main' }}>ABOUT US</Box>
                 <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
-                  <li><a href="/who-we-are" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Who We Are</a></li>
-                  <li><a href="/our-manifesto" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Our Manifesto</a></li>
-                  <li><a href="/our-team" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Our Team</a></li>
+                  <li><RouterLink to="/who-we-are" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Who We Are</RouterLink></li>
+                  <li><RouterLink to="/our-manifesto" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Our Manifesto</RouterLink></li>
+                  <li><RouterLink to="/our-team" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Our Team</RouterLink></li>
                 </Box>
               </Box>
               {/* What We Do */}
               <Box sx={{ minWidth: 180, mb: { xs: 2, md: 0 } }}>
                 <Box sx={{ fontWeight: 700, fontSize: '1.1rem', mb: 1, color: 'secondary.main' }}>WHAT WE DO</Box>
                 <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
-                  <li><a href="/child-protection" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Child Protection</a></li>
-                  <li><a href="/child-education" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Child Education</a></li>
-                  <li><a href="/after-care" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;After Care</a></li>
-                  <li><a href="/swadhar" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Swadhar</a></li>
-                  <li><a href="/elderly-care" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Elderly Care</a></li>
-                  <li><a href="/staff-list" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Staff List</a></li>
-                  <li><a href="/beneficiary-details" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Beneficiary Details</a></li>
+                  <li><RouterLink to="/child-protection" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Child Protection</RouterLink></li>
+                  <li><RouterLink to="/child-education" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Child Education</RouterLink></li>
+                  <li><RouterLink to="/after-care" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;After Care</RouterLink></li>
+                  <li><RouterLink to="/swadhar" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Swadhar</RouterLink></li>
+                  <li><RouterLink to="/elderly-care" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Elderly Care</RouterLink></li>
+                  <li><RouterLink to="/staff-list" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Staff List</RouterLink></li>
+                  <li><RouterLink to="/beneficiary-details" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Beneficiary Details</RouterLink></li>
                 </Box>
               </Box>
               {/* Quick Links */}
               <Box sx={{ minWidth: 180, mb: { xs: 2, md: 0 } }}>
                 <Box sx={{ fontWeight: 700, fontSize: '1.1rem', mb: 1, color: 'secondary.main' }}>QUICK LINKS</Box>
                 <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
-                  <li><a href="/latest-projects" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Our Latest Projects</a></li>
-                  <li><a href="/news-room" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;News Room</a></li>
-                  <li><a href="/case-history" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Case History</a></li>
-                  <li><a href="/success-story" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Success Story</a></li>
-                  <li><a href="/support-us" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Support Us</a></li>
+                  <li><RouterLink to="/latest-projects" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Our Latest Projects</RouterLink></li>
+                  <li><RouterLink to="/news-room" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;News Room</RouterLink></li>
+                  <li><RouterLink to="/case-history" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Case History</RouterLink></li>
+                  <li><RouterLink to="/success-story" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Success Story</RouterLink></li>
+                  <li><RouterLink to="/support-us" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Support Us</RouterLink></li>
                 </Box>
               </Box>
               {/* Location & Contact */}
