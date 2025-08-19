@@ -79,7 +79,7 @@ function App() {
               <Route path="/login" element={
                 <LoginDialog
                   open={true}
-                  onClose={() => window.location.assign('/')}
+                  onClose={() => window.location.assign(import.meta.env.BASE_URL)}
                   onLogin={() => setIsLoggedIn(true)}
                 />
               } />
