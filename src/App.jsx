@@ -11,7 +11,7 @@ import ResponsiveNavbar from './components/ResponsiveNavbar';
 import Gallery from './components/Gallery';
 import Contact from './components/Contact';
 import DonationForm from './components/DonationForm';
-import LoginForm from './components/LoginForm';
+import LoginDialog from './components/LoginDialog';
 import LiveCCTV from './components/LiveCCTV';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
@@ -43,7 +43,6 @@ import BeneficiaryDetails from './pages/BeneficiaryDetails';
 function App() {
   // User authentication state
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
 
   return (
     <ThemeProvider theme={theme}>
@@ -77,7 +76,13 @@ function App() {
               <Route path="/elderlycare" element={<ElderlyCare />} />
               <Route path="/stafflist" element={<StaffList />} />
               <Route path="/beneficiarydetails" element={<BeneficiaryDetails />} />
-              <Route path="/login" element={<LoginForm onLogin={() => setIsLoggedIn(true)} />} />
+              <Route path="/login" element={
+                <LoginDialog
+                  open={true}
+                  onClose={() => window.location.assign('/')}
+                  onLogin={() => setIsLoggedIn(true)}
+                />
+              } />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Box>
