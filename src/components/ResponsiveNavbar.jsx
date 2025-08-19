@@ -58,6 +58,15 @@ const Brand = styled(Typography)(({ theme }) => ({
   textShadow: '0 2px 8px rgba(0, 91, 150, 0.1)',
   flexGrow: 1,
   cursor: 'pointer',
+  textDecoration: 'none',
+  outline: 'none',
+  // Remove any visible border/outline when the brand link is focused/active/hovered
+  '&:focus, &:active, &:hover': {
+    textDecoration: 'none',
+    outline: 'none',
+    boxShadow: 'none',
+    border: 'none',
+  },
 }));
 
 const aboutMenuItems = [

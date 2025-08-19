@@ -17,7 +17,7 @@ import { aboutImages } from '../assets/CarouselImages';
 export default function AboutUs() {
   return (
     <Box sx={{ p: { xs: 2, md: 4 } }}>
-      <ImageCarousel images={aboutImages} height={320} borderRadius={16} />
+      <ImageCarousel images={aboutImages} />
       <Typography variant="h3" sx={{ color: 'primary.main', fontFamily: 'Raleway, sans-serif', mb: 2 }}>
         About Us
       </Typography>
