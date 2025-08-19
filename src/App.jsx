@@ -103,42 +103,42 @@ function App() {
               <Box sx={{ minWidth: 180, mb: { xs: 2, md: 0 } }}>
                 <Box sx={{ fontWeight: 700, fontSize: '1.1rem', mb: 1, color: 'secondary.main' }}>ABOUT US</Box>
                 <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
-                  <li><a href="/who-we-are" style={{ color: '#fff', textDecoration: 'underline' }}>Who We Are</a></li>
-                  <li><a href="/our-manifesto" style={{ color: '#fff', textDecoration: 'underline' }}>Our Manifesto</a></li>
-                  <li><a href="/our-team" style={{ color: '#fff', textDecoration: 'underline' }}>Our Team</a></li>
+                  <li><a href="/who-we-are" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Who We Are</a></li>
+                  <li><a href="/our-manifesto" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Our Manifesto</a></li>
+                  <li><a href="/our-team" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Our Team</a></li>
                 </Box>
               </Box>
               {/* What We Do */}
               <Box sx={{ minWidth: 180, mb: { xs: 2, md: 0 } }}>
                 <Box sx={{ fontWeight: 700, fontSize: '1.1rem', mb: 1, color: 'secondary.main' }}>WHAT WE DO</Box>
                 <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
-                  <li><a href="/child-protection" style={{ color: '#fff', textDecoration: 'underline' }}>Child Protection</a></li>
-                  <li><a href="/child-education" style={{ color: '#fff', textDecoration: 'underline' }}>Child Education</a></li>
-                  <li><a href="/after-care" style={{ color: '#fff', textDecoration: 'underline' }}>After Care</a></li>
-                  <li><a href="/swadhar" style={{ color: '#fff', textDecoration: 'underline' }}>Swadhar</a></li>
-                  <li><a href="/elderly-care" style={{ color: '#fff', textDecoration: 'underline' }}>Elderly Care</a></li>
-                  <li><a href="/staff-list" style={{ color: '#fff', textDecoration: 'underline' }}>Staff List</a></li>
-                  <li><a href="/beneficiary-details" style={{ color: '#fff', textDecoration: 'underline' }}>Beneficiary Details</a></li>
+                  <li><a href="/child-protection" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Child Protection</a></li>
+                  <li><a href="/child-education" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Child Education</a></li>
+                  <li><a href="/after-care" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;After Care</a></li>
+                  <li><a href="/swadhar" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Swadhar</a></li>
+                  <li><a href="/elderly-care" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Elderly Care</a></li>
+                  <li><a href="/staff-list" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Staff List</a></li>
+                  <li><a href="/beneficiary-details" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Beneficiary Details</a></li>
                 </Box>
               </Box>
               {/* Quick Links */}
               <Box sx={{ minWidth: 180, mb: { xs: 2, md: 0 } }}>
                 <Box sx={{ fontWeight: 700, fontSize: '1.1rem', mb: 1, color: 'secondary.main' }}>QUICK LINKS</Box>
                 <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
-                  <li><a href="/latest-projects" style={{ color: '#fff', textDecoration: 'underline' }}>Our Latest Projects</a></li>
-                  <li><a href="/news-room" style={{ color: '#fff', textDecoration: 'underline' }}>News Room</a></li>
-                  <li><a href="/case-history" style={{ color: '#fff', textDecoration: 'underline' }}>Case History</a></li>
-                  <li><a href="/success-story" style={{ color: '#fff', textDecoration: 'underline' }}>Success Story</a></li>
-                  <li><a href="/support-us" style={{ color: '#fff', textDecoration: 'underline' }}>Support Us</a></li>
+                  <li><a href="/latest-projects" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Our Latest Projects</a></li>
+                  <li><a href="/news-room" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;News Room</a></li>
+                  <li><a href="/case-history" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Case History</a></li>
+                  <li><a href="/success-story" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Success Story</a></li>
+                  <li><a href="/support-us" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Support Us</a></li>
                 </Box>
               </Box>
               {/* Location & Contact */}
               <Box sx={{ minWidth: 220 }}>
                 <Box sx={{ fontWeight: 700, fontSize: '1.1rem', mb: 1, color: 'secondary.main' }}>LOCATION</Box>
                 <Box sx={{ mb: 1 }}>89, Elliot Road, Kolkata - 700016, West Bengal, India</Box>
-                <Box sx={{ mb: 1 }}><a href="tel:+913322293292" style={{ color: '#fff', textDecoration: 'underline' }}>+91 33 2229 3292</a></Box>
-                <Box sx={{ mb: 1 }}><a href="mailto:info@jpk.org" style={{ color: '#fff', textDecoration: 'underline' }}>info@jpk.org</a></Box>
-                <Box sx={{ mb: 1 }}><a href="https://www.facebook.com/ABWUIndia" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'underline' }}>Follow us on Facebook</a></Box>
+                <Box sx={{ mb: 1 }}><a href="tel:+913322293292" style={{ color: '#fff', textDecoration: 'none' }}>+91 33 2229 3292</a></Box>
+                <Box sx={{ mb: 1 }}><a href="mailto:info@jpk.org" style={{ color: '#fff', textDecoration: 'none' }}>info@jpk.org</a></Box>
+                <Box sx={{ mb: 1 }}><a href="https://www.facebook.com/ABWUIndia" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none' }}>Follow us on Facebook</a></Box>
               </Box>
             </Box>
             <Box sx={{ borderTop: '1px solid #fff', pt: 2, textAlign: 'center', fontWeight: 600, fontSize: '1rem', letterSpacing: 0.5 }}>
