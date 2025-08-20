@@ -6,7 +6,7 @@ import { Box, Typography } from '@mui/material';
 export default function OurManifesto() {
   return (
     <Box sx={{ bgcolor: 'background.paper', borderRadius: 3, boxShadow: 2, p: { xs: 2, md: 5 }, mb: 3, border: 2, borderColor: 'secondary.main', maxWidth: 900, mx: 'auto' }}>
-      <Typography variant="h3" sx={{ color: 'secondary.main', fontFamily: 'Raleway, sans-serif', fontWeight: 700, mb: 2, textAlign: 'center' }}>
+      <Typography variant="h3" sx={{ color: 'primary.main', fontFamily: 'Raleway, sans-serif', fontWeight: 700, mb: 2, textAlign: 'center' }}>
         Our Manifesto
       </Typography>
       <Typography variant="h5" sx={{ color: 'primary.main', fontFamily: 'Raleway, sans-serif', fontWeight: 600, mb: 3, textAlign: 'center' }}>

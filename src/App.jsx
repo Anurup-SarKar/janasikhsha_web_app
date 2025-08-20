@@ -4,7 +4,7 @@
 // Uses Material-UI for styling and theming. Follows modern, accessible, and empathetic design.
 
 import React, { useState } from 'react';
-import { ThemeProvider, Container, Box } from '@mui/material';
+import { ThemeProvider, Container, Box, Toolbar } from '@mui/material';
 import { BrowserRouter, Routes, Route, Navigate, Link as RouterLink } from 'react-router-dom';
 import theme from './theme';
 import ResponsiveNavbar from './components/ResponsiveNavbar';
@@ -50,6 +50,8 @@ function App() {
         <Container maxWidth={false} disableGutters sx={{ width: '100vw', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', px: { xs: 0, md: 0 } }}>
           {/* Responsive navigation bar with login/logout and menu */}
           <ResponsiveNavbar isLoggedIn={isLoggedIn} onLogin={() => setIsLoggedIn(true)} onLogout={() => setIsLoggedIn(false)} />
+          {/* Spacer to offset fixed AppBar so routed pages start below the navbar */}
+          <Toolbar />
           {/* Main content area with routed pages — grows to fill available space so footer stays at bottom */}
           <Box tabIndex={-1} sx={{ outline: 'none', flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
             <Routes>

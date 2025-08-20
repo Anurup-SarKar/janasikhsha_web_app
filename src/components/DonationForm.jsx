@@ -116,7 +116,7 @@ export default function DonationForm() {
           <TextField name="phone" label="Phone" value={form.phone} onChange={handleChange} required fullWidth />
           <TextField name="email" label="Email" type="email" value={form.email} onChange={handleChange} required fullWidth />
           <TextField name="amount" label="Amount (INR)" type="number" value={form.amount} onChange={handleChange} required fullWidth inputProps={{ min: 1, step: 1, pattern: '[0-9]*' }} helperText="Enter whole rupees only (no decimals)" />
-          <Button type="submit" variant="contained" color="primary" disabled={loading}>{loading ? 'Processing...' : 'Donate & Pay'}</Button>
+          <Button type="submit" variant="contained" color="secondary" disabled={loading}>{loading ? 'Processing...' : 'Donate & Pay'}</Button>
         </Box>
       )}
     </Box>

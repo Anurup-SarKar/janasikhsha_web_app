@@ -5,18 +5,19 @@
 
 import React from 'react';
 import { Box, Typography, Button, useMediaQuery } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import theme from '../theme';
 
 /**
  * HeroBanner component
  * Shows a large banner with a headline, subheadline, and a donation button.
  * Only visible on desktop (md and up), hidden on mobile.
- * @param {Object} props
- * @param {Function} props.onDonateClick - Callback for the donation button
  * @returns {JSX.Element|null} The rendered hero banner or null on mobile
+ * Clicking the Donate Now button navigates to the donation page (/donate)
  */
-export default function HeroBanner({ onDonateClick }) {
+export default function HeroBanner() {
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+  const navigate = useNavigate();
   if (!isDesktop) return null;
   return (
     <Box
@@ -73,7 +74,7 @@ export default function HeroBanner({ onDonateClick }) {
       <Button
         variant="contained"
         size="large"
-        onClick={onDonateClick}
+        onClick={() => navigate('/donate')}
         sx={{
           fontFamily: 'Raleway, sans-serif',
           fontWeight: 700,
