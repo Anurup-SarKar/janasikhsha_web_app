@@ -33,6 +33,7 @@ import Swadhar from './pages/Swadhar';
 import ElderlyCare from './pages/ElderlyCare';
 import StaffList from './pages/StaffList';
 import BeneficiaryDetails from './pages/BeneficiaryDetails';
+import AdminHome from './pages/AdminHome';
 import MaintenanceHome from './pages/MaintenanceHome';
 
 /**
@@ -58,15 +59,33 @@ function AppInner() {
   // Hide chrome (nav + footer) only on maintenance root path
   const hideChrome = location.pathname === '/' || location.pathname === '';
   return (
+    <ThemeProvider theme={theme}>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
+        <AppRoutes isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+      </BrowserRouter>
+    </ThemeProvider>
+  );
+}
+
+function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
+  const location = useLocation();
+  const isAdminRoute = location.pathname === '/admin_home';
+
+  return (
     <Container maxWidth={false} disableGutters sx={{ width: '100vw', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', px: { xs: 0, md: 0 } }}>
-      {/* Responsive navigation bar with login/logout and menu */}
-      {!hideChrome && <ResponsiveNavbar isLoggedIn={isLoggedIn} onLogin={() => setIsLoggedIn(true)} onLogout={() => setIsLoggedIn(false)} />}
-      {/* Spacer to offset fixed AppBar so routed pages start below the navbar */}
-      {!hideChrome && <Toolbar />}
+      {/* Responsive navigation bar with login/logout and menu (hidden for admin route) */}
+      {!isAdminRoute && (
+        <>
+          <ResponsiveNavbar isLoggedIn={isLoggedIn} onLogin={() => setIsLoggedIn(true)} onLogout={() => setIsLoggedIn(false)} />
+          {/* Spacer to offset fixed AppBar so routed pages start below the navbar */}
+          <Toolbar />
+        </>
+      )}
+
       {/* Main content area with routed pages — grows to fill available space so footer stays at bottom */}
       <Box tabIndex={-1} sx={{ outline: 'none', flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
         <Routes>
-          <Route path="/" element={<MaintenanceHome />} />
+          <Route path="/" element={<Home />} />
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/whatwedo" element={<WhatWeDo />} />
           <Route path="/latestprojects" element={<LatestProjects />} />
@@ -89,6 +108,7 @@ function AppInner() {
           <Route path="/elderlycare" element={<ElderlyCare />} />
           <Route path="/stafflist" element={<StaffList />} />
           <Route path="/beneficiarydetails" element={<BeneficiaryDetails />} />
+          <Route path="/admin_home" element={<AdminHome />} />
           <Route path="/login" element={
             <LoginDialog
               open={true}
@@ -99,8 +119,9 @@ function AppInner() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Box>
-      {/* Footer styled like abwu.org.in */}
-      {!hideChrome && (
+
+      {/* Footer styled like abwu.org.in (hidden for admin route) */}
+      {!isAdminRoute && (
         <Box component="footer" sx={{
           bgcolor: (theme) => theme.palette.primary.main,
           color: '#fff',
