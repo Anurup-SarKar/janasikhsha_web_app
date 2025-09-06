@@ -8,9 +8,13 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
-dist-ssr
+# dist remains ignored for gh-pages deployment
+/dist
+/dist-ssr
 *.local
+
+# Allow docs to be committed for GitHub Pages from branch
+# (do not ignore docs)
 
 # Editor directories and files
 .vscode/*
