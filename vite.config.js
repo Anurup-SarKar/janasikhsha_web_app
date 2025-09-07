@@ -1,10 +1,18 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// BASE_PATH can be overridden for GitHub Pages builds (e.g. BASE_PATH=/janasikhsha_web_app/)
-const base = process.env.BASE_PATH || '/';
-
-export default defineConfig({
-  base,
+// https://vitejs.dev/config/
+export default defineConfig(({ mode }) => ({
+  // Use '/' in dev so routes work locally, and GH Pages subpath in production
+  base: mode === 'production' ? '/janasikhsha_web_app/' : '/',
   plugins: [react()],
-});
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://192.168.29.167:8082',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
+}));

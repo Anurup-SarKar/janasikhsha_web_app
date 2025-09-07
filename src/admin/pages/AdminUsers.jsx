@@ -1,10 +1,13 @@
 import React from 'react';
-import { Paper, Stack, Typography, Button, Table, TableHead, TableRow, TableCell, TableBody, Chip, Dialog, DialogTitle, DialogContent, DialogActions, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
+import { Paper, Stack, Typography, Button, Table, TableHead, TableRow, TableCell, TableBody, Chip, Dialog, DialogTitle, DialogContent, DialogActions, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, CircularProgress, Backdrop } from '@mui/material';
+import ConfirmDialog from '../components/ConfirmDialog';
 
-export default function AdminUsers({ users, setUsers }) {
+export default function AdminUsers({ users, setUsers, loading = false, actionLoading = false, deleteByEmail }) {
     const [editOpen, setEditOpen] = React.useState(false);
     const [addOpen, setAddOpen] = React.useState(false);
     const [current, setCurrent] = React.useState(null);
+    const [confirmOpen, setConfirmOpen] = React.useState(false);
+    const [pendingDelete, setPendingDelete] = React.useState(null);
 
     const openEdit = (u) => { setCurrent({ ...u }); setEditOpen(true); };
     const openAdd = () => {
@@ -15,7 +18,7 @@ export default function AdminUsers({ users, setUsers }) {
         });
         setAddOpen(true);
     };
-    const closeDialogs = () => { setEditOpen(false); setAddOpen(false); };
+    const closeDialogs = () => { setEditOpen(false); setAddOpen(false); setConfirmOpen(false); setPendingDelete(null); };
 
     const saveEdit = () => {
         if (!current) return;
@@ -27,13 +30,28 @@ export default function AdminUsers({ users, setUsers }) {
         setUsers(prev => [...prev, current]);
         setAddOpen(false);
     };
-    const delUser = (id) => setUsers(prev => prev.filter(u => u.id !== id));
+
+    const askDelete = (u) => { setPendingDelete(u); setConfirmOpen(true); };
+    const doDelete = async () => {
+        if (!pendingDelete) return;
+        try {
+            await deleteByEmail?.(pendingDelete.email);
+            setConfirmOpen(false);
+            setPendingDelete(null);
+        } catch (e) {
+            // error is handled by hook; could add toast/snackbar later
+        }
+    };
 
     return (
         <>
+            <Backdrop open={Boolean(loading || actionLoading)} sx={{ zIndex: (t) => t.zIndex.drawer + 1 }}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
+
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
                 <Typography variant="h6" sx={{ fontWeight: 800 }}>User List</Typography>
-                <Button variant="contained" onClick={openAdd}>Add User</Button>
+                <Button variant="contained" onClick={openAdd} disabled={actionLoading}>Add User</Button>
             </Stack>
             <Paper variant="outlined" sx={{ borderRadius: 3 }}>
                 <Table>
@@ -59,8 +77,8 @@ export default function AdminUsers({ users, setUsers }) {
                                 <TableCell>{u.isActive ? <Chip label="Active" color="success" size="small" /> : <Chip label="Inactive" color="default" size="small" />}</TableCell>
                                 <TableCell align="right">
                                     <Stack direction="row" spacing={1} justifyContent="flex-end">
-                                        <Button size="small" variant="outlined" onClick={() => openEdit(u)}>Edit</Button>
-                                        <Button size="small" color="error" variant="outlined" onClick={() => delUser(u.id)}>Delete</Button>
+                                        <Button size="small" variant="outlined" onClick={() => openEdit(u)} disabled={actionLoading}>Edit</Button>
+                                        <Button size="small" color="error" variant="outlined" onClick={() => askDelete(u)} disabled={actionLoading}>Delete</Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
@@ -68,6 +86,17 @@ export default function AdminUsers({ users, setUsers }) {
                     </TableBody>
                 </Table>
             </Paper>
+
+            <ConfirmDialog
+                open={confirmOpen}
+                title="Delete user?"
+                message={pendingDelete ? `Are you sure you want to delete "${pendingDelete.fullName}" (${pendingDelete.email})?` : ''}
+                confirmText="OK, Delete"
+                cancelText="Cancel"
+                onCancel={closeDialogs}
+                onConfirm={doDelete}
+                loading={actionLoading}
+            />
 
             {/* Edit Dialog */}
             <Dialog open={editOpen} onClose={closeDialogs} maxWidth="sm" fullWidth>
