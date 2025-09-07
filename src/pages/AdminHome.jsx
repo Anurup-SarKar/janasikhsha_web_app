@@ -12,6 +12,7 @@ import { AdminLayout } from '../admin';
 import AdminDashboard from '../admin/pages/AdminDashboard';
 import AdminUsers from '../admin/pages/AdminUsers';
 import AdminTransactions from '../admin/pages/AdminTransactions';
+import useUsers from '../admin/hooks/useUsers';
 
 // Custom styled Tabs and Tab for improved UI and to remove side lines
 const StyledTabs = styled((props) => (
@@ -82,34 +83,6 @@ function TabPanel({ children, value, index }) {
     );
 }
 
-// Mock data for UI
-const initialUsers = [
-    {
-        id: 11,
-        username: 'testuser123',
-        email: 'test@example.com',
-        mobile: '1234567890',
-        fullName: 'Test User',
-        cctvLink: null,
-        isCctvVisible: false,
-        isCctvStorageVisible: false,
-        isAdmin: false,
-        isActive: true,
-    },
-    {
-        id: 12,
-        username: 'anita',
-        email: 'anita@example.com',
-        mobile: '9876543210',
-        fullName: 'Anita Bose',
-        cctvLink: 'https://example.com/cctv/anita',
-        isCctvVisible: true,
-        isCctvStorageVisible: true,
-        isAdmin: true,
-        isActive: true,
-    },
-];
-
 const monthlyDonations = [
     { month: 'Jan', total: 42000 },
     { month: 'Feb', total: 51000 },
@@ -129,8 +102,8 @@ const initialTx = [
 export default function AdminHome() {
     const [tab, setTab] = React.useState(0);
 
-    // Users state
-    const [users, setUsers] = React.useState(initialUsers);
+    // Users state via hook (no static data)
+    const { users, setUsers, loading: usersLoading, actionLoading: userActionLoading, deleteByEmail } = useUsers();
     // Transactions state
     const [tx] = React.useState(initialTx);
 
@@ -161,7 +134,7 @@ export default function AdminHome() {
                         </TabPanel>
 
                         <TabPanel value={tab} index={1}>
-                            <AdminUsers users={users} setUsers={setUsers} />
+                            <AdminUsers users={users} setUsers={setUsers} loading={usersLoading} actionLoading={userActionLoading} deleteByEmail={deleteByEmail} />
                         </TabPanel>
 
                         <TabPanel value={tab} index={2}>
