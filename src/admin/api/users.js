@@ -1,4 +1,5 @@
 import { request } from './client';
+import { sha256Hex, DEFAULT_PASSWORD } from '../utils/crypto';
 
 export async function fetchUsers() {
     const json = await request('/api/users', { method: 'GET' });
@@ -13,7 +14,27 @@ export async function deleteUser(email) {
     });
 }
 
+export async function createUser(payload) {
+    const passwordHash = await sha256Hex(DEFAULT_PASSWORD);
+    const body = { ...payload, passwordHash };
+    const json = await request('/api/users', {
+        method: 'POST',
+        body: JSON.stringify(body),
+    });
+    return json?.data;
+}
+
+export async function updateUser(payload) {
+    const json = await request('/api/users/update', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    });
+    return json?.data;
+}
+
 export default {
     fetchUsers,
     deleteUser,
+    createUser,
+    updateUser,
 };

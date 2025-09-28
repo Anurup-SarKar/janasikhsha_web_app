@@ -103,7 +103,23 @@ export default function AdminHome() {
     const [tab, setTab] = React.useState(0);
 
     // Users state via hook (no static data)
-    const { users, setUsers, loading: usersLoading, actionLoading: userActionLoading, deleteByEmail } = useUsers();
+    const {
+        users,
+        setUsers,
+        loading: usersLoading,
+        actionLoading: userActionLoading,
+        deleteByEmail,
+        createUser,
+        updateUser,
+        validateOnChange,
+        getTextFieldProps,
+        getMobileInputGuardProps,
+        fieldErrors,
+        clearFieldErrors,
+        // expose error to UI
+        error: apiError,
+        clearError: clearApiError,
+    } = useUsers();
     // Transactions state
     const [tx] = React.useState(initialTx);
 
@@ -134,7 +150,23 @@ export default function AdminHome() {
                         </TabPanel>
 
                         <TabPanel value={tab} index={1}>
-                            <AdminUsers users={users} setUsers={setUsers} loading={usersLoading} actionLoading={userActionLoading} deleteByEmail={deleteByEmail} />
+                            <AdminUsers
+                                users={users}
+                                setUsers={setUsers}
+                                loading={usersLoading}
+                                actionLoading={userActionLoading}
+                                deleteByEmail={deleteByEmail}
+                                createUser={createUser}
+                                updateUser={updateUser}
+                                // pass validation + input guard helpers to the Add dialog
+                                validateOnChange={validateOnChange}
+                                getTextFieldProps={getTextFieldProps}
+                                getMobileInputGuardProps={getMobileInputGuardProps}
+                                fieldErrors={fieldErrors}
+                                clearFieldErrors={clearFieldErrors}
+                                apiError={apiError}
+                                clearApiError={clearApiError}
+                            />
                         </TabPanel>
 
                         <TabPanel value={tab} index={2}>
