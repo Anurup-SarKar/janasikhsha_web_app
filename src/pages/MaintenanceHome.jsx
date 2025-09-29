@@ -111,7 +111,7 @@ export default function MaintenanceHome() {
                                 backdropFilter: 'blur(4px)',
                                 '&:hover': { background: alpha('#fff', 0.15) }
                             }}
-                            href="mailto:info@jpk.org"
+                            href="mailto:jpk.kolkata@gmail.com"
                         >
                             Contact Us
                         </Button>
