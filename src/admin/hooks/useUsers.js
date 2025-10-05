@@ -94,12 +94,15 @@ export function useUsers(initial = []) {
     }, []);
 
     const load = React.useCallback(async () => {
+        console.log('[useUsers] Starting to load users...');
         setLoading(true);
         setError(null);
         try {
             const data = await fetchUsers();
+            console.log('[useUsers] Loaded users:', data);
             setUsers(data);
         } catch (e) {
+            console.error('[useUsers] Error loading users:', e);
             setError(e);
         } finally {
             setLoading(false);

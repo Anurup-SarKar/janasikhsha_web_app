@@ -8,11 +8,13 @@ import { styled, alpha } from '@mui/material/styles';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import { AdminLayout } from '../admin';
+import AdminLayout from '../admin/layout/AdminLayout';
 import AdminDashboard from '../admin/pages/AdminDashboard';
 import AdminUsers from '../admin/pages/AdminUsers';
 import AdminTransactions from '../admin/pages/AdminTransactions';
+import AdminLoginDialog from '../admin/components/AdminLoginDialog';
 import useUsers from '../admin/hooks/useUsers';
+import { clearAuthToken } from '../admin/api/client';
 
 // Custom styled Tabs and Tab for improved UI and to remove side lines
 const StyledTabs = styled((props) => (
@@ -99,15 +101,16 @@ const initialTx = [
     { id: 'TXN-0998', date: '2025-08-15', particular: 'Donation', amount: 750, method: 'Cash', status: 'Pending' },
 ];
 
-export default function AdminHome() {
+function AuthenticatedAdminHome() {
     const [tab, setTab] = React.useState(0);
 
-    // Users state via hook (no static data)
+    // Users state via hook (only when authenticated)
     const {
         users,
         setUsers,
         loading: usersLoading,
         actionLoading: userActionLoading,
+        reload: reloadUsers,
         deleteByEmail,
         createUser,
         updateUser,
@@ -123,8 +126,15 @@ export default function AdminHome() {
     // Transactions state
     const [tx] = React.useState(initialTx);
 
+    // Handle admin logout
+    const handleAdminLogout = () => {
+        clearAuthToken();
+        // Reload the page to show login dialog
+        window.location.reload();
+    };
+
     return (
-        <AdminLayout>
+        <AdminLayout onLogout={handleAdminLogout}>
             <Container maxWidth="lg" sx={{ mt: 3 }}>
                 <Paper elevation={3} sx={{ borderRadius: 3, overflow: 'hidden' }}>
                     <Box sx={{ px: 2, pt: 1, bgcolor: (t) => t.palette.background.paper }}>
@@ -155,6 +165,7 @@ export default function AdminHome() {
                                 setUsers={setUsers}
                                 loading={usersLoading}
                                 actionLoading={userActionLoading}
+                                reloadUsers={reloadUsers}
                                 deleteByEmail={deleteByEmail}
                                 createUser={createUser}
                                 updateUser={updateUser}
@@ -177,4 +188,85 @@ export default function AdminHome() {
             </Container>
         </AdminLayout>
     );
+}
+
+export default function AdminHome() {
+    const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+
+    // Handle admin login
+    const handleAdminLogin = (userData) => {
+        setIsAuthenticated(true);
+        // You can store user data if needed
+        console.log('Admin logged in:', userData);
+    };
+
+    // Check for existing auth token on component mount and verify admin permissions
+    React.useEffect(() => {
+        const token = localStorage.getItem('admin_auth_token');
+        if (token) {
+            // Verify the token contains admin permissions
+            try {
+                // Decode JWT token to check permissions
+                const parts = token.split('.');
+                if (parts.length === 3) {
+                    const payload = parts[1];
+                    const paddedPayload = payload + '='.repeat((4 - payload.length % 4) % 4);
+                    const decodedPayload = atob(paddedPayload.replace(/-/g, '+').replace(/_/g, '/'));
+                    const tokenData = JSON.parse(decodedPayload);
+
+                    const isAdmin = tokenData.isAdmin === 'true' || tokenData.isAdmin === true;
+                    const isExpired = tokenData.exp && tokenData.exp < Math.floor(Date.now() / 1000);
+
+                    console.log('[Auth] Token validation:', {
+                        email: tokenData.email,
+                        isAdmin,
+                        isExpired,
+                        expiresAt: tokenData.exp ? new Date(tokenData.exp * 1000).toLocaleString() : 'unknown'
+                    });
+
+                    if (isExpired) {
+                        console.log('[Auth] Token expired - clearing and requiring re-login');
+                        localStorage.removeItem('admin_auth_token');
+                        return;
+                    }
+
+                    if (!isAdmin) {
+                        console.log('[Auth] Token does not have admin permissions - clearing and requiring re-login');
+                        localStorage.removeItem('admin_auth_token');
+                        return;
+                    }
+
+                    // Token is valid and user is admin
+                    import('../admin/api/client').then(({ setAuthToken }) => {
+                        setAuthToken(token);
+                        setIsAuthenticated(true);
+                        console.log('[Auth] Restored admin session from localStorage');
+                    });
+                } else {
+                    console.log('[Auth] Invalid token format - clearing');
+                    localStorage.removeItem('admin_auth_token');
+                }
+            } catch (error) {
+                console.error('[Auth] Token validation failed:', error);
+                localStorage.removeItem('admin_auth_token');
+            }
+        }
+    }, []);
+
+    // Show login dialog if not authenticated
+    if (!isAuthenticated) {
+        return (
+            <AdminLoginDialog
+                open={true}
+                onLogin={handleAdminLogin}
+                onClose={() => {
+                    // Redirect back to home or show error - for now just reload
+                    window.location.href = '/';
+                }}
+            />
+        );
+    }
+
+    // Show authenticated admin dashboard
+    return <AuthenticatedAdminHome />;
 }

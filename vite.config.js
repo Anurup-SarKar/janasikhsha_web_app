@@ -8,11 +8,20 @@ export default defineConfig(({ mode }) => ({
   plugins: [react()],
   server: {
     proxy: {
+      // Proxy API requests to bypass CORS in development
       '/api': {
-        target: 'http://192.168.29.167:8082',
+        target: 'https://jpkindia.org',
         changeOrigin: true,
-        secure: false,
-      },
-    },
-  },
+        secure: true,
+        configure: (proxy, options) => {
+          proxy.on('error', (err, req, res) => {
+            console.log('Proxy error:', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req, res) => {
+            console.log('Proxying request to:', proxyReq.path);
+          });
+        }
+      }
+    }
+  }
 }));
