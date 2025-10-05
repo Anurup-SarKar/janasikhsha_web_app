@@ -6,12 +6,15 @@ import AlternateEmailRoundedIcon from '@mui/icons-material/AlternateEmailRounded
 import PhoneIphoneRoundedIcon from '@mui/icons-material/PhoneIphoneRounded';
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import { testAuth } from '../api/auth';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function AdminUsers({ users, setUsers, loading = false, actionLoading = false, deleteByEmail, createUser, /* injected from hook */ validateOnChange, getTextFieldProps, getMobileInputGuardProps, fieldErrors, clearFieldErrors, /* add api error */ apiError, clearApiError, /* new */ updateUser }) {
+
+
+export default function AdminUsers({ users, setUsers, loading = false, actionLoading = false, reloadUsers, deleteByEmail, createUser, /* injected from hook */ validateOnChange, getTextFieldProps, getMobileInputGuardProps, fieldErrors, clearFieldErrors, /* add api error */ apiError, clearApiError, /* new */ updateUser }) {
     const [editOpen, setEditOpen] = React.useState(false);
     const [addOpen, setAddOpen] = React.useState(false);
     const [current, setCurrent] = React.useState(null);
@@ -163,7 +166,46 @@ export default function AdminUsers({ users, setUsers, loading = false, actionLoa
 
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
                 <Typography variant="h6" sx={{ fontWeight: 800 }}>User List</Typography>
-                <Button variant="contained" onClick={openAdd} disabled={actionLoading}>Add User</Button>
+                <Stack direction="row" spacing={1}>
+                    <Button
+                        variant="outlined"
+                        onClick={async () => {
+                            try {
+                                const { testUserApiAccess } = await import('../api/users');
+                                const result = await testUserApiAccess();
+                                console.log('[Debug] API Test Result:', result);
+
+                                if (result.success) {
+                                    const userInfo = result.currentUser ?
+                                        `\nCurrent User: ${result.currentUser.email} (Admin: ${result.currentUser.isAdmin})` :
+                                        '';
+                                    alert(`✓ API Test Success!\nUsers found: ${result.usersCount}${userInfo}\nCheck console for details.`);
+                                } else {
+                                    const userInfo = result.currentUser && typeof result.currentUser === 'object' ?
+                                        `\nCurrent User: ${result.currentUser.email} (Admin: ${result.currentUser.isAdmin})` :
+                                        result.currentUser ? `\nToken Issue: ${result.currentUser}` : '';
+                                    alert(`✗ API Test Failed!\nIssue: ${result.diagnosis}\nSolution: ${result.solution}${userInfo}\nCheck console for details.`);
+                                }
+                            } catch (error) {
+                                console.error('[Debug] Test failed:', error);
+                                alert('Test Failed! Check console for details.');
+                            }
+                        }}
+                        disabled={actionLoading || loading}
+                        sx={{ minWidth: 'auto', px: 1.5, fontSize: '0.75rem' }}
+                    >
+                        Diagnose API
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        onClick={reloadUsers}
+                        disabled={actionLoading || loading}
+                        sx={{ minWidth: 'auto', px: 2 }}
+                    >
+                        Reload
+                    </Button>
+                    <Button variant="contained" onClick={openAdd} disabled={actionLoading}>Add User</Button>
+                </Stack>
             </Stack>
             <Paper variant="outlined" sx={{ borderRadius: 3 }}>
                 <Table>
@@ -443,6 +485,7 @@ export default function AdminUsers({ users, setUsers, loading = false, actionLoa
                     {successMsg || 'User added successfully'}
                 </Alert>
             </Snackbar>
+
         </>
     );
 }
