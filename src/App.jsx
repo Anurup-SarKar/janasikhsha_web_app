@@ -43,21 +43,9 @@ import MaintenanceHome from './pages/MaintenanceHome';
  * @returns {JSX.Element} The rendered App with all routes and layout.
  */
 function App() {
-  return (
-    <ThemeProvider theme={theme}>
-      <BrowserRouter basename={import.meta.env.BASE_URL}>
-        <AppInner />
-      </BrowserRouter>
-    </ThemeProvider>
-  );
-}
-
-function AppInner() {
   // User authentication state
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const location = useLocation();
-  // Hide chrome (nav + footer) only on maintenance root path
-  const hideChrome = location.pathname === '/' || location.pathname === '';
+
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter basename={import.meta.env.BASE_URL}>

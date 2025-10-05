@@ -3,8 +3,8 @@ import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  // Use '/' in dev so routes work locally, and GH Pages subpath in production
-  base: mode === 'production' ? '/janasikhsha_web_app/' : '/',
+  // Always use root path for VPS deployment (override with BASE_PATH env for GitHub Pages)
+  base: process.env.BASE_PATH || '/',
   plugins: [react()],
   server: {
     proxy: {
