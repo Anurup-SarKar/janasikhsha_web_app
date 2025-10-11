@@ -119,6 +119,25 @@ export async function validateOtp(email, password, otp) {
     return response;
 }
 
+// Password reset: request a reset token to be sent to email (and also returned in response)
+export async function requestPasswordReset(email) {
+    const response = await request('/api/auth/password/reset/request', {
+        method: 'POST',
+        body: JSON.stringify({ email }),
+    });
+    return response;
+}
+
+// Password reset: perform the reset with token and new password (hashed)
+export async function performPasswordReset(email, resetToken, newPassword) {
+    const newPasswordHash = await sha256Hex(newPassword);
+    const response = await request('/api/auth/password/reset/perform', {
+        method: 'POST',
+        body: JSON.stringify({ email, resetToken, newPasswordHash }),
+    });
+    return response;
+}
+
 // Test login flow with debug credentials
 export async function testLoginFlow() {
     console.log('[testLoginFlow] Testing login flow...');
@@ -190,4 +209,6 @@ export default {
     validateOtp,
     testAuth,
     testApiConnectivity,
+    requestPasswordReset,
+    performPasswordReset,
 };

@@ -34,6 +34,7 @@ import ElderlyCare from './pages/ElderlyCare';
 import StaffList from './pages/StaffList';
 import BeneficiaryDetails from './pages/BeneficiaryDetails';
 import AdminHome from './pages/AdminHome';
+import ResetPassword from './pages/ResetPassword';
 import MaintenanceHome from './pages/MaintenanceHome';
 
 /**
@@ -57,7 +58,7 @@ function App() {
 
 function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
   const location = useLocation();
-  const isAdminRoute = location.pathname === '/admin_home';
+  const isAdminRoute = location.pathname === '/admin_home' || location.pathname === '/reset_password';
   const isMaintenanceRoute = location.pathname === '/';
 
   return (
@@ -98,6 +99,7 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
           <Route path="/stafflist" element={<StaffList />} />
           <Route path="/beneficiarydetails" element={<BeneficiaryDetails />} />
           <Route path="/admin_home" element={<AdminHome />} />
+          <Route path="/reset_password" element={<ResetPassword />} />
           <Route path="/login" element={
             <LoginDialog
               open={true}

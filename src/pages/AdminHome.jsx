@@ -3,11 +3,12 @@
 // UI-only: beautiful MUI layout using the existing theme and font. No links/buttons added to the public site.
 
 import React from 'react';
-import { Box, Container, Paper, Tabs, Tab, Divider } from '@mui/material';
+import { Box, Container, Paper, Tabs, Tab, Divider, IconButton, Menu, MenuItem, Typography, useMediaQuery } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import MenuIcon from '@mui/icons-material/Menu';
 import AdminLayout from '../admin/layout/AdminLayout';
 import AdminDashboard from '../admin/pages/AdminDashboard';
 import AdminUsers from '../admin/pages/AdminUsers';
@@ -103,6 +104,9 @@ const initialTx = [
 
 function AuthenticatedAdminHome() {
     const [tab, setTab] = React.useState(0);
+    const isMobile = useMediaQuery((t) => t.breakpoints.down('sm'));
+    const [menuAnchor, setMenuAnchor] = React.useState(null);
+    const tabLabels = ['Dashboard', 'User Data', 'Transactions'];
 
     // Users state via hook (only when authenticated)
     const {
@@ -138,23 +142,47 @@ function AuthenticatedAdminHome() {
             <Container maxWidth="lg" sx={{ mt: 3 }}>
                 <Paper elevation={3} sx={{ borderRadius: 3, overflow: 'hidden' }}>
                     <Box sx={{ px: 2, pt: 1, bgcolor: (t) => t.palette.background.paper }}>
-                        <StyledTabs
-                            value={tab}
-                            onChange={(_, v) => setTab(v)}
-                            aria-label="Admin Tabs"
-                            variant="scrollable"
-                            scrollButtons={false}
-                            allowScrollButtonsMobile={false}
-                        >
-                            <StyledTab icon={<DashboardIcon />} iconPosition="start" label="Dashboard" {...a11yProps(0)} />
-                            <StyledTab icon={<PeopleIcon />} iconPosition="start" label="User Data" {...a11yProps(1)} />
-                            <StyledTab icon={<ReceiptLongIcon />} iconPosition="start" label="Transactions" {...a11yProps(2)} />
-                        </StyledTabs>
+                        {isMobile ? (
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <IconButton color="primary" onClick={(e) => setMenuAnchor(e.currentTarget)} aria-label="Open sections">
+                                    <MenuIcon />
+                                </IconButton>
+                                <Typography variant="subtitle1" sx={{ fontWeight: 800 }}>
+                                    {tabLabels[tab]}
+                                </Typography>
+                                {/* spacer to balance layout */}
+                                <Box sx={{ width: 40 }} />
+                                <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}>
+                                    {tabLabels.map((label, idx) => (
+                                        <MenuItem
+                                            key={label}
+                                            selected={idx === tab}
+                                            onClick={() => { setTab(idx); setMenuAnchor(null); }}
+                                        >
+                                            {label}
+                                        </MenuItem>
+                                    ))}
+                                </Menu>
+                            </Box>
+                        ) : (
+                            <StyledTabs
+                                value={tab}
+                                onChange={(_, v) => setTab(v)}
+                                aria-label="Admin Tabs"
+                                variant="scrollable"
+                                scrollButtons
+                                allowScrollButtonsMobile
+                            >
+                                <StyledTab icon={<DashboardIcon />} iconPosition="start" label="Dashboard" {...a11yProps(0)} />
+                                <StyledTab icon={<PeopleIcon />} iconPosition="start" label="User Data" {...a11yProps(1)} />
+                                <StyledTab icon={<ReceiptLongIcon />} iconPosition="start" label="Transactions" {...a11yProps(2)} />
+                            </StyledTabs>
+                        )}
                     </Box>
 
                     <Divider />
 
-                    <Box sx={{ p: 3 }}>
+                    <Box sx={{ p: { xs: 2, md: 3 } }}>
                         <TabPanel value={tab} index={0}>
                             <AdminDashboard users={users} monthlyDonations={monthlyDonations} />
                         </TabPanel>
