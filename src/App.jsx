@@ -34,6 +34,7 @@ import ElderlyCare from './pages/ElderlyCare';
 import StaffList from './pages/StaffList';
 import BeneficiaryDetails from './pages/BeneficiaryDetails';
 import AdminHome from './pages/AdminHome';
+import ResetPassword from './pages/ResetPassword';
 
 /**
  * Main App component for the NGO website.
@@ -56,11 +57,11 @@ function App() {
 
 function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
   const location = useLocation();
-  const isAdminRoute = location.pathname === '/admin_home';
+  const isAdminRoute = location.pathname === '/admin_home' || location.pathname === '/reset_password';
 
   return (
     <Container maxWidth={false} disableGutters sx={{ width: '100vw', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', px: { xs: 0, md: 0 } }}>
-      {/* Responsive navigation bar with login/logout and menu (hidden for admin route) */}
+      {/* Responsive navigation bar with login/logout and menu (hidden for admin/reset routes) */}
       {!isAdminRoute && (
         <>
           <ResponsiveNavbar isLoggedIn={isLoggedIn} onLogin={() => setIsLoggedIn(true)} onLogout={() => setIsLoggedIn(false)} />
@@ -96,6 +97,7 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
           <Route path="/stafflist" element={<StaffList />} />
           <Route path="/beneficiarydetails" element={<BeneficiaryDetails />} />
           <Route path="/admin_home" element={<AdminHome />} />
+          <Route path="/reset_password" element={<ResetPassword />} />
           <Route path="/login" element={
             <LoginDialog
               open={true}
@@ -107,7 +109,7 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
         </Routes>
       </Box>
 
-      {/* Footer styled like abwu.org.in (hidden for admin route) */}
+      {/* Footer styled like abwu.org.in (hidden for admin/reset routes) */}
       {!isAdminRoute && (
         <Box component="footer" sx={{
           bgcolor: (theme) => theme.palette.primary.main,
