@@ -1,12 +1,15 @@
 import React from 'react';
-import { Paper, Stack, Typography, Button, Table, TableHead, TableRow, TableCell, TableBody, Chip, Dialog, DialogTitle, DialogContent, DialogActions, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, CircularProgress, Backdrop, Grid, Box, Slide, InputAdornment, Alert, Snackbar } from '@mui/material';
+import { Paper, Stack, Typography, Button, Table, TableHead, TableRow, TableCell, TableBody, Chip, Dialog, DialogTitle, DialogContent, DialogActions, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, CircularProgress, Backdrop, Grid, Box, Slide, InputAdornment, Alert, Snackbar, TableContainer, Card, CardContent, CardActions, Divider, IconButton, Tooltip } from '@mui/material';
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import ConfirmDialog from '../components/ConfirmDialog';
 import PersonAddAltRoundedIcon from '@mui/icons-material/PersonAddAltRounded';
 import AlternateEmailRoundedIcon from '@mui/icons-material/AlternateEmailRounded';
 import PhoneIphoneRoundedIcon from '@mui/icons-material/PhoneIphoneRounded';
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
-import { testAuth } from '../api/auth';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -24,6 +27,26 @@ export default function AdminUsers({ users, setUsers, loading = false, actionLoa
     // Success snackbar state
     const [successOpen, setSuccessOpen] = React.useState(false);
     const [successMsg, setSuccessMsg] = React.useState('');
+    // Search state
+    const [search, setSearch] = React.useState('');
+
+    // Derived filtered list
+    const displayedUsers = React.useMemo(() => {
+        const q = (search || '').trim().toLowerCase();
+        if (!q) return users;
+        const qDigits = q.replace(/\D/g, '');
+        return users.filter((u) => {
+            const username = String(u.username || '').toLowerCase();
+            const email = String(u.email || '').toLowerCase();
+            const mobile = String(u.mobile || '');
+            const mobileDigits = mobile.replace(/\D/g, '');
+            return (
+                username.includes(q) ||
+                email.includes(q) ||
+                (qDigits ? mobileDigits.includes(qDigits) : false)
+            );
+        });
+    }, [users, search]);
 
     const openEdit = (u) => { setCurrent({ ...u }); setErrors({}); clearFieldErrors?.(); clearApiError?.(); setEditOpen(true); };
     const openAdd = () => {
@@ -164,82 +187,142 @@ export default function AdminUsers({ users, setUsers, loading = false, actionLoa
                 <CircularProgress color="inherit" />
             </Backdrop>
 
-            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-                <Typography variant="h6" sx={{ fontWeight: 800 }}>User List</Typography>
-                <Stack direction="row" spacing={1}>
-                    <Button
-                        variant="outlined"
-                        onClick={async () => {
-                            try {
-                                const { testUserApiAccess } = await import('../api/users');
-                                const result = await testUserApiAccess();
-                                console.log('[Debug] API Test Result:', result);
-
-                                if (result.success) {
-                                    const userInfo = result.currentUser ?
-                                        `\nCurrent User: ${result.currentUser.email} (Admin: ${result.currentUser.isAdmin})` :
-                                        '';
-                                    alert(`✓ API Test Success!\nUsers found: ${result.usersCount}${userInfo}\nCheck console for details.`);
-                                } else {
-                                    const userInfo = result.currentUser && typeof result.currentUser === 'object' ?
-                                        `\nCurrent User: ${result.currentUser.email} (Admin: ${result.currentUser.isAdmin})` :
-                                        result.currentUser ? `\nToken Issue: ${result.currentUser}` : '';
-                                    alert(`✗ API Test Failed!\nIssue: ${result.diagnosis}\nSolution: ${result.solution}${userInfo}\nCheck console for details.`);
-                                }
-                            } catch (error) {
-                                console.error('[Debug] Test failed:', error);
-                                alert('Test Failed! Check console for details.');
-                            }
+            <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'stretch', sm: 'center' }} spacing={1.5} sx={{ mb: 2 }}>
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <Typography variant="h6" sx={{ fontWeight: 800 }}>User List</Typography>
+                    {/* Mobile actions as icons */}
+                    <Stack direction="row" spacing={0.5} sx={{ display: { xs: 'flex', sm: 'none' } }}>
+                        <Tooltip title="Reload">
+                            <span>
+                                <IconButton size="small" onClick={reloadUsers} disabled={actionLoading || loading}>
+                                    <RefreshRoundedIcon />
+                                </IconButton>
+                            </span>
+                        </Tooltip>
+                        <Tooltip title="Add User">
+                            <span>
+                                <IconButton size="small" color="primary" onClick={openAdd} disabled={actionLoading}>
+                                    <AddCircleRoundedIcon />
+                                </IconButton>
+                            </span>
+                        </Tooltip>
+                    </Stack>
+                </Stack>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} alignItems={{ xs: 'stretch', sm: 'center' }}>
+                    {/* Search input */}
+                    <TextField
+                        size="small"
+                        placeholder="Search by username, email, or mobile"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        sx={{ minWidth: { xs: '100%', sm: 220, md: 320 } }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchRoundedIcon fontSize="small" />
+                                </InputAdornment>
+                            ),
+                            endAdornment: search ? (
+                                <InputAdornment position="end">
+                                    <Button aria-label="Clear search" onClick={() => setSearch('')} size="small" sx={{ minWidth: 'auto', px: 1 }}>
+                                        <ClearRoundedIcon fontSize="small" />
+                                    </Button>
+                                </InputAdornment>
+                            ) : null,
                         }}
-                        disabled={actionLoading || loading}
-                        sx={{ minWidth: 'auto', px: 1.5, fontSize: '0.75rem' }}
-                    >
-                        Diagnose API
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        onClick={reloadUsers}
-                        disabled={actionLoading || loading}
-                        sx={{ minWidth: 'auto', px: 2 }}
-                    >
-                        Reload
-                    </Button>
-                    <Button variant="contained" onClick={openAdd} disabled={actionLoading}>Add User</Button>
+                    />
+                    {/* Desktop actions as buttons */}
+                    <Stack direction="row" spacing={1} justifyContent={{ xs: 'space-between', sm: 'flex-start' }} sx={{ display: { xs: 'none', sm: 'flex' } }}>
+                        <Button
+                            variant="outlined"
+                            onClick={reloadUsers}
+                            disabled={actionLoading || loading}
+                            sx={{ minWidth: 'auto', px: 2 }}
+                        >
+                            Reload
+                        </Button>
+                        <Button variant="contained" onClick={openAdd} disabled={actionLoading}>Add User</Button>
+                    </Stack>
                 </Stack>
             </Stack>
-            <Paper variant="outlined" sx={{ borderRadius: 3 }}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Full Name</TableCell>
-                            <TableCell>Username</TableCell>
-                            <TableCell>Email</TableCell>
-                            <TableCell>Mobile</TableCell>
-                            <TableCell>Admin</TableCell>
-                            <TableCell>Active</TableCell>
-                            <TableCell align="right">Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {users.map((u) => (
-                            <TableRow key={u.id} hover>
-                                <TableCell>{u.fullName}</TableCell>
-                                <TableCell>{u.username}</TableCell>
-                                <TableCell>{u.email}</TableCell>
-                                <TableCell>{u.mobile}</TableCell>
-                                <TableCell>{u.isAdmin ? <Chip label="Yes" color="secondary" size="small" /> : <Chip label="No" size="small" />}</TableCell>
-                                <TableCell>{u.isActive ? <Chip label="Active" color="success" size="small" /> : <Chip label="Inactive" color="default" size="small" />}</TableCell>
-                                <TableCell align="right">
-                                    <Stack direction="row" spacing={1} justifyContent="flex-end">
-                                        <Button size="small" variant="outlined" onClick={() => openEdit(u)} disabled={actionLoading}>Edit</Button>
-                                        <Button size="small" color="error" variant="outlined" onClick={() => askDelete(u)} disabled={actionLoading}>Delete</Button>
+
+            {/* Desktop/Tablet table */}
+            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                <Paper variant="outlined" sx={{ borderRadius: 3 }}>
+                    <TableContainer sx={{ borderRadius: 3 }}>
+                        <Table size="small">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Full Name</TableCell>
+                                    <TableCell>Username</TableCell>
+                                    <TableCell>Email</TableCell>
+                                    <TableCell>Mobile</TableCell>
+                                    <TableCell>Admin</TableCell>
+                                    <TableCell>Active</TableCell>
+                                    <TableCell align="right">Actions</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {displayedUsers.map((u) => (
+                                    <TableRow key={u.id} hover>
+                                        <TableCell>{u.fullName}</TableCell>
+                                        <TableCell>{u.username}</TableCell>
+                                        <TableCell>{u.email}</TableCell>
+                                        <TableCell>{u.mobile}</TableCell>
+                                        <TableCell>{u.isAdmin ? <Chip label="Yes" color="secondary" size="small" /> : <Chip label="No" size="small" />}</TableCell>
+                                        <TableCell>{u.isActive ? <Chip label="Active" color="success" size="small" /> : <Chip label="Inactive" color="default" size="small" />}</TableCell>
+                                        <TableCell align="right">
+                                            <Stack direction="row" spacing={1} justifyContent="flex-end">
+                                                <Button size="small" variant="outlined" onClick={() => openEdit(u)} disabled={actionLoading}>Edit</Button>
+                                                <Button size="small" color="error" variant="outlined" onClick={() => askDelete(u)} disabled={actionLoading}>Delete</Button>
+                                            </Stack>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                                {displayedUsers.length === 0 && (
+                                    <TableRow>
+                                        <TableCell colSpan={7} align="center">
+                                            No users found{search ? ` for "${search}"` : ''}.
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Paper>
+            </Box>
+
+            {/* Mobile card list */}
+            <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
+                <Stack spacing={1.5}>
+                    {displayedUsers.map((u) => (
+                        <Card key={u.id} variant="outlined" sx={{ borderRadius: 3 }}>
+                            <CardContent>
+                                <Stack spacing={0.5}>
+                                    <Typography variant="subtitle1" sx={{ fontWeight: 800 }}>{u.fullName || u.username}</Typography>
+                                    <Typography variant="body2" color="text.secondary">Username: {u.username}</Typography>
+                                    <Typography variant="body2" color="text.secondary">Email: {u.email}</Typography>
+                                    <Typography variant="body2" color="text.secondary">Mobile: {u.mobile}</Typography>
+                                    <Stack direction="row" spacing={1} sx={{ pt: 0.5 }}>
+                                        {u.isAdmin ? <Chip label="Admin" color="secondary" size="small" /> : <Chip label="User" size="small" />}
+                                        {u.isActive ? <Chip label="Active" color="success" size="small" /> : <Chip label="Inactive" size="small" />}
                                     </Stack>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </Paper>
+                                </Stack>
+                            </CardContent>
+                            <Divider />
+                            <CardActions sx={{ justifyContent: 'flex-end', px: 2, pb: 2 }}>
+                                <Button size="small" variant="outlined" onClick={() => openEdit(u)} disabled={actionLoading}>Edit</Button>
+                                <Button size="small" color="error" variant="outlined" onClick={() => askDelete(u)} disabled={actionLoading}>Delete</Button>
+                            </CardActions>
+                        </Card>
+                    ))}
+                    {displayedUsers.length === 0 && (
+                        <Paper variant="outlined" sx={{ p: 2, textAlign: 'center', borderRadius: 3 }}>
+                            No users found{search ? ` for "${search}"` : ''}.
+                        </Paper>
+                    )}
+                </Stack>
+            </Box>
 
             <ConfirmDialog
                 open={confirmOpen}
