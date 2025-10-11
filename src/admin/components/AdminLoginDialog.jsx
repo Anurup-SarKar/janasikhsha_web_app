@@ -9,11 +9,11 @@ import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import AdminPanelSettingsRoundedIcon from '@mui/icons-material/AdminPanelSettingsRounded';
 import SecurityRoundedIcon from '@mui/icons-material/SecurityRounded';
 import { alpha } from '@mui/material/styles';
-import { adminLogin, validateOtp } from '../api/auth';
+import { adminLogin, validateOtp, requestPasswordReset, performPasswordReset } from '../api/auth';
 import { setAuthToken } from '../api/client';
 
 export default function AdminLoginDialog({ open, onClose, onLogin }) {
-    // Track authentication phases: 'login', 'otp', 'forgot'
+    // Track authentication phases: 'login', 'otp', 'forgot', 'reset'
     const [phase, setPhase] = React.useState('login');
     const [resetKey, setResetKey] = React.useState(0);
 
@@ -21,9 +21,13 @@ export default function AdminLoginDialog({ open, onClose, onLogin }) {
     const [credentials, setCredentials] = React.useState({ email: '', password: '' });
     const [otp, setOtp] = React.useState('');
     const [forgotEmail, setForgotEmail] = React.useState('');
+    const [resetToken, setResetToken] = React.useState('');
+    const [newPassword, setNewPassword] = React.useState('');
+    const [confirmPassword, setConfirmPassword] = React.useState('');
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState('');
     const [otpData, setOtpData] = React.useState(null); // Store OTP response data
+    const [resetExpiresIn, setResetExpiresIn] = React.useState(null);
 
     // Reset form when dialog opens
     React.useEffect(() => {
@@ -32,9 +36,26 @@ export default function AdminLoginDialog({ open, onClose, onLogin }) {
             setCredentials({ email: '', password: '' });
             setOtp('');
             setForgotEmail('');
+            setResetToken('');
+            setNewPassword('');
+            setConfirmPassword('');
             setError('');
             setOtpData(null);
+            setResetExpiresIn(null);
             setResetKey((k) => k + 1);
+
+            // If reset link was invalid/expired, bring user to Forgot with prefilled email and message
+            try {
+                const linkError = sessionStorage.getItem('admin_reset_link_error');
+                const prefillEmail = sessionStorage.getItem('admin_reset_email');
+                if (linkError) {
+                    setPhase('forgot');
+                    if (prefillEmail) setForgotEmail(prefillEmail);
+                    setError(linkError);
+                    sessionStorage.removeItem('admin_reset_link_error');
+                    sessionStorage.removeItem('admin_reset_email');
+                }
+            } catch { }
         }
     }, [open]);
 
@@ -45,6 +66,12 @@ export default function AdminLoginDialog({ open, onClose, onLogin }) {
 
     const handleShowLogin = () => {
         setPhase('login');
+        setError('');
+    };
+
+    const handleShowReset = (prefillEmail = '') => {
+        if (prefillEmail) setForgotEmail(prefillEmail);
+        setPhase('reset');
         setError('');
     };
 
@@ -60,7 +87,11 @@ export default function AdminLoginDialog({ open, onClose, onLogin }) {
         setCredentials({ email: '', password: '' });
         setOtp('');
         setForgotEmail('');
+        setResetToken('');
+        setNewPassword('');
+        setConfirmPassword('');
         setOtpData(null);
+        setResetExpiresIn(null);
         setError('');
         onClose?.();
     };
@@ -175,15 +206,71 @@ export default function AdminLoginDialog({ open, onClose, onLogin }) {
         setError('');
 
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            setError('Password reset instructions sent to your email.');
-            // Auto switch back to login after 2 seconds
-            setTimeout(() => {
-                handleShowLogin();
-            }, 2000);
+            const res = await requestPasswordReset(forgotEmail);
+            if (res?.statusCode === 200) {
+                // Persist token and expiry locally for later validation on the reset page
+                try {
+                    if (res.data?.resetToken) {
+                        localStorage.setItem('admin_reset_token', res.data.resetToken);
+                    }
+                    if (res.data?.expiresInSeconds) {
+                        const expiresAt = Date.now() + Number(res.data.expiresInSeconds) * 1000;
+                        localStorage.setItem('admin_reset_expiresAt', String(expiresAt));
+                    }
+                    if (forgotEmail) {
+                        localStorage.setItem('admin_reset_email', forgotEmail);
+                    }
+                } catch { }
+
+                setError('Please check your email for the password reset link.');
+                // Stay on forgot phase so user can read instructions or use the link below
+                // setPhase('reset');
+            } else {
+                setError(res?.statusMessage || 'Failed to request password reset.');
+            }
         } catch (err) {
-            setError('Failed to send reset email. Please try again.');
+            const msg = err.message || 'Failed to request password reset.';
+            try {
+                const match = msg.match(/\{.*"statusMessage"\s*:\s*"([^"]+)"/);
+                setError(match ? match[1] : msg);
+            } catch {
+                setError(msg);
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handlePerformReset = async (e) => {
+        e.preventDefault();
+        if (!forgotEmail) { setError('Please enter your email.'); return; }
+        // Token is stored internally from the request API; if absent, guide user to use the email link
+        if (!resetToken) { setError('Reset token not available. Please open the reset link sent to your email to continue.'); return; }
+        if (!newPassword || newPassword.length < 8) { setError('Password must be at least 8 characters long.'); return; }
+        if (newPassword !== confirmPassword) { setError('Passwords do not match.'); return; }
+        setLoading(true);
+        setError('');
+        try {
+            const res = await performPasswordReset(forgotEmail, resetToken, newPassword);
+            if (res?.statusCode === 200) {
+                setError(res.statusMessage || 'Password reset successful');
+                // After success, return to login with email prefilled
+                setCredentials({ email: forgotEmail, password: '' });
+                setPhase('login');
+                setResetToken('');
+                setNewPassword('');
+                setConfirmPassword('');
+            } else {
+                setError(res?.statusMessage || 'Password reset failed.');
+            }
+        } catch (err) {
+            const msg = err.message || 'Password reset failed.';
+            try {
+                const match = msg.match(/\{.*"statusMessage"\s*:\s*"([^"]+)"/);
+                setError(match ? match[1] : msg);
+            } catch {
+                setError(msg);
+            }
         } finally {
             setLoading(false);
         }
@@ -201,7 +288,13 @@ export default function AdminLoginDialog({ open, onClose, onLogin }) {
             case 'forgot':
                 return {
                     text: 'Reset Admin Password',
-                    subtitle: 'Enter your admin email to reset password',
+                    subtitle: 'Enter your admin email to get a reset token',
+                    icon: <LockRoundedIcon />
+                };
+            case 'reset':
+                return {
+                    text: 'Set New Password',
+                    subtitle: resetExpiresIn ? `Token expires in ${resetExpiresIn} seconds` : 'Enter token and new password',
                     icon: <LockRoundedIcon />
                 };
             default:
@@ -272,7 +365,7 @@ export default function AdminLoginDialog({ open, onClose, onLogin }) {
             <DialogContent sx={{ p: 3 }}>
                 {error && (
                     <Alert
-                        severity={error.includes('sent') ? 'success' : 'error'}
+                        severity={/sent|success/i.test(error) ? 'success' : 'error'}
                         sx={{ mb: 2 }}
                         onClose={() => setError('')}
                     >
@@ -400,7 +493,7 @@ export default function AdminLoginDialog({ open, onClose, onLogin }) {
                 )}
 
                 {phase === 'forgot' && (
-                    // Forgot Password Form
+                    // Forgot Password Form (request token)
                     <Box component="form" onSubmit={handleForgotPassword}>
                         <Stack spacing={2.5}>
                             <TextField
@@ -427,6 +520,27 @@ export default function AdminLoginDialog({ open, onClose, onLogin }) {
                                 {loading ? 'Sending...' : 'Send Reset Instructions'}
                             </Button>
 
+                            {resetToken && (
+                                <Stack spacing={1} sx={{ mt: 1 }}>
+                                    <Typography variant="body2" color="text.secondary">
+                                        You can also open the reset page directly:
+                                    </Typography>
+                                    <Link href={`/reset_password?token=${encodeURIComponent(resetToken)}`} underline="hover" sx={{ fontWeight: 700 }}>
+                                        {`${window.location.origin}/reset_password?token=${resetToken}`}
+                                    </Link>
+                                    <Button
+                                        type="button"
+                                        variant="outlined"
+                                        size="small"
+                                        onClick={() => window.location.assign(`/reset_password?token=${encodeURIComponent(resetToken)}`)}
+                                        disabled={loading}
+                                        sx={{ alignSelf: 'flex-start' }}
+                                    >
+                                        Open Reset Page
+                                    </Button>
+                                </Stack>
+                            )}
+
                             <Box sx={{ textAlign: 'center', mt: 1 }}>
                                 <Link
                                     component="button"
@@ -439,6 +553,70 @@ export default function AdminLoginDialog({ open, onClose, onLogin }) {
                                     ← Back to Admin Login
                                 </Link>
                             </Box>
+                        </Stack>
+                    </Box>
+                )}
+
+                {phase === 'reset' && (
+                    // Perform Password Reset Form
+                    <Box component="form" onSubmit={handlePerformReset}>
+                        <Stack spacing={2.5}>
+                            <TextField
+                                label="Admin Email Address"
+                                type="email"
+                                value={forgotEmail}
+                                onChange={(e) => setForgotEmail(e.target.value)}
+                                fullWidth
+                                required
+                                autoComplete="email"
+                                disabled={loading}
+                            />
+                            {/* Reset token is stored internally and will be sent automatically */}
+                            <TextField
+                                label="New Password"
+                                type="password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                fullWidth
+                                required
+                                disabled={loading}
+                                helperText="Minimum 8 characters"
+                            />
+                            <TextField
+                                label="Confirm New Password"
+                                type="password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                fullWidth
+                                required
+                                disabled={loading}
+                                error={!!confirmPassword && newPassword !== confirmPassword}
+                                helperText={!!confirmPassword && newPassword !== confirmPassword ? 'Passwords do not match' : ' '}
+                            />
+
+                            <Stack direction="row" spacing={2}>
+                                <Button
+                                    type="button"
+                                    variant="text"
+                                    size="large"
+                                    fullWidth
+                                    onClick={handleShowForgot}
+                                    disabled={loading}
+                                    sx={{ fontWeight: 700 }}
+                                >
+                                    ← Request token again
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    size="large"
+                                    fullWidth
+                                    disabled={loading || !forgotEmail || !newPassword || newPassword !== confirmPassword}
+                                    sx={{ fontWeight: 700 }}
+                                >
+                                    {loading ? 'Resetting...' : 'Reset Password'}
+                                </Button>
+                            </Stack>
                         </Stack>
                     </Box>
                 )}
