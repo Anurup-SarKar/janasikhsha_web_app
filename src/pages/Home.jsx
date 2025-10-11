@@ -7,7 +7,6 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import ImageCarousel from '../components/ImageCarousel';
 import HeroBanner from '../components/HeroBanner';
-import WhatWeDo from './WhatWeDo';
 import { heroImages } from '../assets/CarouselImages';
 
 /**
@@ -25,7 +24,6 @@ export default function Home() {
           We are a non-profit organization committed to the welfare, education, and rehabilitation of girl children and survivors of sexual violence. Our mission is to create a safe, nurturing environment and empower them to lead fulfilling lives.
         </Typography>
       </Box>
-      <WhatWeDo />
       <HeroBanner />
     </Box>
   );
