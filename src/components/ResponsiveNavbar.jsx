@@ -32,18 +32,27 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   justifyContent: 'space-between',
   paddingLeft: theme.spacing(2),
   paddingRight: theme.spacing(2),
+  gap: theme.spacing(1), // Add consistent spacing between elements
 }));
 const NavButton = styled(Button)(({ theme }) => ({
   fontFamily: 'Raleway, sans-serif',
-  fontWeight: 500,
-  fontSize: '0.95rem',
+  fontWeight: 400,
+  fontSize: '0.85rem',
   color: theme.palette.primary.main,
   background: 'none',
   borderRadius: 8,
-  padding: '8px 18px',
-  margin: '0 2px',
+  padding: '6px 12px',
+  margin: '0 1px',
   textTransform: 'none',
-  letterSpacing: 0.5,
+  letterSpacing: 0.3,
+  minHeight: 50,
+  maxWidth: 120,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  textAlign: 'center',
+  whiteSpace: 'pre-line', // Allow line breaks
+  lineHeight: 1.2,
   '&:hover': {
     background: 'rgba(255, 127, 17, 0.08)',
     color: theme.palette.secondary.main,
@@ -53,14 +62,23 @@ const NavButton = styled(Button)(({ theme }) => ({
 const Brand = styled(Typography)(({ theme }) => ({
   fontFamily: 'Raleway, sans-serif',
   fontWeight: 900,
-  fontSize: '1.5rem',
+  fontSize: '1.3rem',
   color: theme.palette.primary.main,
-  letterSpacing: 1,
+  letterSpacing: 0.8,
   textShadow: '0 2px 8px rgba(0, 91, 150, 0.1)',
-  flexGrow: 1,
+  flex: '0 0 auto',
+  maxWidth: '300px',
   cursor: 'pointer',
   textDecoration: 'none',
   outline: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  minHeight: 40,
+  minWidth: 0, // Allow text to shrink
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  marginRight: theme.spacing(2),
   // Remove any visible border/outline when the brand link is focused/active/hovered
   '&:focus, &:active, &:hover': {
     textDecoration: 'none',
@@ -72,8 +90,13 @@ const Brand = styled(Typography)(({ theme }) => ({
 
 const aboutMenuItems = [
   { label: 'Who We Are', page: 'whoweare' },
-  { label: 'Our Manifesto', page: 'ourmanifesto' },
-  { label: 'Our Team', page: 'ourteam' },
+  { label: 'Memorumdam Of Association ', page: 'memorumdam' },
+  { label: 'Authority of Organization & Staff Structure', page: 'authority' },
+];
+
+const confidentialMenuItems = [
+  { label: 'Donation, CSR, FCRA', page: 'donationform' },
+  { label: 'CCTV Live View', page: 'livecctv', requiresAuth: true },
 ];
 
 /**
@@ -88,6 +111,7 @@ const aboutMenuItems = [
 export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [aboutAnchorEl, setAboutAnchorEl] = React.useState(null);
+  const [confidentialAnchorEl, setConfidentialAnchorEl] = React.useState(null);
   const [createUserOpen, setCreateUserOpen] = useState(false);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [newUser, setNewUser] = useState({ username: '', password: '' });
@@ -96,13 +120,12 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
   const navItems = [
-    { label: 'About Us', page: 'aboutus' },
-    { label: 'What We Do', page: 'whatwedo' },
-    { label: 'Gallery', page: 'gallery' },
-    { label: 'News Room', page: 'newsroom' },
-    { label: 'Case History', page: 'casehistory' },
-    { label: 'Support Us', page: 'supportus' },
-    { label: 'Contact', page: 'contact' },
+    { label: 'What We\nDo', page: 'whatwedo' },
+    { label: 'Latest\nProjects', page: 'latestprojects' },
+    { label: 'Our\nAchievements', page: 'ourachievements' },
+    { label: 'History of\nOrganization', page: 'history' },
+    { label: 'Photo\nGallery', page: 'photogallery' },
+    { label: 'Contact\nDetails', page: 'contact' },
   ];
   if (isLoggedIn) navItems.push({ label: 'Live CCTV', page: 'livecctv' });
 
@@ -128,6 +151,19 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
 
   const handleAboutMenuOpen = (event) => setAboutAnchorEl(event.currentTarget);
   const handleAboutMenuClose = () => setAboutAnchorEl(null);
+  
+  const handleConfidentialMenuOpen = (event) => setConfidentialAnchorEl(event.currentTarget);
+  const handleConfidentialMenuClose = () => setConfidentialAnchorEl(null);
+
+  // Handle confidential menu item click with authentication check
+  const handleConfidentialMenuItemClick = (menuItem) => {
+    handleConfidentialMenuClose();
+    if (menuItem.requiresAuth && !isLoggedIn) {
+      setLoginDialogOpen(true);
+    } else {
+      navigate(`/${menuItem.page}`);
+    }
+  };
 
   // Handle create user dialog open/close
   const handleOpenCreateUser = () => { setCreateUserOpen(true); setNewUser({ username: '', password: '' }); setCreateUserError(''); };
@@ -166,7 +202,15 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
           )}
           <Brand component={RouterLink} to="/">Janasiksha Prochar Kendra</Brand>
           {!isMobile && (
-            <>
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 2.5,
+              height: '100%',
+              flex: '0 1 auto',
+              overflow: 'hidden',
+              flexWrap: 'nowrap'
+            }}>
               <NavButton
                 aria-controls={aboutAnchorEl ? 'about-menu' : undefined}
                 aria-haspopup="true"
@@ -190,19 +234,77 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                     component={RouterLink}
                     to={`/${item.page}`}
                     onClick={handleAboutMenuClose}
-                    sx={{ fontFamily: 'Raleway, sans-serif', color: theme.palette.primary.main, fontWeight: 500 }}
+                    sx={{ 
+                      fontFamily: 'Raleway, sans-serif', 
+                      color: theme.palette.primary.main, 
+                      fontWeight: 400,
+                      fontSize: '0.85rem',
+                      textAlign: 'left',
+                      display: 'flex',
+                      alignItems: 'center',
+                      minHeight: 40
+                    }}
                   >
                     {item.label}
                   </MenuItem>
                 ))}
               </Menu>
-              {navItems.filter(item => item.label !== 'About Us').map(item => (
-                <NavButton key={item.page} component={RouterLink} to={`/${item.page}`}>{item.label}</NavButton>
-              ))}
+
+              {navItems.map((item, index) => {
+                // Insert Confidential Category dropdown before Photo Gallery
+                if (item.page === 'photogallery') {
+                  return (
+                    <React.Fragment key={`confidential-${index}`}>
+                      {/* Confidential Category Dropdown */}
+                      <NavButton
+                        aria-controls={confidentialAnchorEl ? 'confidential-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={confidentialAnchorEl ? 'true' : undefined}
+                        onClick={handleConfidentialMenuOpen}
+                        endIcon={<ArrowDropDownIcon />}
+                      >
+                        Confidential Category
+                      </NavButton>
+                      <Menu
+                        id="confidential-menu"
+                        anchorEl={confidentialAnchorEl}
+                        open={Boolean(confidentialAnchorEl)}
+                        onClose={handleConfidentialMenuClose}
+                        MenuListProps={{ 'aria-labelledby': 'confidential-menu-button' }}
+                        sx={{ mt: 1 }}
+                      >
+                        {confidentialMenuItems.map((menuItem) => (
+                          <MenuItem
+                            key={menuItem.page}
+                            onClick={() => handleConfidentialMenuItemClick(menuItem)}
+                            sx={{ 
+                              fontFamily: 'Raleway, sans-serif', 
+                              color: theme.palette.primary.main, 
+                              fontWeight: 400,
+                              fontSize: '0.85rem',
+                              textAlign: 'left',
+                              display: 'flex',
+                              alignItems: 'center',
+                              minHeight: 40
+                            }}
+                          >
+                            {menuItem.label}
+                          </MenuItem>
+                        ))}
+                      </Menu>
+                      {/* Photo Gallery Button */}
+                      <NavButton key={item.page} component={RouterLink} to={`/${item.page}`}>{item.label}</NavButton>
+                    </React.Fragment>
+                  );
+                }
+                return (
+                  <NavButton key={item.page} component={RouterLink} to={`/${item.page}`}>{item.label}</NavButton>
+                );
+              })}
               {isLoggedIn && (
                 <NavButton onClick={handleOpenCreateUser}>Create User</NavButton>
               )}
-            </>
+            </Box>
           )}
           {isLoggedIn ? (
             // Replace icon with text button for Logout
@@ -217,6 +319,13 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                 borderRadius: 3,
                 textTransform: 'none',
                 boxShadow: '0 2px 8px rgba(0, 91, 150, 0.18)',
+                minHeight: 40,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '8px 24px',
+                flexShrink: 0, // Prevent the button from shrinking
+                whiteSpace: 'nowrap', // Prevent text wrapping
                 '&:hover': {
                   backgroundColor: theme.palette.primary.dark,
                 },
@@ -237,6 +346,13 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                 borderRadius: 3,
                 textTransform: 'none',
                 boxShadow: '0 2px 8px rgba(0, 91, 150, 0.18)',
+                minHeight: 40,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '8px 24px',
+                flexShrink: 0, // Prevent the button from shrinking
+                whiteSpace: 'nowrap', // Prevent text wrapping
                 '&:hover': {
                   backgroundColor: theme.palette.primary.dark,
                 },
@@ -265,9 +381,25 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                 button
                 key="aboutus"
                 onClick={() => setDrawerOpen(open => !open)}
-                sx={{ pl: 2 }}
+                sx={{ 
+                  pl: 2,
+                  minHeight: 48,
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
               >
-                <ListItemText primary="About Us" primaryTypographyProps={{ sx: { fontFamily: 'Raleway, sans-serif', color: theme.palette.primary.main, fontWeight: 500 } }} />
+                <ListItemText 
+                  primary="About Us" 
+                  primaryTypographyProps={{ 
+                    sx: { 
+                      fontFamily: 'Raleway, sans-serif', 
+                      color: theme.palette.primary.main, 
+                      fontWeight: 400,
+                      textAlign: 'left',
+                      lineHeight: 1.2
+                    } 
+                  }} 
+                />
               </ListItem>
               {/* Render About Us submenus indented under About Us */}
               {drawerOpen && aboutMenuItems.map(item => (
@@ -277,31 +409,206 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                   component={RouterLink}
                   to={`/${item.page}`}
                   onClick={() => setDrawerOpen(false)}
-                  sx={{ pl: 4 }}
+                  sx={{ 
+                    pl: 4,
+                    minHeight: 44,
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
                 >
-                  <ListItemText primary={item.label} primaryTypographyProps={{ sx: { fontFamily: 'Raleway, sans-serif', color: theme.palette.primary.main, fontWeight: 500 } }} />
+                  <ListItemText 
+                    primary={item.label} 
+                    primaryTypographyProps={{ 
+                      sx: { 
+                        fontFamily: 'Raleway, sans-serif', 
+                        color: theme.palette.primary.main, 
+                        fontWeight: 400,
+                        fontSize: '0.9rem',
+                        textAlign: 'left',
+                        lineHeight: 1.2
+                      } 
+                    }} 
+                  />
                 </ListItem>
               ))}
-              {/* Other nav items except About Us */}
-              {navItems.filter(item => item.label !== 'About Us').map(item => (
-                <ListItem
-                  button
-                  key={item.page}
-                  component={RouterLink}
-                  to={`/${item.page}`}
-                  onClick={() => setDrawerOpen(false)}
-                >
-                  <ListItemText primary={item.label} primaryTypographyProps={{ sx: { fontFamily: 'Raleway, sans-serif', color: theme.palette.primary.main, fontWeight: 500 } }} />
-                </ListItem>
-              ))}
+
+              {/* Other nav items */}
+              {navItems.map((item, index) => {
+                // Insert Confidential Category dropdown before Photo Gallery
+                if (item.page === 'photogallery') {
+                  return (
+                    <React.Fragment key={`mobile-confidential-${index}`}>
+                      {/* Confidential Category submenu for mobile */}
+                      <ListItem
+                        button
+                        key="confidentialcategory-mobile"
+                        onClick={() => setDrawerOpen(open => !open)}
+                        sx={{ 
+                          pl: 2,
+                          minHeight: 48,
+                          display: 'flex',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <ListItemText 
+                          primary="Confidential Category" 
+                          primaryTypographyProps={{ 
+                            sx: { 
+                              fontFamily: 'Raleway, sans-serif', 
+                              color: theme.palette.primary.main, 
+                              fontWeight: 400,
+                              textAlign: 'left',
+                              lineHeight: 1.2
+                            } 
+                          }} 
+                        />
+                      </ListItem>
+                      {/* Render Confidential Category submenus indented under Confidential Category */}
+                      {drawerOpen && confidentialMenuItems.map(menuItem => (
+                        <ListItem
+                          button
+                          key={menuItem.page}
+                          onClick={() => {
+                            setDrawerOpen(false);
+                            if (menuItem.requiresAuth && !isLoggedIn) {
+                              setLoginDialogOpen(true);
+                            } else {
+                              navigate(`/${menuItem.page}`);
+                            }
+                          }}
+                          sx={{ 
+                            pl: 4,
+                            minHeight: 44,
+                            display: 'flex',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <ListItemText 
+                            primary={menuItem.label} 
+                            primaryTypographyProps={{ 
+                              sx: { 
+                                fontFamily: 'Raleway, sans-serif', 
+                                color: theme.palette.primary.main, 
+                                fontWeight: 400,
+                                fontSize: '0.9rem',
+                                textAlign: 'left',
+                                lineHeight: 1.2
+                              } 
+                            }} 
+                          />
+                        </ListItem>
+                      ))}
+                      {/* Photo Gallery Item */}
+                      <ListItem
+                        button
+                        key={item.page}
+                        component={RouterLink}
+                        to={`/${item.page}`}
+                        onClick={() => setDrawerOpen(false)}
+                        sx={{
+                          minHeight: 56,
+                          display: 'flex',
+                          alignItems: 'center',
+                          pl: 2
+                        }}
+                      >
+                        <ListItemText 
+                          primary={item.label.replace('\n', ' ')} 
+                          primaryTypographyProps={{ 
+                            sx: { 
+                              fontFamily: 'Raleway, sans-serif', 
+                              color: theme.palette.primary.main, 
+                              fontWeight: 400,
+                              textAlign: 'left',
+                              lineHeight: 1.3,
+                              whiteSpace: 'normal',
+                              wordWrap: 'break-word'
+                            } 
+                          }} 
+                        />
+                      </ListItem>
+                    </React.Fragment>
+                  );
+                }
+                return (
+                  <ListItem
+                    button
+                    key={item.page}
+                    component={RouterLink}
+                    to={`/${item.page}`}
+                    onClick={() => setDrawerOpen(false)}
+                    sx={{
+                      minHeight: 56,
+                      display: 'flex',
+                      alignItems: 'center',
+                      pl: 2
+                    }}
+                  >
+                    <ListItemText 
+                      primary={item.label.replace('\n', ' ')} 
+                      primaryTypographyProps={{ 
+                        sx: { 
+                          fontFamily: 'Raleway, sans-serif', 
+                          color: theme.palette.primary.main, 
+                          fontWeight: 400,
+                          textAlign: 'left',
+                          lineHeight: 1.3,
+                          whiteSpace: 'normal',
+                          wordWrap: 'break-word'
+                        } 
+                      }} 
+                    />
+                  </ListItem>
+                );
+              })}
               <Divider sx={{ my: 1 }} />
-              <ListItem button onClick={handleLoginLogout}>
-                <ListItemText primary={isLoggedIn ? 'Logout' : 'Login'} primaryTypographyProps={{ sx: { fontFamily: 'Raleway, sans-serif', color: theme.palette.secondary.main, fontWeight: 700 } }} />
+              <ListItem 
+                button 
+                onClick={handleLoginLogout}
+                sx={{
+                  minHeight: 48,
+                  display: 'flex',
+                  alignItems: 'center',
+                  pl: 2
+                }}
+              >
+                <ListItemText 
+                  primary={isLoggedIn ? 'Logout' : 'Login'} 
+                  primaryTypographyProps={{ 
+                    sx: { 
+                      fontFamily: 'Raleway, sans-serif', 
+                      color: theme.palette.secondary.main, 
+                      fontWeight: 700,
+                      textAlign: 'left',
+                      lineHeight: 1.2
+                    } 
+                  }} 
+                />
                 {/* Removed trailing icons to show text only */}
               </ListItem>
               {isLoggedIn && (
-                <ListItem button onClick={handleOpenCreateUser}>
-                  <ListItemText primary="Create User" />
+                <ListItem 
+                  button 
+                  onClick={handleOpenCreateUser}
+                  sx={{
+                    minHeight: 48,
+                    display: 'flex',
+                    alignItems: 'center',
+                    pl: 2
+                  }}
+                >
+                  <ListItemText 
+                    primary="Create User"
+                    primaryTypographyProps={{ 
+                      sx: { 
+                        fontFamily: 'Raleway, sans-serif', 
+                        color: theme.palette.primary.main, 
+                        fontWeight: 500,
+                        textAlign: 'left',
+                        lineHeight: 1.2
+                      } 
+                    }}
+                  />
                 </ListItem>
               )}
             </List>

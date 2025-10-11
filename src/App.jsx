@@ -19,13 +19,14 @@ import AboutUs from './pages/AboutUs';
 import WhatWeDo from './pages/WhatWeDo';
 import LatestProjects from './pages/LatestProjects';
 import NewsRoom from './pages/NewsRoom';
-import CaseHistory from './pages/CaseHistory';
+import History from './pages/History';
 import SuccessStory from './pages/SuccessStory';
 import SupportUs from './pages/SupportUs';
 import Location from './pages/Location';
 import WhoWeAre from './pages/WhoWeAre';
 import OurManifesto from './pages/OurManifesto';
 import OurTeam from './pages/OurTeam';
+import OurAchievements from './pages/OurAchievements';
 import ChildProtection from './pages/ChildProtection';
 import ChildEducation from './pages/ChildEducation';
 import AfterCare from './pages/AfterCare';
@@ -78,17 +79,19 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
           <Route path="/whatwedo" element={<WhatWeDo />} />
           <Route path="/latestprojects" element={<LatestProjects />} />
           <Route path="/newsroom" element={<NewsRoom />} />
-          <Route path="/casehistory" element={<CaseHistory />} />
+          <Route path="/history" element={<History />} />
           <Route path="/successstory" element={<SuccessStory />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/supportus" element={<SupportUs />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/location" element={<Location />} />
           <Route path="/donate" element={<DonationForm />} />
+          <Route path="/donationform" element={<DonationForm />} />
           <Route path="/livecctv" element={isLoggedIn ? <LiveCCTV /> : <Navigate to="/login" />} />
           <Route path="/whoweare" element={<WhoWeAre />} />
           <Route path="/ourmanifesto" element={<OurManifesto />} />
           <Route path="/ourteam" element={<OurTeam />} />
+          <Route path="/ourachievements" element={<OurAchievements />} />
           <Route path="/childprotection" element={<ChildProtection />} />
           <Route path="/childeducation" element={<ChildEducation />} />
           <Route path="/aftercare" element={<AfterCare />} />
@@ -154,17 +157,24 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
               <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
                 <li><RouterLink to="/latest-projects" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Our Latest Projects</RouterLink></li>
                 <li><RouterLink to="/news-room" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;News Room</RouterLink></li>
-                <li><RouterLink to="/case-history" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Case History</RouterLink></li>
+                <li><RouterLink to="/history" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;History</RouterLink></li>
                 <li><RouterLink to="/success-story" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Success Story</RouterLink></li>
                 <li><RouterLink to="/support-us" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Support Us</RouterLink></li>
               </Box>
             </Box>
             {/* Location & Contact */}
-            <Box sx={{ minWidth: 220 }}>
-              <Box sx={{ fontWeight: 700, fontSize: '1.1rem', mb: 1, color: 'secondary.main' }}>LOCATION</Box>
-              <Box sx={{ mb: 1 }}>89, Elliot Road, Kolkata - 700016, West Bengal, India</Box>
-              <Box sx={{ mb: 1 }}><a href="tel:+913322293292" style={{ color: '#fff', textDecoration: 'none' }}>+91 33 2229 3292</a></Box>
-              <Box sx={{ mb: 1 }}><a href="mailto:info@jpk.org" style={{ color: '#fff', textDecoration: 'none' }}>info@jpk.org</a></Box>
+            <Box sx={{ minWidth: 280 }}>
+              <Box sx={{ fontWeight: 700, fontSize: '1.1rem', mb: 1, color: 'secondary.main' }}>CONTACT US</Box>
+              <Box sx={{ mb: 1, fontSize: '0.9rem' }}>
+                <strong>Registered Office:</strong><br />
+                57-B, College Street, Kolkata 700073
+              </Box>
+              <Box sx={{ mb: 1, fontSize: '0.9rem' }}>
+                <strong>City Office:</strong><br />
+                CK-6, Sector-II, Salt Lake City, Kolkata 700064
+              </Box>
+              <Box sx={{ mb: 1 }}><a href="tel:+913322413324" style={{ color: '#fff', textDecoration: 'none' }}>+91-(033) 2241-3324</a></Box>
+              <Box sx={{ mb: 1 }}><a href="mailto:jpk.kolkata@gmail.com" style={{ color: '#fff', textDecoration: 'none' }}>jpk.kolkata@gmail.com</a></Box>
               <Box sx={{ mb: 1 }}><a href="https://www.facebook.com/ABWUIndia" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none' }}>Follow us on Facebook</a></Box>
             </Box>
           </Box>
