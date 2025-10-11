@@ -355,33 +355,6 @@ export default function AdminLoginDialog({ open, onClose, onLogin }) {
                                 variant="filled"
                             />
 
-                            {/* Testing Purpose: Show OTP from API response */}
-                            {otpData?.otp && (
-                                <Alert
-                                    severity="info"
-                                    sx={{
-                                        bgcolor: 'info.light',
-                                        color: 'info.contrastText',
-                                        fontWeight: 600,
-                                        '& .MuiAlert-message': {
-                                            fontSize: '1rem',
-                                            textAlign: 'center',
-                                            width: '100%'
-                                        }
-                                    }}
-                                >
-                                    <Typography variant="body2" sx={{ mb: 0.5, opacity: 0.8 }}>
-                                        Testing Mode - OTP Code:
-                                    </Typography>
-                                    <Typography variant="h5" sx={{ fontWeight: 800, letterSpacing: '0.3rem' }}>
-                                        {otpData.otp}
-                                    </Typography>
-                                    <Typography variant="caption" sx={{ opacity: 0.7, mt: 0.5, display: 'block' }}>
-                                        (Remove this after email server setup)
-                                    </Typography>
-                                </Alert>
-                            )}
-
                             <Stack direction="row" spacing={1} alignItems="flex-end">
                                 <TextField
                                     label="Enter OTP Code"
@@ -397,23 +370,6 @@ export default function AdminLoginDialog({ open, onClose, onLogin }) {
                                         style: { textAlign: 'center', fontSize: '1.2rem', letterSpacing: '0.5rem' }
                                     }}
                                 />
-                                {/* Testing Purpose: Quick fill button */}
-                                {otpData?.otp && (
-                                    <Button
-                                        variant="outlined"
-                                        size="small"
-                                        onClick={() => setOtp(otpData.otp)}
-                                        disabled={loading}
-                                        sx={{
-                                            minWidth: 'auto',
-                                            px: 1.5,
-                                            mb: 0.5,
-                                            fontSize: '0.75rem'
-                                        }}
-                                    >
-                                        Fill
-                                    </Button>
-                                )}
                             </Stack>
 
                             <Stack direction="row" spacing={2}>

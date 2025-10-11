@@ -6,7 +6,8 @@ import AlternateEmailRoundedIcon from '@mui/icons-material/AlternateEmailRounded
 import PhoneIphoneRoundedIcon from '@mui/icons-material/PhoneIphoneRounded';
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
-import { testAuth } from '../api/auth';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -24,6 +25,26 @@ export default function AdminUsers({ users, setUsers, loading = false, actionLoa
     // Success snackbar state
     const [successOpen, setSuccessOpen] = React.useState(false);
     const [successMsg, setSuccessMsg] = React.useState('');
+    // Search state
+    const [search, setSearch] = React.useState('');
+
+    // Derived filtered list
+    const displayedUsers = React.useMemo(() => {
+        const q = (search || '').trim().toLowerCase();
+        if (!q) return users;
+        const qDigits = q.replace(/\D/g, '');
+        return users.filter((u) => {
+            const username = String(u.username || '').toLowerCase();
+            const email = String(u.email || '').toLowerCase();
+            const mobile = String(u.mobile || '');
+            const mobileDigits = mobile.replace(/\D/g, '');
+            return (
+                username.includes(q) ||
+                email.includes(q) ||
+                (qDigits ? mobileDigits.includes(qDigits) : false)
+            );
+        });
+    }, [users, search]);
 
     const openEdit = (u) => { setCurrent({ ...u }); setErrors({}); clearFieldErrors?.(); clearApiError?.(); setEditOpen(true); };
     const openAdd = () => {
@@ -166,36 +187,29 @@ export default function AdminUsers({ users, setUsers, loading = false, actionLoa
 
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
                 <Typography variant="h6" sx={{ fontWeight: 800 }}>User List</Typography>
-                <Stack direction="row" spacing={1}>
-                    <Button
-                        variant="outlined"
-                        onClick={async () => {
-                            try {
-                                const { testUserApiAccess } = await import('../api/users');
-                                const result = await testUserApiAccess();
-                                console.log('[Debug] API Test Result:', result);
-
-                                if (result.success) {
-                                    const userInfo = result.currentUser ?
-                                        `\nCurrent User: ${result.currentUser.email} (Admin: ${result.currentUser.isAdmin})` :
-                                        '';
-                                    alert(`✓ API Test Success!\nUsers found: ${result.usersCount}${userInfo}\nCheck console for details.`);
-                                } else {
-                                    const userInfo = result.currentUser && typeof result.currentUser === 'object' ?
-                                        `\nCurrent User: ${result.currentUser.email} (Admin: ${result.currentUser.isAdmin})` :
-                                        result.currentUser ? `\nToken Issue: ${result.currentUser}` : '';
-                                    alert(`✗ API Test Failed!\nIssue: ${result.diagnosis}\nSolution: ${result.solution}${userInfo}\nCheck console for details.`);
-                                }
-                            } catch (error) {
-                                console.error('[Debug] Test failed:', error);
-                                alert('Test Failed! Check console for details.');
-                            }
+                <Stack direction="row" spacing={1} alignItems="center">
+                    {/* Search input */}
+                    <TextField
+                        size="small"
+                        placeholder="Search by username, email, or mobile"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        sx={{ minWidth: { xs: 180, sm: 260, md: 320 } }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchRoundedIcon fontSize="small" />
+                                </InputAdornment>
+                            ),
+                            endAdornment: search ? (
+                                <InputAdornment position="end">
+                                    <Button aria-label="Clear search" onClick={() => setSearch('')} size="small" sx={{ minWidth: 'auto', px: 1 }}>
+                                        <ClearRoundedIcon fontSize="small" />
+                                    </Button>
+                                </InputAdornment>
+                            ) : null,
                         }}
-                        disabled={actionLoading || loading}
-                        sx={{ minWidth: 'auto', px: 1.5, fontSize: '0.75rem' }}
-                    >
-                        Diagnose API
-                    </Button>
+                    />
                     <Button
                         variant="outlined"
                         onClick={reloadUsers}
@@ -221,7 +235,7 @@ export default function AdminUsers({ users, setUsers, loading = false, actionLoa
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {users.map((u) => (
+                        {displayedUsers.map((u) => (
                             <TableRow key={u.id} hover>
                                 <TableCell>{u.fullName}</TableCell>
                                 <TableCell>{u.username}</TableCell>
@@ -237,6 +251,13 @@ export default function AdminUsers({ users, setUsers, loading = false, actionLoa
                                 </TableCell>
                             </TableRow>
                         ))}
+                        {displayedUsers.length === 0 && (
+                            <TableRow>
+                                <TableCell colSpan={7} align="center">
+                                    No users found{search ? ` for "${search}"` : ''}.
+                                </TableCell>
+                            </TableRow>
+                        )}
                     </TableBody>
                 </Table>
             </Paper>
