@@ -36,6 +36,7 @@ import StaffList from './pages/StaffList';
 import BeneficiaryDetails from './pages/BeneficiaryDetails';
 import AdminHome from './pages/AdminHome';
 import ResetPassword from './pages/ResetPassword';
+import Authority from './pages/Authority';
 
 /**
  * Main App component for the NGO website.
@@ -99,6 +100,7 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
           <Route path="/elderlycare" element={<ElderlyCare />} />
           <Route path="/stafflist" element={<StaffList />} />
           <Route path="/beneficiarydetails" element={<BeneficiaryDetails />} />
+          <Route path="/authority" element={<Authority />} />
           <Route path="/admin_home" element={<AdminHome />} />
           <Route path="/reset_password" element={<ResetPassword />} />
           <Route path="/login" element={

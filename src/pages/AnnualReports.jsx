@@ -30,8 +30,8 @@ import SchoolIcon from '@mui/icons-material/School';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 
 // Import PDF files
-import Report2023_24 from '../assets/Report/ANNUAL REPORT FOR THE YEAR 2023 - 2024 _compressed.pdf';
-import Report2022_23 from '../assets/Report/Annual Report for the year 22-23_compressed.pdf';
+import Report2023_24 from '../assets/documents/ANNUAL REPORT FOR THE YEAR 2023 - 2024 _compressed.pdf';
+import Report2022_23 from '../assets/documents/Annual Report for the year 22-23_compressed.pdf';
 
 const ReportCard = styled(Card)(({ theme }) => ({
   height: '100%',

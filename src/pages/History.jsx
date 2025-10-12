@@ -32,8 +32,11 @@ import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import StarIcon from '@mui/icons-material/Star';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 
+// Import PDF file
+import HistoryPDF from '../assets/documents/JANASIKSHA PROCHAR KENDRA _Brief History_ CURRENTLY FINAl - 2012.pdf';
+
 // PDF file path
-const historyPDFPath = '/src/assets/History/JANASIKSHA PROCHAR KENDRA _Brief History_ CURRENTLY FINAl - 2012.pdf';
+const historyPDFPath = HistoryPDF;
 
 const HistoryCard = styled(Card)(({ theme }) => ({
   height: '100%',
