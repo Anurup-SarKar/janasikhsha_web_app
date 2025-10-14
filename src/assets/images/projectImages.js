@@ -14,7 +14,7 @@ import shaktiSadan from './shakti-sadan.jpg';
 import seniorCitizensHome from './senior-citizens-home.jpg';
 import openShelterGirls from './open-shelter-girls.jpg';
 import icdsRedLight from './icds-red-light.jpg';
-import healthServices from './health-services.jpg';
+import healthServices from './health-service.jpg';
 import vocationalTraining from './vocational-training.jpg';
 import library from './library.jpg';
 

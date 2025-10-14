@@ -1,15 +1,22 @@
 // CarouselImages.js
 // Centralized image URL data for carousels and hero banners in the Janasiksha Prochar Kendra website.
-// All images are public Unsplash URLs for demo purposes. Replace with your own images as needed.
+// Using local banner images for hero carousel.
+
+// Import banner images
+import Banner1 from './images/Banner1.jpg';
+import Banner2 from './images/Banner2.jpg';
+import Banner3 from './images/Banner3.jpg';
+import Banner4 from './images/Banner4.jpg';
 
 /**
- * Array of hero banner image URLs
+ * Array of hero banner image URLs - using local banner images
  * @type {string[]}
  */
-const heroImages = [
-  'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=900&q=80',
+const ngoImages = [
+  Banner1,
+  Banner2,
+  Banner3,
+  Banner4,
 ];
 
 /**
@@ -42,4 +49,4 @@ const whatWeDoImages = [
   'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=900&q=80',
 ];
 
-export { heroImages, galleryImages, aboutImages, whatWeDoImages };
+export { ngoImages, galleryImages, aboutImages, whatWeDoImages };

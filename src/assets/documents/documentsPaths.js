@@ -3,10 +3,10 @@
 // All documents are located in the assets/documents folder
 
 // Import PDF files
-import BriefHistory2012 from './JANASIKSHA PROCHAR KENDRA _Brief History_ CURRENTLY FINAl - 2012.pdf';
-import AnnualReport2022_23 from './Annual Report for the year 22-23_compressed.pdf';
-import AnnualReport2023_24 from './ANNUAL REPORT FOR THE YEAR 2023 - 2024 _compressed.pdf';
-import AuthorityDocument from './Authority.pdf';
+import BriefHistory2012 from './JANASIKSHA PROCHAR KENDRA _Brief History_ CURRENTLY FINAl - 2012.pdf?url';
+import AnnualReport2022_23 from './Annual Report for the year 22-23_compressed.pdf?url';
+import AnnualReport2023_24 from './ANNUAL REPORT FOR THE YEAR 2023 - 2024 _compressed.pdf?url';
+import MemorandumDocument from './Memorandum.pdf?url';
 
 /**
  * Documents object mapping document IDs to their information
@@ -48,15 +48,15 @@ const documents = {
     size: 'PDF Document'
   },
 
-  // Authority Document
-  authorityDocument: {
-    id: 'authorityDocument',
-    title: 'Authority & Registration Document',
-    filename: 'Authority.pdf',
-    path: AuthorityDocument,
-    category: 'Authority',
+  // Memorandum of Association
+  memorandumDocument: {
+    id: 'memorandumDocument',
+    title: 'Memorandum of Association',
+    filename: 'Memorandum.pdf',
+    path: MemorandumDocument,
+    category: 'Legal',
     year: 'Current',
-    description: 'Official authority and registration documents of Janasiksha Prochar Kendra',
+    description: 'Memorandum of Association document of Janasiksha Prochar Kendra',
     size: 'PDF Document'
   }
 };
