@@ -1,6 +1,8 @@
 // API client for admin features with authentication support
 // Use proxy in development, direct URL in production
-export const API_BASE = '';
+export const API_BASE = typeof window !== 'undefined' && window.location.hostname === 'localhost'
+    ? '' // dev will go through Vite proxy to /api -> https://jpkindia.org
+    : 'https://jpkindia.org';
 
 // Auth token storage
 let authToken = null;
@@ -77,18 +79,20 @@ export async function testConnection() {
     }
 }
 
-export async function request(path, options = {}) {
-    const url = `${API_BASE}${path}`;
+export async function request(pathOrUrl, options = {}) {
+    const isAbsolute = /^https?:\/\//i.test(pathOrUrl);
+    const url = isAbsolute ? pathOrUrl : `${API_BASE}${pathOrUrl}`;
     const headers = {
         'Content-Type': 'application/json',
         ...(options.headers || {}),
-    };    // Add auth token if available
+    };
+    // Add auth token if available
     const token = getAuthToken();
     if (token) {
         headers.Authorization = `Bearer ${token}`;
-        console.log(`[API Client] ${options.method || 'GET'} ${path} - authenticated request`);
+        console.log(`[API Client] ${options.method || 'GET'} ${url} - authenticated request`);
     } else {
-        console.warn(`[API Client] ${options.method || 'GET'} ${path} - no auth token available`);
+        console.warn(`[API Client] ${options.method || 'GET'} ${url} - no auth token available`);
     }
 
     try {
@@ -110,7 +114,7 @@ export async function request(path, options = {}) {
         }
 
         const jsonResponse = await res.json();
-        console.log(`[API Client] ${options.method || 'GET'} ${path} - success`);
+        console.log(`[API Client] ${options.method || 'GET'} ${url} - success`);
         return jsonResponse;
     } catch (error) {
         console.error(`[API Client] Request failed:`, error);
