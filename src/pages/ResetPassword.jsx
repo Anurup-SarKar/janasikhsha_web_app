@@ -13,6 +13,9 @@ export default function ResetPassword() {
     const navigate = useNavigate();
     const query = useQuery();
 
+    // Detect if this is admin or normal user based on URL parameter or stored token
+    const [isAdmin] = React.useState(() => query.get('type') === 'admin' || !!localStorage.getItem('admin_reset_token'));
+
     // Email and token come from URL; email is non-editable
     const [email] = React.useState(() => decodeURIComponent(query.get('email') || ''));
     const [token] = React.useState(query.get('token') || '');
@@ -23,32 +26,40 @@ export default function ResetPassword() {
 
     // Validate link token against locally stored token + expiry; if mismatch/expired, bounce to login with message
     React.useEffect(() => {
-        try {
-            const storedToken = localStorage.getItem('admin_reset_token');
-            const expiresAtStr = localStorage.getItem('admin_reset_expiresAt');
-            const expiresAt = expiresAtStr ? parseInt(expiresAtStr, 10) : 0;
-            const now = Date.now();
-            const emailStored = localStorage.getItem('admin_reset_email') || '';
+        // For admin users, validate against stored token
+        if (isAdmin) {
+            try {
+                const storedToken = localStorage.getItem('admin_reset_token');
+                const expiresAtStr = localStorage.getItem('admin_reset_expiresAt');
+                const expiresAt = expiresAtStr ? parseInt(expiresAtStr, 10) : 0;
+                const now = Date.now();
+                const emailStored = localStorage.getItem('admin_reset_email') || '';
 
-            if (!token || !storedToken || token !== storedToken) {
-                sessionStorage.setItem('admin_reset_link_error', 'Reset link is invalid or expired. Please request a new link.');
+                if (!token || !storedToken || token !== storedToken) {
+                    sessionStorage.setItem('admin_reset_link_error', 'Reset link is invalid or expired. Please request a new link.');
+                    if (email) sessionStorage.setItem('admin_reset_email', email);
+                    navigate('/admin_home');
+                    return;
+                }
+                if (expiresAt && now > expiresAt) {
+                    sessionStorage.setItem('admin_reset_link_error', 'Reset link expired. Please request a new link.');
+                    if (email || emailStored) sessionStorage.setItem('admin_reset_email', email || emailStored);
+                    navigate('/admin_home');
+                    return;
+                }
+            } catch (e) {
+                // If any error, be safe and redirect to login dialog with message
+                sessionStorage.setItem('admin_reset_link_error', 'Unable to verify reset link. Please request a new link.');
                 if (email) sessionStorage.setItem('admin_reset_email', email);
                 navigate('/admin_home');
-                return;
             }
-            if (expiresAt && now > expiresAt) {
-                sessionStorage.setItem('admin_reset_link_error', 'Reset link expired. Please request a new link.');
-                if (email || emailStored) sessionStorage.setItem('admin_reset_email', email || emailStored);
-                navigate('/admin_home');
-                return;
+        } else {
+            // For normal users, just validate token exists in URL
+            if (!token || !email) {
+                navigate('/login');
             }
-        } catch (e) {
-            // If any error, be safe and redirect to login dialog with message
-            sessionStorage.setItem('admin_reset_link_error', 'Unable to verify reset link. Please request a new link.');
-            if (email) sessionStorage.setItem('admin_reset_email', email);
-            navigate('/admin_home');
         }
-    }, [token, email, navigate]);
+    }, [token, email, navigate, isAdmin]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -62,8 +73,19 @@ export default function ResetPassword() {
         try {
             const res = await performPasswordReset(email, token, newPassword);
             if (res?.statusCode === 200) {
-                // Success: redirect to admin login dialog
-                navigate('/admin_home');
+                // Success: redirect based on user type
+                setMessage('Password reset successful! Redirecting to login...');
+                setTimeout(() => {
+                    if (isAdmin) {
+                        // Clean up admin reset tokens
+                        localStorage.removeItem('admin_reset_token');
+                        localStorage.removeItem('admin_reset_expiresAt');
+                        localStorage.removeItem('admin_reset_email');
+                        navigate('/admin_home');
+                    } else {
+                        navigate('/login');
+                    }
+                }, 2000);
             } else {
                 setMessage(res?.statusMessage || 'Password reset failed.');
             }
@@ -96,7 +118,7 @@ export default function ResetPassword() {
                     )}
 
                     <TextField
-                        label="Admin Email Address"
+                        label={isAdmin ? "Admin Email Address" : "Email Address"}
                         type="email"
                         value={email}
                         fullWidth

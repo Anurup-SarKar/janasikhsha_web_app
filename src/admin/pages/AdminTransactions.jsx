@@ -1,20 +1,30 @@
 import React from 'react';
-import { Paper, Stack, Typography, Button, TextField, Table, TableHead, TableRow, TableCell, TableBody, Chip, TableContainer, Box, Card, CardContent, Divider, IconButton, Tooltip } from '@mui/material';
+import { Paper, Stack, Typography, Button, TextField, Table, TableHead, TableRow, TableCell, TableBody, Chip, TableContainer, Box, Card, CardContent, Divider, IconButton, Tooltip, Alert, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 import PaymentRoundedIcon from '@mui/icons-material/PaymentRounded';
 import ReceiptLongRoundedIcon from '@mui/icons-material/ReceiptLongRounded';
+import { request } from '../api/client';
 
-export default function AdminTransactions({ transactions }) {
+export default function AdminTransactions({ transactions = [] }) {
     const [dateFrom, setDateFrom] = React.useState('');
     const [dateTo, setDateTo] = React.useState('');
     const [mobileFiltersOpen, setMobileFiltersOpen] = React.useState(false);
 
-    const closeFiltersIfMobile = () => {
-        // Safe to call always; on desktop the container stays visible regardless of this state
-        setMobileFiltersOpen(false);
-    };
+    // Server/API state (count is defaulted to 50 and not shown in UI)
+    const [count] = React.useState(50);
+    const [skip, setSkip] = React.useState(0);
+    const [rows, setRows] = React.useState([]);
+    const [total, setTotal] = React.useState(0);
+    const [loading, setLoading] = React.useState(false);
+    const [error, setError] = React.useState('');
+
+    // Details dialog state
+    const [detailOpen, setDetailOpen] = React.useState(false);
+    const [detailItem, setDetailItem] = React.useState(null);
+
+    const closeFiltersIfMobile = () => setMobileFiltersOpen(false);
 
     const setRelativeRange = (days) => {
         const to = new Date();
@@ -41,15 +51,27 @@ export default function AdminTransactions({ transactions }) {
         closeFiltersIfMobile();
     };
 
+    // Compute default last 24h epoch range
+    const getDefaultRange = () => {
+        const now = new Date();
+        const toTs = Math.floor(now.getTime() / 1000);
+        const fromTs = Math.floor((now.getTime() - 24 * 60 * 60 * 1000) / 1000);
+        return { fromTs, toTs };
+    };
+
     const resetFilters = () => {
+        // Clear UI dates, then fetch using default last 24h regardless of async state
         setDateFrom('');
         setDateTo('');
         closeFiltersIfMobile();
+        setSkip(0);
+        fetchPayments(0, true);
     };
 
     const applyFilters = () => {
-        // Filtering is reactive; this simply closes the panel on mobile to show results
         closeFiltersIfMobile();
+        setSkip(0);
+        fetchPayments(0);
     };
 
     const statusChip = (status) => (
@@ -66,10 +88,103 @@ export default function AdminTransactions({ transactions }) {
         return theme.palette.divider;
     };
 
-    const filteredTx = transactions.filter(t => {
-        if (!dateFrom || !dateTo) return true;
-        return t.date >= dateFrom && t.date <= dateTo;
-    });
+    // Build epoch range; all params optional with sensible defaults
+    const buildRange = () => {
+        const now = new Date();
+        let fromTs, toTs;
+        if (!dateFrom && !dateTo) {
+            // default last 24 hours
+            toTs = Math.floor(now.getTime() / 1000);
+            fromTs = Math.floor((now.getTime() - 24 * 60 * 60 * 1000) / 1000);
+        } else if (dateFrom && dateTo) {
+            fromTs = Math.floor(new Date(`${dateFrom}T00:00:00`).getTime() / 1000);
+            toTs = Math.floor(new Date(`${dateTo}T23:59:59`).getTime() / 1000);
+        } else if (dateFrom) {
+            fromTs = Math.floor(new Date(`${dateFrom}T00:00:00`).getTime() / 1000);
+            toTs = Math.floor(now.getTime() / 1000);
+        } else {
+            // only dateTo provided
+            const d = new Date(`${dateTo}T23:59:59`);
+            toTs = Math.floor(d.getTime() / 1000);
+            fromTs = Math.floor((d.getTime() - 24 * 60 * 60 * 1000) / 1000);
+        }
+        return { fromTs, toTs };
+    };
+
+    // Transform payment item -> UI row, storing raw for details view
+    const mapPayment = (p) => {
+        const rupees = Math.round(((p?.amount ?? 0) / 100));
+        const dt = p?.created_at ? new Date(p.created_at * 1000) : new Date();
+        const date = dt.toISOString().slice(0, 10);
+        let status = (p?.status || '').toLowerCase();
+        status = status === 'captured' ? 'Success' : status === 'authorized' ? 'Pending' : status === 'failed' ? 'Failed' : p?.status || 'Unknown';
+        return {
+            id: p?.id || '-',
+            date,
+            particular: p?.description || 'Donation',
+            amount: rupees,
+            method: (p?.method || '-').toUpperCase(),
+            status,
+            raw: p,
+        };
+    };
+
+    // Fetch from secured admin API (Bearer token handled by request())
+    const fetchPayments = async (overrideSkip, forceDefaultRange = false) => {
+        const qSkip = typeof overrideSkip === 'number' ? overrideSkip : skip;
+        const { fromTs, toTs } = forceDefaultRange ? getDefaultRange() : buildRange();
+        const qs = new URLSearchParams();
+        // All optional; include if defined
+        if (fromTs) qs.set('from', String(fromTs));
+        if (toTs) qs.set('to', String(toTs));
+        if (count) qs.set('count', String(count));
+        if (typeof qSkip === 'number') qs.set('skip', String(qSkip));
+
+        const path = `/api/admin/razorpay/payments?${qs.toString()}`;
+        setLoading(true);
+        setError('');
+        try {
+            const res = await request(path, { method: 'GET' });
+            // API response wrapper: { statusCode, statusMessage, data: { count, items } }
+            const data = res?.data || {};
+            const items = Array.isArray(data?.items) ? data.items : [];
+            setRows(items.map(mapPayment));
+            setTotal(data?.count || items.length || 0);
+            if (typeof overrideSkip === 'number') setSkip(overrideSkip);
+        } catch (e) {
+            setError(e?.message || 'Failed to load payments');
+            setRows([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Initial load: last 24 hours
+    React.useEffect(() => {
+        fetchPayments(0);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Use only API rows; if none, show the empty state
+    const baseTx = rows;
+
+    const handleOpenDetail = (row) => {
+        const raw = row?.raw || null;
+        setDetailItem(raw);
+        setDetailOpen(Boolean(raw));
+    };
+    const handleCloseDetail = () => {
+        setDetailOpen(false);
+        setDetailItem(null);
+    };
+
+    const prettyStatus = (s) => {
+        const v = (s || '').toLowerCase();
+        if (v === 'captured') return 'Success';
+        if (v === 'authorized') return 'Pending';
+        if (v === 'failed') return 'Failed';
+        return s || 'Unknown';
+    };
 
     return (
         <Stack spacing={2}>
@@ -104,12 +219,10 @@ export default function AdminTransactions({ transactions }) {
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 2 }}>
                     <TextField label="From" type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} InputLabelProps={{ shrink: true }} sx={{ maxWidth: 220 }} />
                     <TextField label="To" type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} InputLabelProps={{ shrink: true }} sx={{ maxWidth: 220 }} />
+                    <Button size="small" variant="contained" onClick={applyFilters} disabled={loading}>Apply</Button>
+                    <Button size="small" variant="text" onClick={resetFilters} disabled={loading}>Reset</Button>
                 </Stack>
-                {/* Mobile actions */}
-                <Stack direction="row" spacing={1} sx={{ mt: 2, display: { xs: 'flex', sm: 'none' } }}>
-                    <Button size="small" variant="contained" onClick={applyFilters}>Apply</Button>
-                    <Button size="small" variant="text" onClick={resetFilters}>Reset</Button>
-                </Stack>
+                {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
             </Paper>
 
             {/* Desktop/Tablet table */}
@@ -128,18 +241,26 @@ export default function AdminTransactions({ transactions }) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {filteredTx.map((t) => (
-                                    <TableRow key={t.id} hover>
+                                {baseTx.map((t) => (
+                                    <TableRow key={t.id} hover onClick={() => handleOpenDetail(t)} sx={{ cursor: 'pointer' }}>
                                         <TableCell>{t.date}</TableCell>
                                         <TableCell>{t.id}</TableCell>
                                         <TableCell>{t.particular}</TableCell>
-                                        <TableCell align="right">{t.amount.toLocaleString()}</TableCell>
+                                        <TableCell align="right">{Number(t.amount || 0).toLocaleString()}</TableCell>
                                         <TableCell>{t.method}</TableCell>
-                                        <TableCell>
-                                            {statusChip(t.status)}
-                                        </TableCell>
+                                        <TableCell>{statusChip(t.status)}</TableCell>
                                     </TableRow>
                                 ))}
+                                {!loading && baseTx.length === 0 && (
+                                    <TableRow>
+                                        <TableCell colSpan={6} align="center">No transactions for selected range.</TableCell>
+                                    </TableRow>
+                                )}
+                                {loading && (
+                                    <TableRow>
+                                        <TableCell colSpan={6} align="center"><CircularProgress size={20} /></TableCell>
+                                    </TableRow>
+                                )}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -149,14 +270,14 @@ export default function AdminTransactions({ transactions }) {
             {/* Mobile card list */}
             <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
                 <Stack spacing={1.5}>
-                    {filteredTx.map((t) => (
-                        <Card key={t.id} variant="outlined" sx={{ borderRadius: 3, position: 'relative', overflow: 'hidden' }}>
+                    {baseTx.map((t) => (
+                        <Card key={t.id} variant="outlined" onClick={() => handleOpenDetail(t)} sx={{ borderRadius: 3, position: 'relative', overflow: 'hidden', cursor: 'pointer' }}>
                             {/* Status accent bar */}
                             <Box sx={(theme) => ({ position: 'absolute', top: 0, left: 0, right: 0, height: 4, bgcolor: statusColor(t.status, theme) })} />
                             <CardContent sx={{ pt: 1.25 }}>
                                 <Stack spacing={1}>
                                     <Stack direction="row" alignItems="center" justifyContent="space-between">
-                                        <Typography variant="h6" sx={{ fontWeight: 800 }}>₹ {t.amount.toLocaleString()}</Typography>
+                                        <Typography variant="h6" sx={{ fontWeight: 800 }}>₹ {Number(t.amount || 0).toLocaleString()}</Typography>
                                         {statusChip(t.status)}
                                     </Stack>
                                     <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>{t.particular}</Typography>
@@ -179,13 +300,187 @@ export default function AdminTransactions({ transactions }) {
                             </CardContent>
                         </Card>
                     ))}
-                    {filteredTx.length === 0 && (
+                    {!loading && baseTx.length === 0 && (
                         <Paper variant="outlined" sx={{ p: 2, textAlign: 'center', borderRadius: 3 }}>
                             No transactions for selected range.
                         </Paper>
                     )}
+                    {loading && (
+                        <Paper variant="outlined" sx={{ p: 2, textAlign: 'center', borderRadius: 3 }}>
+                            <CircularProgress size={20} />
+                        </Paper>
+                    )}
                 </Stack>
             </Box>
+
+            {/* Details Dialog */}
+            <Dialog open={detailOpen} onClose={handleCloseDetail} maxWidth="md" fullWidth>
+                <DialogTitle>Transaction details</DialogTitle>
+                <DialogContent dividers>
+                    {detailItem ? (
+                        <Stack spacing={2}>
+                            <Paper variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
+                                <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1 }}>Summary</Typography>
+                                <Table size="small">
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableCell sx={{ width: 220 }}>Transaction ID</TableCell>
+                                            <TableCell sx={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace' }}>{detailItem.id}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Status</TableCell>
+                                            <TableCell>{prettyStatus(detailItem.status)}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Amount</TableCell>
+                                            <TableCell>₹ {Math.round((detailItem.amount || 0) / 100).toLocaleString()} {detailItem.currency || ''}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Method</TableCell>
+                                            <TableCell>{(detailItem.method || '-').toUpperCase()}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Description</TableCell>
+                                            <TableCell>{detailItem.description || '-'}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Created at</TableCell>
+                                            <TableCell>{detailItem.created_at ? new Date(detailItem.created_at * 1000).toLocaleString() : '-'}</TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </Paper>
+
+                            <Paper variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
+                                <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1 }}>Donor details</Typography>
+                                <Table size="small">
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableCell sx={{ width: 220 }}>Donor name</TableCell>
+                                            <TableCell>{detailItem?.notes?.donor_name || '-'}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Donor email</TableCell>
+                                            <TableCell>{detailItem?.notes?.donor_email || detailItem?.email || '-'}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Donor contact</TableCell>
+                                            <TableCell>{detailItem?.contact || '-'}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Donor PAN</TableCell>
+                                            <TableCell>{detailItem?.notes?.donor_pan || '-'}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Local order ID</TableCell>
+                                            <TableCell sx={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace' }}>{detailItem?.notes?.local_order_id || '-'}</TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </Paper>
+
+                            <Paper variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
+                                <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1 }}>Payment details</Typography>
+                                <Table size="small">
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableCell sx={{ width: 220 }}>Currency</TableCell>
+                                            <TableCell>{detailItem.currency || '-'}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Captured</TableCell>
+                                            <TableCell>{String(detailItem.captured)}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Order ID</TableCell>
+                                            <TableCell>{detailItem.order_id || '-'}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Invoice ID</TableCell>
+                                            <TableCell>{detailItem.invoice_id || '-'}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>International</TableCell>
+                                            <TableCell>{String(detailItem.international)}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Bank</TableCell>
+                                            <TableCell>{detailItem.bank || '-'}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Wallet</TableCell>
+                                            <TableCell>{detailItem.wallet || '-'}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>VPA</TableCell>
+                                            <TableCell>{detailItem.vpa || '-'}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Email</TableCell>
+                                            <TableCell>{detailItem.email || '-'}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Contact</TableCell>
+                                            <TableCell>{detailItem.contact || '-'}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Amount refunded</TableCell>
+                                            <TableCell>₹ {Math.round((detailItem.amount_refunded || 0) / 100).toLocaleString()}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Fee</TableCell>
+                                            <TableCell>{detailItem.fee != null ? `₹ ${Math.round((detailItem.fee || 0) / 100).toLocaleString()}` : '-'}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Tax</TableCell>
+                                            <TableCell>{detailItem.tax != null ? `₹ ${Math.round((detailItem.tax || 0) / 100).toLocaleString()}` : '-'}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Acquirer transaction ID</TableCell>
+                                            <TableCell>{detailItem?.acquirer_data?.bank_transaction_id || '-'}</TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </Paper>
+
+                            {(detailItem.error_code || detailItem.error_description || detailItem.error_reason) && (
+                                <Paper variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
+                                    <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1, color: 'error.main' }}>Errors</Typography>
+                                    <Table size="small">
+                                        <TableBody>
+                                            <TableRow>
+                                                <TableCell sx={{ width: 220 }}>Error code</TableCell>
+                                                <TableCell>{detailItem.error_code || '-'}</TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Error description</TableCell>
+                                                <TableCell>{detailItem.error_description || '-'}</TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Error source</TableCell>
+                                                <TableCell>{detailItem.error_source || '-'}</TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Error step</TableCell>
+                                                <TableCell>{detailItem.error_step || '-'}</TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Error reason</TableCell>
+                                                <TableCell>{detailItem.error_reason || '-'}</TableCell>
+                                            </TableRow>
+                                        </TableBody>
+                                    </Table>
+                                </Paper>
+                            )}
+                        </Stack>
+                    ) : (
+                        <Typography variant="body2">No details available.</Typography>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDetail}>Close</Button>
+                </DialogActions>
+            </Dialog>
         </Stack>
     );
 }
