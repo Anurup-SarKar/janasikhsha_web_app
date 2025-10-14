@@ -13,8 +13,9 @@ export default function ResetPassword() {
     const navigate = useNavigate();
     const query = useQuery();
 
-    // Detect if this is admin or normal user based on URL parameter or stored token
-    const [isAdmin] = React.useState(() => query.get('type') === 'admin' || !!localStorage.getItem('admin_reset_token'));
+    // Detect if this is admin based ONLY on URL parameter 'type=admin'
+    // Normal users will not have this parameter
+    const [isAdmin] = React.useState(() => query.get('type') === 'admin');
 
     // Email and token come from URL; email is non-editable
     const [email] = React.useState(() => decodeURIComponent(query.get('email') || ''));
@@ -24,7 +25,7 @@ export default function ResetPassword() {
     const [loading, setLoading] = React.useState(false);
     const [message, setMessage] = React.useState('');
 
-    // Validate link token against locally stored token + expiry; if mismatch/expired, bounce to login with message
+    // Validate link - for admin, check stored token; for normal users, just check URL params exist
     React.useEffect(() => {
         // For admin users, validate against stored token
         if (isAdmin) {
@@ -54,9 +55,9 @@ export default function ResetPassword() {
                 navigate('/admin_home');
             }
         } else {
-            // For normal users, just validate token exists in URL
+            // For normal users, just validate token and email exist in URL (backend will validate token)
             if (!token || !email) {
-                navigate('/login');
+                setMessage('Invalid reset link. Token or email is missing.');
             }
         }
     }, [token, email, navigate, isAdmin]);
