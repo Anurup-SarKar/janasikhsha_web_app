@@ -6,6 +6,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Box, Typography, TextField, Button } from '@mui/material';
 import { alpha } from '@mui/material/styles';
+import { adminLogin, validateOtp, requestPasswordReset } from '../admin/api/auth';
 
 /**
  * LoginForm component
@@ -86,8 +87,8 @@ export default function LoginForm({ onBack, onLogin, hideBackButton, embedded, l
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  // Handle form submit (initial credentials step)
-  function handleSubmit(e) {
+  // Handle form submit (initial credentials step) - call backend API
+  async function handleSubmit(e) {
     e.preventDefault();
     setError('');
     setOtpMsg('');
@@ -98,21 +99,34 @@ export default function LoginForm({ onBack, onLogin, hideBackButton, embedded, l
       return;
     }
 
-    // Optional: Try demo credential check, but still proceed to OTP
-    const users = JSON.parse(localStorage.getItem('jpk_users') || '{}');
-    if (users[form.email] && users[form.email] !== form.password) {
-      setError('Invalid username or password.');
-      return;
-    }
+    try {
+      const response = await adminLogin(form.email, form.password);
 
-    // Move to OTP verification phase instead of logging in directly
-    setIsOtpPhase(true);
-    setOtp('');
-    setOtpMsg('We have sent a 6-digit OTP to your email.');
+      if (response.statusCode === 200 && response.data?.otp) {
+        // Move to OTP verification phase
+        setIsOtpPhase(true);
+        setOtp('');
+        setOtpMsg('We have sent a 6-digit OTP to your email.');
+      } else {
+        setError(response.statusMessage || 'Login failed. Please try again.');
+      }
+    } catch (err) {
+      const errorMsg = err.message || 'Login failed. Please check your credentials.';
+      try {
+        const match = errorMsg.match(/\{.*"statusMessage"\s*:\s*"([^"]+)"/);
+        if (match) {
+          setError(match[1]);
+        } else {
+          setError(errorMsg);
+        }
+      } catch {
+        setError(errorMsg);
+      }
+    }
   }
 
-  // Verify OTP
-  function handleVerifyOtp(e) {
+  // Verify OTP - call backend API
+  async function handleVerifyOtp(e) {
     e.preventDefault();
     setError('');
 
@@ -121,8 +135,33 @@ export default function LoginForm({ onBack, onLogin, hideBackButton, embedded, l
       return;
     }
 
-    onLogin?.();
-    scrollToId('aboutus');
+    try {
+      const response = await validateOtp(form.email, form.password, otp);
+
+      if (response.statusCode === 200 && response.data?.token) {
+        // For normal users, no admin check - just store token in localStorage
+        const token = response.data.token;
+        console.log('[User Login] Login successful - storing token');
+        localStorage.setItem('user_auth_token', token);
+
+        onLogin?.(response.data.user);
+        scrollToId('aboutus');
+      } else {
+        setError(response.statusMessage || 'Invalid OTP. Please try again.');
+      }
+    } catch (err) {
+      const errorMsg = err.message || 'OTP validation failed. Please try again.';
+      try {
+        const match = errorMsg.match(/\{.*"statusMessage"\s*:\s*"([^"]+)"/);
+        if (match) {
+          setError(match[1]);
+        } else {
+          setError(errorMsg);
+        }
+      } catch {
+        setError(errorMsg);
+      }
+    }
   }
 
   // Resend OTP
@@ -131,8 +170,8 @@ export default function LoginForm({ onBack, onLogin, hideBackButton, embedded, l
     setOtpMsg('A new OTP has been sent.');
   };
 
-  // Handle forgot password
-  function handleForgotPassword(e) {
+  // Handle forgot password - call backend API
+  async function handleForgotPassword(e) {
     e.preventDefault();
     setResetMsg('');
     setError('');
@@ -141,11 +180,22 @@ export default function LoginForm({ onBack, onLogin, hideBackButton, embedded, l
       setError('Please enter a valid email to reset password.');
       return;
     }
-    const users = JSON.parse(localStorage.getItem('jpk_users') || '{}');
-    if (users[form.email]) {
-      setResetMsg('A password reset link has been sent to your email (demo only).');
-    } else {
-      setError('No account found with this email.');
+
+    try {
+      const res = await requestPasswordReset(form.email);
+      if (res?.statusCode === 200) {
+        setResetMsg('A password reset link has been sent to your email. Please check your inbox.');
+      } else {
+        setError(res?.statusMessage || 'Failed to request password reset.');
+      }
+    } catch (err) {
+      const msg = err.message || 'Failed to request password reset.';
+      try {
+        const match = msg.match(/\{.*"statusMessage"\s*:\s*"([^"]+)"/);
+        setError(match ? match[1] : msg);
+      } catch {
+        setError(msg);
+      }
     }
   }
 
