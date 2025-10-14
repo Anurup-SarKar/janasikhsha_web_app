@@ -4,20 +4,13 @@ import React from 'react';
 import { Box, Typography, Grid, Avatar } from '@mui/material';
 
 const teamMembers = [
-  { name: 'Mrs. Shukla Banerjee', role: 'President', img: null },
-  { name: 'Mrs. Rina Banerjee', role: 'Vice President', img: null },
-  { name: 'Mrs. Sarmila Basu', role: 'Secretary', img: null },
-  { name: 'Mrs. Sarmila Basu', role: 'Superintendent', img: null },
-  { name: 'Mrs. Sarmila Basu', role: 'Project Director', img: null },
-  { name: 'Mrs. Sarmila Basu', role: 'Child Welfare Officer', img: null },
-  { name: 'Mrs. Sarmila Basu', role: 'Probation Officer', img: null },
-  { name: 'Mrs. Sarmila Basu', role: 'Counsellor', img: null },
-  { name: 'Mrs. Sarmila Basu', role: 'House Mother', img: null },
-  { name: 'Mrs. Sarmila Basu', role: 'House Father', img: null },
-  { name: 'Mrs. Sarmila Basu', role: 'House Attendant', img: null },
-  { name: 'Mrs. Sarmila Basu', role: 'Cook', img: null },
-  { name: 'Mrs. Sarmila Basu', role: 'Sweeper', img: null },
-  { name: 'Mrs. Sarmila Basu', role: 'Watchman', img: null },
+  { name: 'Mr. Amiyo Kumar Chakraborty', role: 'President', img: null },
+  { name: 'Mr. Prof.(Dr) Partha Basu', role: 'Vice President', img: null },
+  { name: 'Mr. Asim Mukherjee', role: 'Secretary', img: null },
+  { name: 'Mr. Pradip Das', role: 'Treasurer', img: null },
+  { name: 'Mrs. Aparna Roy', role: 'Member', img: null },
+  { name: 'Mrs. Rita Ray(Saha)', role: 'Accounts Officer', img: null },
+  { name: 'Mr. Avisekh Mukherjee', role: 'Executive Director', img: null },
 ];
 
 export default function OurTeam() {

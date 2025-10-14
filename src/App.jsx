@@ -15,7 +15,6 @@ import LoginDialog from './components/LoginDialog';
 import LiveCCTV from './components/LiveCCTV';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
-import AboutUs from './pages/AboutUs';
 import WhatWeDo from './pages/WhatWeDo';
 import LatestProjects from './pages/LatestProjects';
 import NewsRoom from './pages/NewsRoom';
@@ -26,17 +25,15 @@ import Location from './pages/Location';
 import WhoWeAre from './pages/WhoWeAre';
 import OurManifesto from './pages/OurManifesto';
 import OurTeam from './pages/OurTeam';
+import PDFViewer from './pages/PDFViewer';
 import OurAchievements from './pages/OurAchievements';
 import ChildProtection from './pages/ChildProtection';
 import ChildEducation from './pages/ChildEducation';
-import AfterCare from './pages/AfterCare';
 import Swadhar from './pages/Swadhar';
 import ElderlyCare from './pages/ElderlyCare';
-import StaffList from './pages/StaffList';
 import BeneficiaryDetails from './pages/BeneficiaryDetails';
 import AdminHome from './pages/AdminHome';
 import ResetPassword from './pages/ResetPassword';
-import Authority from './pages/Authority';
 import MaintenanceHome from './pages/MaintenanceHome';
 
 /**
@@ -78,7 +75,6 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
       <Box tabIndex={-1} sx={{ outline: 'none', flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
         <Routes>
           <Route path="/" element={<MaintenanceHome />} />
-          <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/whatwedo" element={<WhatWeDo />} />
           <Route path="/latestprojects" element={<LatestProjects />} />
           <Route path="/newsroom" element={<NewsRoom />} />
@@ -92,17 +88,16 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
           <Route path="/donationform" element={<DonationForm />} />
           <Route path="/livecctv" element={isLoggedIn ? <LiveCCTV /> : <Navigate to="/login" />} />
           <Route path="/whoweare" element={<WhoWeAre />} />
+          <Route path="/memorandum" element={<PDFViewer />} />
+          <Route path="/pdf/:documentId" element={<PDFViewer />} />
           <Route path="/ourmanifesto" element={<OurManifesto />} />
           <Route path="/ourteam" element={<OurTeam />} />
           <Route path="/ourachievements" element={<OurAchievements />} />
           <Route path="/childprotection" element={<ChildProtection />} />
           <Route path="/childeducation" element={<ChildEducation />} />
-          <Route path="/aftercare" element={<AfterCare />} />
           <Route path="/swadhar" element={<Swadhar />} />
           <Route path="/elderlycare" element={<ElderlyCare />} />
-          <Route path="/stafflist" element={<StaffList />} />
           <Route path="/beneficiarydetails" element={<BeneficiaryDetails />} />
-          <Route path="/authority" element={<Authority />} />
           <Route path="/admin_home" element={<AdminHome />} />
           <Route path="/reset_password" element={<ResetPassword />} />
           <Route path="/login" element={
@@ -137,45 +132,35 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
             <Box sx={{ minWidth: 180, mb: { xs: 2, md: 0 } }}>
               <Box sx={{ fontWeight: 700, fontSize: '1.1rem', mb: 1, color: 'secondary.main' }}>ABOUT US</Box>
               <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
-                <li><RouterLink to="/who-we-are" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Who We Are</RouterLink></li>
-                <li><RouterLink to="/our-manifesto" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Our Manifesto</RouterLink></li>
-                <li><RouterLink to="/our-team" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Our Team</RouterLink></li>
-              </Box>
-            </Box>
-            {/* What We Do */}
-            <Box sx={{ minWidth: 180, mb: { xs: 2, md: 0 } }}>
-              <Box sx={{ fontWeight: 700, fontSize: '1.1rem', mb: 1, color: 'secondary.main' }}>WHAT WE DO</Box>
-              <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
-                <li><RouterLink to="/child-protection" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Child Protection</RouterLink></li>
-                <li><RouterLink to="/child-education" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Child Education</RouterLink></li>
-                <li><RouterLink to="/after-care" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;After Care</RouterLink></li>
-                <li><RouterLink to="/swadhar" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Swadhar</RouterLink></li>
-                <li><RouterLink to="/elderly-care" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Elderly Care</RouterLink></li>
-                <li><RouterLink to="/staff-list" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Staff List</RouterLink></li>
-                <li><RouterLink to="/beneficiary-details" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Beneficiary Details</RouterLink></li>
+                <li><RouterLink to="/whoweare" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Who We Are</RouterLink></li>
+                <li><RouterLink to="/memorandum" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Memorandum of Association</RouterLink></li>
               </Box>
             </Box>
             {/* Quick Links */}
             <Box sx={{ minWidth: 180, mb: { xs: 2, md: 0 } }}>
               <Box sx={{ fontWeight: 700, fontSize: '1.1rem', mb: 1, color: 'secondary.main' }}>QUICK LINKS</Box>
               <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
-                <li><RouterLink to="/latest-projects" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Our Latest Projects</RouterLink></li>
-                <li><RouterLink to="/news-room" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;News Room</RouterLink></li>
-                <li><RouterLink to="/history" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;History</RouterLink></li>
-                <li><RouterLink to="/success-story" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Success Story</RouterLink></li>
-                <li><RouterLink to="/support-us" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Support Us</RouterLink></li>
+                <li><RouterLink to="/latestprojects" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Our Scheme</RouterLink></li>
+                <li><RouterLink to="/ourachievements" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Our Achivements</RouterLink></li>
+                <li><RouterLink to="/history" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;History Of Organization</RouterLink></li>
+                <li><RouterLink to="/gallery" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Photo Gallery</RouterLink></li>
+
               </Box>
             </Box>
             {/* Location & Contact */}
             <Box sx={{ minWidth: 280 }}>
               <Box sx={{ fontWeight: 700, fontSize: '1.1rem', mb: 1, color: 'secondary.main' }}>CONTACT US</Box>
               <Box sx={{ mb: 1, fontSize: '0.9rem' }}>
-                <strong>Registered Office:</strong><br />
-                57-B, College Street, Kolkata 700073
+                <strong>Liaison Office:</strong><br />
+                31B,Bhabani Dutta Lane, Kolkata-700073, WB, India
               </Box>
               <Box sx={{ mb: 1, fontSize: '0.9rem' }}>
-                <strong>City Office:</strong><br />
-                CK-6, Sector-II, Salt Lake City, Kolkata 700064
+                <strong>Head Office:</strong><br />
+                CK-6, Sector-II, Salt Lake City, Kolkata 700064,WB, India
+              </Box>
+               <Box sx={{ mb: 1, fontSize: '0.9rem' }}>
+                <strong>Rural Office:</strong><br />
+                P.O+Vill: Baganda,Via:jangipara, Hoogly 712404,WB, India
               </Box>
               <Box sx={{ mb: 1 }}><a href="tel:+913322413324" style={{ color: '#fff', textDecoration: 'none' }}>+91-(033) 2241-3324</a></Box>
               <Box sx={{ mb: 1 }}><a href="mailto:jpk.kolkata@gmail.com" style={{ color: '#fff', textDecoration: 'none' }}>jpk.kolkata@gmail.com</a></Box>

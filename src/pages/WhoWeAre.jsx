@@ -1,103 +1,278 @@
-// WhoWeAre.jsx
-// Who We Are page - Updated with historical content from Brief History PDF
 import React from 'react';
-import { Box, Typography, Grid, Card, CardContent, Chip } from '@mui/material';
+import { 
+  Box, 
+  Container, 
+  Typography, 
+  Paper, 
+  Grid, 
+  Card, 
+  CardContent,
+  Chip
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+
+const InfoCard = styled(Card)(({ theme }) => ({
+  background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+  border: `2px solid ${theme.palette.primary.main}`,
+  borderRadius: '16px',
+  transition: 'all 0.3s ease-in-out',
+  '&:hover': {
+    transform: 'translateY(-8px)',
+    boxShadow: '0 12px 24px rgba(0, 91, 150, 0.15)',
+    border: `2px solid ${theme.palette.secondary.main}`,
+  },
+}));
+
+const SectionChip = styled(Chip)(({ theme }) => ({
+  fontSize: '0.9rem',
+  fontWeight: 'bold',
+  height: '32px',
+  backgroundColor: theme.palette.secondary.main,
+  color: 'white',
+  '& .MuiChip-label': {
+    paddingX: '12px',
+  },
+}));
+
+const organizationInfo = [
+  {
+    title: "Mission of the Organization",
+    icon: "🎯",
+    category: "Mission",
+    description: "Janasiksha Prochar Kendra (JPK) was conceived and incepted to extend developmental service to the people in difficult circumstances with focus on women and children."
+  },
+  {
+    title: "Registration",
+    icon: "📋",
+    category: "Legal",
+    description: "The Organization is registered under the West Bengal Societies Registration Act No. XXVI (1961)",
+    details: [
+      "Registration No: S/12026 dt. 09.08.72",
+      "FCRA No: 147120188 dt. 19.04.85 issued by the Ministry of Home Affairs, Government of India"
+    ]
+  },
+  {
+    title: "The Organization",
+    icon: "🏛️",
+    category: "History",
+    description: "Janasiksha Prochar Kendra started its journey four decades ago with the avowed objective of eradication of illiteracy from amongst the rural poor in addition to rendering other developmental services to the under-privileged sections of the society with focus on women and children in difficulty. During these years, with support from Central and State Government, Welfare Boards, and International Donor Agencies, the organization has expanded its activities manifold, supplementing governmental activities in social welfare both in rural and urban areas, including red light areas."
+  },
+  {
+    title: "Management",
+    icon: "👥",
+    category: "Structure",
+    description: "At the head of the organization there is an Executive Committee headed by the President, the members of which are elected every year in an annual general meeting. The committee sits every three months or earlier — depending on exigency — within the ambit of rules and by–laws of the organization. The day-to-day administration is looked after by the Secretary, ably assisted by a team of dedicated and experienced workers, and sub–committees for each project under the superintendence, direction, and control of the Executive Committee. Fund management is also very transparent, each project having a separate bank account being operated under dual signatory system. Commercial double entry system is maintained and the accounts of each project and that of the organization as a whole are audited every year by a renowned audit firm of the city."
+  },
+  {
+    title: "Areas of Work",
+    icon: "🏢",
+    category: "Services",
+    description: "Our organization focuses on comprehensive development across multiple sectors:",
+    workAreas: [
+      "Education – both non-formal and formal",
+      "Skill upgradation – vocational and non-formal technical training",
+      "Development of child labour",
+      "Supplementary nutrition",
+      "Health care",
+      "Cultural development",
+      "Shelter Homes for destitute elderly persons, women, and girls in difficult circumstances for empowerment and rehabilitation",
+      "Cross-cutting Issues – HIV/AIDS, child marriage, dowry menace, population stabilization, drug addiction and alcoholism, trafficking, etc."
+    ]
+  }
+];
+
+const getCategoryColor = (category) => {
+  const colors = {
+    'Mission': '#e91e63',
+    'Legal': '#2196f3',
+    'History': '#ff9800',
+    'Structure': '#9c27b0',
+    'Services': '#4caf50'
+  };
+  return colors[category] || '#757575';
+};
 
 export default function WhoWeAre() {
   return (
-    <Box sx={{ maxWidth: 1200, mx: 'auto', p: { xs: 2, md: 4 } }}>
-      {/* Header Section */}
-      <Box sx={{ bgcolor: (theme) => theme.palette.background.paper, borderRadius: 3, boxShadow: 2, p: { xs: 3, md: 5 }, mb: 4, border: (theme) => `2px solid ${theme.palette.secondary.main}` }}>
-        <Typography variant="h3" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 700, mb: 2, textAlign: 'center', textShadow: '0 2px 8px rgba(0, 91, 150, 0.12)' }}>
+    <Container maxWidth="lg" sx={{ py: 8 }}>
+      {/* Page Header */}
+      <Box sx={{ textAlign: 'center', mb: 8 }}>
+        <Typography 
+          variant="h2" 
+          component="h1" 
+          sx={{ 
+            mb: 3, 
+            fontFamily: 'Raleway, sans-serif', 
+            fontWeight: 800, 
+            color: (theme) => theme.palette.primary.main,
+            fontSize: { xs: '2.5rem', md: '3.5rem' }
+          }}
+        >
           Who We Are
         </Typography>
-        <Typography variant="h5" sx={{ color: (theme) => theme.palette.text.primary, fontFamily: 'Raleway, sans-serif', fontWeight: 600, mb: 3, textAlign: 'center' }}>
-          Janasiksha Prochar Kendra - A Legacy of Care and Empowerment
+        <Typography 
+          variant="h5" 
+          sx={{ 
+            color: (theme) => theme.palette.text.secondary, 
+            fontFamily: 'Raleway, sans-serif', 
+            fontWeight: 400, 
+            mb: 4,
+            maxWidth: 800,
+            mx: 'auto',
+            lineHeight: 1.6
+          }}
+        >
+          Understanding Our Mission, History, and Organizational Structure
         </Typography>
+        <Box sx={{ width: 100, height: 4, bgcolor: 'secondary.main', mx: 'auto', borderRadius: 2 }} />
       </Box>
 
+      {/* Organization Info Grid */}
       <Grid container spacing={4}>
-        {/* Our Foundation */}
-        <Grid item xs={12} md={6}>
-          <Card sx={{ height: '100%', bgcolor: '#f8f9fa', border: '1px solid #e0e0e0' }}>
-            <CardContent sx={{ p: 3 }}>
-              <Typography variant="h5" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 700, mb: 2 }}>
-                Our Foundation
-              </Typography>
-              <Typography variant="body1" sx={{ fontFamily: 'Raleway, sans-serif', color: (theme) => theme.palette.text.primary, fontSize: '1.1rem', mb: 2, textAlign: 'justify', lineHeight: 1.7 }}>
-                <strong>Janasiksha Prochar Kendra</strong> was established through the vision and dedication of the Bengal Presidency Council of Women and the All Bengal Women's Conference, who recognized the urgent need for an independent organization dedicated to the suppression of immoral traffic and the protection of vulnerable women and children.
-              </Typography>
-              <Typography variant="body1" sx={{ fontFamily: 'Raleway, sans-serif', color: (theme) => theme.palette.text.primary, fontSize: '1.1rem', textAlign: 'justify', lineHeight: 1.7 }}>
-                From its inception, our organization has been committed to creating a safe haven for those who have faced exploitation, abuse, and abandonment, providing them with not just shelter, but hope for a dignified future.
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+        {organizationInfo.map((info, index) => (
+          <Grid item xs={12} md={6} key={index}>
+            <InfoCard>
+              <CardContent sx={{ p: 4, display: 'flex', flexDirection: 'column' }}>
+                {/* Icon, Title and Category */}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1, flex: 1 }}>
+                    <Typography 
+                      variant="h5" 
+                      sx={{ 
+                        color: (theme) => theme.palette.primary.main, 
+                        fontFamily: 'Raleway, sans-serif', 
+                        fontWeight: 700, 
+                        fontSize: { xs: '1.3rem', md: '1.5rem' }
+                      }}
+                    >
+                      {info.title}
+                    </Typography>
+                    <SectionChip 
+                      label={info.category}
+                      size="medium"
+                    />
+                  </Box>
+                  <Typography variant="h3" sx={{ fontSize: '2.5rem', ml: 1 }}>
+                    {info.icon}
+                  </Typography>
+                </Box>
 
-        {/* Our Mission */}
-        <Grid item xs={12} md={6}>
-          <Card sx={{ height: '100%', bgcolor: '#f0f7ff', border: '1px solid #e3f2fd' }}>
-            <CardContent sx={{ p: 3 }}>
-              <Typography variant="h5" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 700, mb: 2 }}>
-                Our Mission
-              </Typography>
-              <Typography variant="body1" sx={{ fontFamily: 'Raleway, sans-serif', color: (theme) => theme.palette.text.primary, fontSize: '1.1rem', mb: 2, textAlign: 'justify', lineHeight: 1.7 }}>
-                We are dedicated to the <strong>right to survive and thrive</strong>. Our mission encompasses the comprehensive care, education, and empowerment of underprivileged girls and women who have faced various forms of social, economic, and physical vulnerabilities.
-              </Typography>
-              <Typography variant="body1" sx={{ fontFamily: 'Raleway, sans-serif', color: (theme) => theme.palette.text.primary, fontSize: '1.1rem', textAlign: 'justify', lineHeight: 1.7 }}>
-                We stand firmly for children's rights, ensuring that every girl in our care receives the support, education, and opportunities necessary to build an independent and fulfilling life.
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+                {/* Description */}
+                <Typography 
+                  variant="body1" 
+                  sx={{ 
+                    fontFamily: 'Raleway, sans-serif', 
+                    color: (theme) => theme.palette.text.primary, 
+                    fontSize: '1rem', 
+                    textAlign: 'justify', 
+                    lineHeight: 1.6,
+                    mb: 2
+                  }}
+                >
+                  {info.description}
+                </Typography>
 
-        {/* What We Do */}
-        <Grid item xs={12}>
-          <Card sx={{ bgcolor: 'white', boxShadow: 2 }}>
-            <CardContent sx={{ p: 4 }}>
-              <Typography variant="h5" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 700, mb: 3, textAlign: 'center' }}>
-                Our Core Services
-              </Typography>
-              <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid item xs={12} sm={6} md={3}>
-                  <Chip label="Residential Care" variant="outlined" sx={{ width: '100%', p: 1, fontSize: '1rem' }} />
-                </Grid>
-                <Grid item xs={12} sm={6} md={3}>
-                  <Chip label="Education & Training" variant="outlined" sx={{ width: '100%', p: 1, fontSize: '1rem' }} />
-                </Grid>
-                <Grid item xs={12} sm={6} md={3}>
-                  <Chip label="Rehabilitation Support" variant="outlined" sx={{ width: '100%', p: 1, fontSize: '1rem' }} />
-                </Grid>
-                <Grid item xs={12} sm={6} md={3}>
-                  <Chip label="Legal Aid" variant="outlined" sx={{ width: '100%', p: 1, fontSize: '1rem' }} />
-                </Grid>
-              </Grid>
-              <Typography variant="body1" sx={{ fontFamily: 'Raleway, sans-serif', color: (theme) => theme.palette.text.primary, fontSize: '1.1rem', textAlign: 'justify', lineHeight: 1.7, mb: 2 }}>
-                Our comprehensive approach ensures that every individual who comes to us receives holistic support. We provide safe residential facilities, quality education, vocational training, psychological counseling, and legal assistance to help survivors rebuild their lives with dignity and independence.
-              </Typography>
-              <Typography variant="body1" sx={{ fontFamily: 'Raleway, sans-serif', color: (theme) => theme.palette.text.primary, fontSize: '1.1rem', textAlign: 'justify', lineHeight: 1.7 }}>
-                Through our various programs, we have created a nurturing environment where healing begins, education flourishes, and new opportunities emerge for those who have faced life's most challenging circumstances.
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+                {/* Additional Details for Registration */}
+                {info.details && (
+                  <Box sx={{ 
+                    mt: 2, 
+                    p: 2, 
+                    bgcolor: (theme) => theme.palette.primary.light + '20', 
+                    borderRadius: 2,
+                    border: (theme) => `1px solid ${theme.palette.primary.light}`
+                  }}>
+                    {info.details.map((detail, idx) => (
+                      <Typography 
+                        key={idx}
+                        variant="body2" 
+                        sx={{ 
+                          fontFamily: 'Raleway, sans-serif', 
+                          color: (theme) => theme.palette.primary.dark, 
+                          fontWeight: 600,
+                          mb: idx < info.details.length - 1 ? 1 : 0
+                        }}
+                      >
+                        <strong>{detail.split(':')[0]}:</strong> {detail.split(':')[1]}
+                      </Typography>
+                    ))}
+                  </Box>
+                )}
 
-        {/* Our Impact */}
-        <Grid item xs={12}>
-          <Box sx={{ bgcolor: (theme) => theme.palette.secondary.main, color: 'white', borderRadius: 2, p: 4, textAlign: 'center' }}>
-            <Typography variant="h5" sx={{ fontFamily: 'Raleway, sans-serif', fontWeight: 700, mb: 3 }}>
-              Our Commitment
-            </Typography>
-            <Typography variant="h6" sx={{ fontFamily: 'Raleway, sans-serif', fontWeight: 600, fontStyle: 'italic', mb: 2 }}>
-              "Right To Survive & Thrive. Let's Stand For Children's Right."
-            </Typography>
-            <Typography variant="body1" sx={{ fontFamily: 'Raleway, sans-serif', fontSize: '1.1rem', opacity: 0.95 }}>
-              Your contribution will provide underprivileged children and girls with a chance to learn, aspire, and achieve their dreams. 
-              Together, we can continue this legacy of hope and transformation.
-            </Typography>
-          </Box>
-        </Grid>
+                {/* Work Areas List */}
+                {info.workAreas && (
+                  <Box sx={{ mt: 2 }}>
+                    {info.workAreas.map((area, idx) => (
+                      <Box 
+                        key={idx}
+                        sx={{ 
+                          display: 'flex', 
+                          alignItems: 'flex-start', 
+                          mb: 1.5,
+                          p: 1,
+                          borderRadius: 1,
+                          '&:hover': {
+                            bgcolor: 'rgba(0, 0, 0, 0.04)'
+                          }
+                        }}
+                      >
+                        <Typography 
+                          variant="body2" 
+                          sx={{ 
+                            mr: 1, 
+                            fontWeight: 'bold', 
+                            color: (theme) => theme.palette.secondary.main,
+                            minWidth: '20px'
+                          }}
+                        >
+                          ({idx + 1})
+                        </Typography>
+                        <Typography 
+                          variant="body2" 
+                          sx={{ 
+                            fontFamily: 'Raleway, sans-serif', 
+                            color: (theme) => theme.palette.text.primary,
+                            lineHeight: 1.5,
+                            flex: 1
+                          }}
+                        >
+                          {area}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </CardContent>
+            </InfoCard>
+          </Grid>
+        ))}
       </Grid>
-    </Box>
+
+      {/* Footer Message */}
+      <Box sx={{ textAlign: 'center', mt: 6, p: 4, bgcolor: 'primary.main', color: 'white', borderRadius: 3 }}>
+        <Typography 
+          variant="h6" 
+          sx={{ 
+            fontFamily: 'Raleway, sans-serif', 
+            fontWeight: 600, 
+            mb: 2 
+          }}
+        >
+          Continuing Our Legacy of Service
+        </Typography>
+        <Typography 
+          variant="body1" 
+          sx={{ 
+            fontFamily: 'Raleway, sans-serif', 
+            fontSize: '1.1rem',
+            maxWidth: 800,
+            mx: 'auto',
+            opacity: 0.95
+          }}
+        >
+          For over four decades, we have been dedicated to serving the most vulnerable members of our society. 
+          Our commitment to transparency, community development, and social welfare continues to drive our mission forward.
+        </Typography>
+      </Box>
+    </Container>
   );
 }
