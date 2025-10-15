@@ -5,7 +5,6 @@ import { Box, Typography, Grid, Card, CardContent, Chip, Container } from '@mui/
 import { styled } from '@mui/material/styles';
 
 const AwardCard = styled(Card)(({ theme }) => ({
-  height: '100%',
   background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
   border: `2px solid ${theme.palette.primary.main}`,
   borderRadius: '16px',
@@ -119,7 +118,7 @@ export default function OurAchievements() {
         {achievements.map((achievement, index) => (
           <Grid item xs={12} md={6} key={index}>
             <AwardCard>
-              <CardContent sx={{ p: 4, height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <CardContent sx={{ p: 4, display: 'flex', flexDirection: 'column' }}>
                 {/* Icon, Title and Year on same line */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1, flex: 1 }}>

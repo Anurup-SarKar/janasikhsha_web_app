@@ -16,7 +16,6 @@ import { styled } from '@mui/material/styles';
 import projectImages, { placeholderImage } from '../assets/images/projectImages';
 
 const ProjectCard = styled(Card)(({ theme }) => ({
-  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   transition: 'all 0.3s ease-in-out',
@@ -217,33 +216,18 @@ export default function LatestProjects() {
       {/* Projects Grid */}
       <Grid container spacing={4}>
         {projects.map((project) => (
-          <Grid item xs={12} sm={6} lg={4} key={project.id}>
+          <Grid item xs={12} key={project.id}>
             <ProjectCard>
-              {/* Project Image */}
-              <CardMedia
-                component="img"
-                height="280"
-                image={projectImages[project.id] || placeholderImage}
-                alt={project.title}
-                sx={{ 
-                  objectFit: 'cover',
-                  borderRadius: '12px 12px 0 0',
-                  transition: 'transform 0.3s ease-in-out',
-                  '&:hover': {
-                    transform: 'scale(1.02)'
-                  }
-                }}
-              />
               <CardContent sx={{ 
                 p: { xs: 2.5, sm: 3 }, 
-                flexGrow: 1, 
                 display: 'flex', 
-                flexDirection: 'column', 
-                textAlign: 'left',
-                minHeight: '160px'
+                flexDirection: 'column',
               }}>
-                {/* Category Chip */}
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                {/* Title Section */}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
+                  <ProjectTitle sx={{ flex: 1, mr: 2 }}>
+                    {project.title}
+                  </ProjectTitle>
                   <Chip 
                     label={project.category}
                     size="small"
@@ -252,19 +236,57 @@ export default function LatestProjects() {
                       color: categoryColors[project.category],
                       fontWeight: 600,
                       fontSize: '0.75rem',
-                      height: '28px'
+                      height: '28px',
+                      flexShrink: 0
                     }}
                   />
                 </Box>
-                
-                {/* Project Content */}
-                <Box sx={{ flexGrow: 1, textAlign: 'left' }}>
-                  <ProjectTitle>
-                    {project.title}
-                  </ProjectTitle>
-                  <ProjectDescription>
-                    {project.description}
-                  </ProjectDescription>
+
+                {/* Content Section - Image Left, Description Right */}
+                <Box sx={{ 
+                  display: 'flex', 
+                  gap: 3, 
+                  flexDirection: { xs: 'column', md: 'row' },
+                  alignItems: 'flex-start' 
+                }}>
+                  {/* Image Section - Only show if image exists */}
+                  {projectImages[project.id] && (
+                    <Box sx={{ 
+                      flex: { xs: '1', md: '0 0 400px' },
+                      minHeight: { xs: '220px', md: '300px' }
+                    }}>
+                      <CardMedia
+                        component="img"
+                        image={projectImages[project.id]}
+                        alt={project.title}
+                        sx={{ 
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          borderRadius: '12px',
+                          transition: 'transform 0.3s ease-in-out',
+                          '&:hover': {
+                            transform: 'scale(1.02)'
+                          }
+                        }}
+                      />
+                    </Box>
+                  )}
+                  
+                  {/* Description Section */}
+                  <Box sx={{ 
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start'
+                  }}>
+                    <ProjectDescription sx={{ 
+                      textAlign: 'justify',
+                      lineHeight: 1.7
+                    }}>
+                      {project.description}
+                    </ProjectDescription>
+                  </Box>
                 </Box>
               </CardContent>
             </ProjectCard>

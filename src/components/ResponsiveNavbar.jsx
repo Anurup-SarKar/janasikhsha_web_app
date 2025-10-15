@@ -39,12 +39,12 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 const NavButton = styled(Button)(({ theme }) => ({
   fontFamily: 'Raleway, sans-serif',
   fontWeight: 400,
-  fontSize: '0.85rem',
+  fontSize: '0.95rem', // Increased from 0.85rem to 0.95rem
   color: theme.palette.primary.main,
   background: 'none',
   borderRadius: 8,
-  padding: '6px 12px',
-  margin: '0 1px',
+  padding: '6px 16px', // Increased horizontal padding for better spacing
+  margin: '0 4px', // Increased margin for consistent spacing between items
   textTransform: 'none',
   letterSpacing: 0.3,
   minHeight: 50,
@@ -114,6 +114,11 @@ const aboutMenuItems = [
   { label: 'Authority of Organization & Staff Structure', page: 'ourteam' },
 ];
 
+const schemeMenuItems = [
+  { label: 'Running Scheme', page: 'latestprojects' },
+  { label: 'Proposed Scheme', page: 'proposedscheme' },
+];
+
 /**
  * ResponsiveNavbar component
  * Shows navigation links, login/logout, and a drawer menu for mobile.
@@ -126,6 +131,7 @@ const aboutMenuItems = [
 export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [aboutAnchorEl, setAboutAnchorEl] = React.useState(null);
+  const [schemeAnchorEl, setSchemeAnchorEl] = React.useState(null);
   const [createUserOpen, setCreateUserOpen] = useState(false);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [newUser, setNewUser] = useState({ username: '', password: '' });
@@ -135,7 +141,6 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
   const navigate = useNavigate();
   const navItems = [
     { label: 'What We\nDo', page: 'whatwedo' },
-    { label: 'Latest\nProjects', page: 'latestprojects' },
     { label: 'Our\nAchievements', page: 'ourachievements' },
     { label: 'History of\nOrganization', page: 'history' },
     { label: 'Photo\nGallery', page: 'photogallery' },
@@ -165,6 +170,9 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
 
   const handleAboutMenuOpen = (event) => setAboutAnchorEl(event.currentTarget);
   const handleAboutMenuClose = () => setAboutAnchorEl(null);
+
+  const handleSchemeMenuOpen = (event) => setSchemeAnchorEl(event.currentTarget);
+  const handleSchemeMenuClose = () => setSchemeAnchorEl(null);
 
   // Handle create user dialog open/close
   const handleOpenCreateUser = () => { setCreateUserOpen(true); setNewUser({ username: '', password: '' }); setCreateUserError(''); };
@@ -249,7 +257,7 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                       fontFamily: 'Raleway, sans-serif', 
                       color: theme.palette.primary.main, 
                       fontWeight: 400,
-                      fontSize: '0.85rem',
+                      fontSize: '0.95rem', // Increased to match main menu items
                       textAlign: 'left',
                       display: 'flex',
                       alignItems: 'center',
@@ -261,7 +269,50 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                 ))}
               </Menu>
 
-              {navItems.map((item) => (
+              {/* What We Do - first nav item */}
+              <NavButton component={RouterLink} to="/whatwedo">What We{'\n'}Do</NavButton>
+
+              <NavButton
+                aria-controls={schemeAnchorEl ? 'scheme-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={schemeAnchorEl ? 'true' : undefined}
+                onClick={handleSchemeMenuOpen}
+                endIcon={<ArrowDropDownIcon />}
+              >
+                Our Scheme
+              </NavButton>
+              <Menu
+                id="scheme-menu"
+                anchorEl={schemeAnchorEl}
+                open={Boolean(schemeAnchorEl)}
+                onClose={handleSchemeMenuClose}
+                MenuListProps={{ 'aria-labelledby': 'scheme-menu-button' }}
+                sx={{ mt: 1 }}
+              >
+                {schemeMenuItems.map((item) => (
+                  <MenuItem
+                    key={item.page}
+                    component={RouterLink}
+                    to={`/${item.page}`}
+                    onClick={handleSchemeMenuClose}
+                    sx={{ 
+                      fontFamily: 'Raleway, sans-serif', 
+                      color: theme.palette.primary.main, 
+                      fontWeight: 400,
+                      fontSize: '0.95rem',
+                      textAlign: 'left',
+                      display: 'flex',
+                      alignItems: 'center',
+                      minHeight: 40
+                    }}
+                  >
+                    {item.label}
+                  </MenuItem>
+                ))}
+              </Menu>
+
+              {/* Remaining nav items */}
+              {navItems.slice(1).map((item) => (
                 <NavButton key={item.page} component={RouterLink} to={`/${item.page}`}>{item.label}</NavButton>
               ))}
               {isLoggedIn && (
@@ -274,7 +325,7 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
             <Button
               onClick={handleLoginLogout}
               sx={{
-                ml: 2,
+                ml: 0.5, // Reduced margin-left to move button more to the left
                 color: '#fff',
                 backgroundColor: theme.palette.primary.main,
                 fontWeight: 700,
@@ -301,7 +352,7 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
             <Button
               onClick={handleLoginLogout}
               sx={{
-                ml: 2,
+                ml: 0.5, // Reduced margin-left to move button more to the left
                 color: '#fff',
                 backgroundColor: theme.palette.primary.main,
                 fontWeight: 700,
@@ -386,7 +437,7 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                         fontFamily: 'Raleway, sans-serif', 
                         color: theme.palette.primary.main, 
                         fontWeight: 400,
-                        fontSize: '0.9rem',
+                        fontSize: '0.95rem', // Increased to match main menu items
                         textAlign: 'left',
                         lineHeight: 1.2
                       } 
@@ -395,8 +446,91 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                 </ListItem>
               ))}
 
-              {/* Other nav items */}
-              {navItems.map((item) => (
+              {/* What We Do - first nav item */}
+              <ListItem
+                button
+                component={RouterLink}
+                to="/whatwedo"
+                onClick={() => setDrawerOpen(false)}
+                sx={{
+                  minHeight: 56,
+                  display: 'flex',
+                  alignItems: 'center',
+                  pl: 2
+                }}
+              >
+                <ListItemText 
+                  primary="What We Do" 
+                  primaryTypographyProps={{ 
+                    sx: { 
+                      fontFamily: 'Raleway, sans-serif', 
+                      color: theme.palette.primary.main, 
+                      fontWeight: 400,
+                      textAlign: 'left',
+                      lineHeight: 1.3
+                    } 
+                  }} 
+                />
+              </ListItem>
+
+              {/* Our Scheme submenu for mobile */}
+              <ListItem
+                button
+                key="ourscheme"
+                onClick={() => setDrawerOpen(open => !open)}
+                sx={{ 
+                  pl: 2,
+                  minHeight: 48,
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                <ListItemText 
+                  primary="Our Scheme" 
+                  primaryTypographyProps={{ 
+                    sx: { 
+                      fontFamily: 'Raleway, sans-serif', 
+                      color: theme.palette.primary.main, 
+                      fontWeight: 400,
+                      textAlign: 'left',
+                      lineHeight: 1.2
+                    } 
+                  }} 
+                />
+              </ListItem>
+              {/* Render Our Scheme submenus indented under Our Scheme */}
+              {drawerOpen && schemeMenuItems.map(item => (
+                <ListItem
+                  button
+                  key={item.page}
+                  component={RouterLink}
+                  to={`/${item.page}`}
+                  onClick={() => setDrawerOpen(false)}
+                  sx={{ 
+                    pl: 4,
+                    minHeight: 44,
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
+                >
+                  <ListItemText 
+                    primary={item.label} 
+                    primaryTypographyProps={{ 
+                      sx: { 
+                        fontFamily: 'Raleway, sans-serif', 
+                        color: theme.palette.primary.main, 
+                        fontWeight: 400,
+                        fontSize: '0.95rem',
+                        textAlign: 'left',
+                        lineHeight: 1.2
+                      } 
+                    }} 
+                  />
+                </ListItem>
+              ))}
+
+              {/* Remaining nav items */}
+              {navItems.slice(1).map((item) => (
                 <ListItem
                   button
                   key={item.page}
