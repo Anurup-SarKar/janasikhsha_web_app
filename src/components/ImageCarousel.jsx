@@ -12,10 +12,10 @@ import Autoplay from 'embla-carousel-autoplay';
  * ImageCarousel component
  * @param {Object} props
  * @param {string[]} props.images - Array of image URLs to display
- * @param {number} [props.height=550] - Height of the carousel in pixels
+ * @param {number} [props.height=620] - Height of the carousel in pixels
  * @returns {JSX.Element} The rendered image carousel
  */
-export default function ImageCarousel({ images, height = 550 }) {
+export default function ImageCarousel({ images, height = 620 }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState([]);
 
@@ -58,6 +58,10 @@ export default function ImageCarousel({ images, height = 550 }) {
                 component="img"
                 src={img}
                 alt={`carousel-${idx}`}
+                onError={(e) => {
+                  console.error(`Failed to load image: ${img}`);
+                  e.target.style.display = 'none';
+                }}
                 sx={{ width: '100%', height: { xs: 420, sm: height }, objectFit: 'cover', display: 'block' }}
               />
             </Box>

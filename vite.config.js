@@ -6,6 +6,7 @@ export default defineConfig(({ mode }) => ({
   // Use '/' in dev so routes work locally, and GH Pages subpath in production
   base: mode === 'production' ? '/janasikhsha_web_app/' : '/',
   plugins: [react()],
+  assetsInclude: ['**/*.pdf', '**/*.jpg', '**/*.png', '**/*.jpeg', '**/*.gif'],
   server: {
     proxy: {
       // Proxy API requests to bypass CORS in development

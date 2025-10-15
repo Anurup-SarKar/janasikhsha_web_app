@@ -162,6 +162,8 @@ export default function LoginForm({ onBack, onLogin, hideBackButton, embedded, l
         setError(errorMsg);
       }
     }
+    onLogin?.();
+    scrollToId('home');
   }
 
   // Resend OTP
