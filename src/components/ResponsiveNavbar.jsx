@@ -13,6 +13,8 @@ import theme from '../theme';
 import LoginDialog from './LoginDialog';
 import LoginForm from './LoginForm';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import Logo1 from '../assets/images/Logo-1.jpg';
+import Logo2 from '../assets/images/Logo-2.png';
 
 // Styled components for a clean, branded look
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
@@ -32,35 +34,71 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   justifyContent: 'space-between',
   paddingLeft: theme.spacing(2),
   paddingRight: theme.spacing(2),
+  gap: theme.spacing(1), // Add consistent spacing between elements
 }));
 const NavButton = styled(Button)(({ theme }) => ({
   fontFamily: 'Raleway, sans-serif',
-  fontWeight: 500,
-  fontSize: '0.95rem',
+  fontWeight: 400,
+  fontSize: '0.95rem', // Increased from 0.85rem to 0.95rem
   color: theme.palette.primary.main,
   background: 'none',
   borderRadius: 8,
-  padding: '8px 18px',
-  margin: '0 2px',
+  padding: '6px 16px', // Increased horizontal padding for better spacing
+  margin: '0 4px', // Increased margin for consistent spacing between items
   textTransform: 'none',
-  letterSpacing: 0.5,
+  letterSpacing: 0.3,
+  minHeight: 50,
+  maxWidth: 120,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  textAlign: 'center',
+  whiteSpace: 'pre-line', // Allow line breaks
+  lineHeight: 1.2,
   '&:hover': {
     background: 'rgba(255, 127, 17, 0.08)',
     color: theme.palette.secondary.main,
     boxShadow: '0 2px 8px rgba(0, 91, 150, 0.2)',
   },
 }));
-const Brand = styled(Typography)(({ theme }) => ({
-  fontFamily: 'Raleway, sans-serif',
-  fontWeight: 900,
-  fontSize: '1.5rem',
-  color: theme.palette.primary.main,
-  letterSpacing: 1,
-  textShadow: '0 2px 8px rgba(0, 91, 150, 0.1)',
-  flexGrow: 1,
+const BrandContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1.5),
   cursor: 'pointer',
   textDecoration: 'none',
   outline: 'none',
+  flex: '0 0 auto',
+  maxWidth: '400px',
+  minWidth: 0,
+}));
+
+const LogoImage = styled('img')(({ theme }) => ({
+  width: 40,
+  height: 40,
+  borderRadius: '50%',
+  objectFit: 'cover',
+  flexShrink: 0, // Prevent logo from shrinking
+  border: `2px solid ${theme.palette.primary.light}`,
+  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+}));
+
+const Brand = styled(Typography)(({ theme }) => ({
+  fontFamily: 'Raleway, sans-serif',
+  fontWeight: 900,
+  fontSize: '0.95rem', // Further decreased for smaller title
+  color: theme.palette.primary.main,
+  letterSpacing: 0.8,
+  textShadow: '0 2px 8px rgba(0, 91, 150, 0.1)',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  minWidth: 0, // Allow text to shrink
+  display: 'flex',
+  alignItems: 'center', // Vertically center the text
+  justifyContent: 'center', // Horizontally center the text
+  textAlign: 'center', // Center text alignment
+  lineHeight: 1, // Adjust line height for better vertical centering
   // Remove any visible border/outline when the brand link is focused/active/hovered
   '&:focus, &:active, &:hover': {
     textDecoration: 'none',
@@ -72,8 +110,13 @@ const Brand = styled(Typography)(({ theme }) => ({
 
 const aboutMenuItems = [
   { label: 'Who We Are', page: 'whoweare' },
-  { label: 'Our Manifesto', page: 'ourmanifesto' },
-  { label: 'Our Team', page: 'ourteam' },
+  { label: 'Memorandum of Association', page: 'memorandum' },
+  { label: 'Authority of Organization & Staff Structure', page: 'ourteam' },
+];
+
+const schemeMenuItems = [
+  { label: 'Running Scheme', page: 'latestprojects' },
+  { label: 'Proposed Scheme', page: 'proposedscheme' },
 ];
 
 /**
@@ -88,6 +131,7 @@ const aboutMenuItems = [
 export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [aboutAnchorEl, setAboutAnchorEl] = React.useState(null);
+  const [schemeAnchorEl, setSchemeAnchorEl] = React.useState(null);
   const [createUserOpen, setCreateUserOpen] = useState(false);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [newUser, setNewUser] = useState({ username: '', password: '' });
@@ -96,13 +140,11 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
   const navItems = [
-    { label: 'About Us', page: 'aboutus' },
-    { label: 'What We Do', page: 'whatwedo' },
-    { label: 'Gallery', page: 'gallery' },
-    { label: 'News Room', page: 'newsroom' },
-    { label: 'Case History', page: 'casehistory' },
-    { label: 'Support Us', page: 'supportus' },
-    { label: 'Contact', page: 'contact' },
+    { label: 'What We\nDo', page: 'whatwedo' },
+    { label: 'Our\nAchievements', page: 'ourachievements' },
+    { label: 'History of\nOrganization', page: 'history' },
+    { label: 'Photo\nGallery', page: 'photogallery' },
+    { label: 'Contact\nDetails', page: 'contact' },
   ];
   if (isLoggedIn) navItems.push({ label: 'Live CCTV', page: 'livecctv' });
 
@@ -128,6 +170,9 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
 
   const handleAboutMenuOpen = (event) => setAboutAnchorEl(event.currentTarget);
   const handleAboutMenuClose = () => setAboutAnchorEl(null);
+
+  const handleSchemeMenuOpen = (event) => setSchemeAnchorEl(event.currentTarget);
+  const handleSchemeMenuClose = () => setSchemeAnchorEl(null);
 
   // Handle create user dialog open/close
   const handleOpenCreateUser = () => { setCreateUserOpen(true); setNewUser({ username: '', password: '' }); setCreateUserError(''); };
@@ -164,9 +209,27 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
               <MenuIcon sx={{ color: theme.palette.secondary.main, fontSize: 26 }} />
             </IconButton>
           )}
-          <Brand component={RouterLink} to="/">Janasiksha Prochar Kendra</Brand>
+          <BrandContainer component={RouterLink} to="/">
+            <LogoImage 
+              src={Logo1} 
+              alt="Janasiksha Prochar Kendra Logo 1"
+            />
+            <Brand>JANASIKSHA PROCHAR KENDRA</Brand>
+            <LogoImage 
+              src={Logo2} 
+              alt="Janasiksha Prochar Kendra Logo 2"
+            />
+          </BrandContainer>
           {!isMobile && (
-            <>
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 2.5,
+              height: '100%',
+              flex: '0 1 auto',
+              overflow: 'hidden',
+              flexWrap: 'nowrap'
+            }}>
               <NavButton
                 aria-controls={aboutAnchorEl ? 'about-menu' : undefined}
                 aria-haspopup="true"
@@ -190,26 +253,79 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                     component={RouterLink}
                     to={`/${item.page}`}
                     onClick={handleAboutMenuClose}
-                    sx={{ fontFamily: 'Raleway, sans-serif', color: theme.palette.primary.main, fontWeight: 500 }}
+                    sx={{ 
+                      fontFamily: 'Raleway, sans-serif', 
+                      color: theme.palette.primary.main, 
+                      fontWeight: 400,
+                      fontSize: '0.95rem', // Increased to match main menu items
+                      textAlign: 'left',
+                      display: 'flex',
+                      alignItems: 'center',
+                      minHeight: 40
+                    }}
                   >
                     {item.label}
                   </MenuItem>
                 ))}
               </Menu>
-              {navItems.filter(item => item.label !== 'About Us').map(item => (
+
+              {/* What We Do - first nav item */}
+              <NavButton component={RouterLink} to="/whatwedo">What We{'\n'}Do</NavButton>
+
+              <NavButton
+                aria-controls={schemeAnchorEl ? 'scheme-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={schemeAnchorEl ? 'true' : undefined}
+                onClick={handleSchemeMenuOpen}
+                endIcon={<ArrowDropDownIcon />}
+              >
+                Our Scheme
+              </NavButton>
+              <Menu
+                id="scheme-menu"
+                anchorEl={schemeAnchorEl}
+                open={Boolean(schemeAnchorEl)}
+                onClose={handleSchemeMenuClose}
+                MenuListProps={{ 'aria-labelledby': 'scheme-menu-button' }}
+                sx={{ mt: 1 }}
+              >
+                {schemeMenuItems.map((item) => (
+                  <MenuItem
+                    key={item.page}
+                    component={RouterLink}
+                    to={`/${item.page}`}
+                    onClick={handleSchemeMenuClose}
+                    sx={{ 
+                      fontFamily: 'Raleway, sans-serif', 
+                      color: theme.palette.primary.main, 
+                      fontWeight: 400,
+                      fontSize: '0.95rem',
+                      textAlign: 'left',
+                      display: 'flex',
+                      alignItems: 'center',
+                      minHeight: 40
+                    }}
+                  >
+                    {item.label}
+                  </MenuItem>
+                ))}
+              </Menu>
+
+              {/* Remaining nav items */}
+              {navItems.slice(1).map((item) => (
                 <NavButton key={item.page} component={RouterLink} to={`/${item.page}`}>{item.label}</NavButton>
               ))}
               {isLoggedIn && (
                 <NavButton onClick={handleOpenCreateUser}>Create User</NavButton>
               )}
-            </>
+            </Box>
           )}
           {isLoggedIn ? (
             // Replace icon with text button for Logout
             <Button
               onClick={handleLoginLogout}
               sx={{
-                ml: 2,
+                ml: 0.5, // Reduced margin-left to move button more to the left
                 color: '#fff',
                 backgroundColor: theme.palette.primary.main,
                 fontWeight: 700,
@@ -217,6 +333,13 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                 borderRadius: 3,
                 textTransform: 'none',
                 boxShadow: '0 2px 8px rgba(0, 91, 150, 0.18)',
+                minHeight: 40,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '8px 24px',
+                flexShrink: 0, // Prevent the button from shrinking
+                whiteSpace: 'nowrap', // Prevent text wrapping
                 '&:hover': {
                   backgroundColor: theme.palette.primary.dark,
                 },
@@ -229,7 +352,7 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
             <Button
               onClick={handleLoginLogout}
               sx={{
-                ml: 2,
+                ml: 0.5, // Reduced margin-left to move button more to the left
                 color: '#fff',
                 backgroundColor: theme.palette.primary.main,
                 fontWeight: 700,
@@ -237,6 +360,13 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                 borderRadius: 3,
                 textTransform: 'none',
                 boxShadow: '0 2px 8px rgba(0, 91, 150, 0.18)',
+                minHeight: 40,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '8px 24px',
+                flexShrink: 0, // Prevent the button from shrinking
+                whiteSpace: 'nowrap', // Prevent text wrapping
                 '&:hover': {
                   backgroundColor: theme.palette.primary.dark,
                 },
@@ -265,9 +395,25 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                 button
                 key="aboutus"
                 onClick={() => setDrawerOpen(open => !open)}
-                sx={{ pl: 2 }}
+                sx={{ 
+                  pl: 2,
+                  minHeight: 48,
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
               >
-                <ListItemText primary="About Us" primaryTypographyProps={{ sx: { fontFamily: 'Raleway, sans-serif', color: theme.palette.primary.main, fontWeight: 500 } }} />
+                <ListItemText 
+                  primary="About Us" 
+                  primaryTypographyProps={{ 
+                    sx: { 
+                      fontFamily: 'Raleway, sans-serif', 
+                      color: theme.palette.primary.main, 
+                      fontWeight: 400,
+                      textAlign: 'left',
+                      lineHeight: 1.2
+                    } 
+                  }} 
+                />
               </ListItem>
               {/* Render About Us submenus indented under About Us */}
               {drawerOpen && aboutMenuItems.map(item => (
@@ -277,31 +423,191 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                   component={RouterLink}
                   to={`/${item.page}`}
                   onClick={() => setDrawerOpen(false)}
-                  sx={{ pl: 4 }}
+                  sx={{ 
+                    pl: 4,
+                    minHeight: 44,
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
                 >
-                  <ListItemText primary={item.label} primaryTypographyProps={{ sx: { fontFamily: 'Raleway, sans-serif', color: theme.palette.primary.main, fontWeight: 500 } }} />
+                  <ListItemText 
+                    primary={item.label} 
+                    primaryTypographyProps={{ 
+                      sx: { 
+                        fontFamily: 'Raleway, sans-serif', 
+                        color: theme.palette.primary.main, 
+                        fontWeight: 400,
+                        fontSize: '0.95rem', // Increased to match main menu items
+                        textAlign: 'left',
+                        lineHeight: 1.2
+                      } 
+                    }} 
+                  />
                 </ListItem>
               ))}
-              {/* Other nav items except About Us */}
-              {navItems.filter(item => item.label !== 'About Us').map(item => (
+
+              {/* What We Do - first nav item */}
+              <ListItem
+                button
+                component={RouterLink}
+                to="/whatwedo"
+                onClick={() => setDrawerOpen(false)}
+                sx={{
+                  minHeight: 56,
+                  display: 'flex',
+                  alignItems: 'center',
+                  pl: 2
+                }}
+              >
+                <ListItemText 
+                  primary="What We Do" 
+                  primaryTypographyProps={{ 
+                    sx: { 
+                      fontFamily: 'Raleway, sans-serif', 
+                      color: theme.palette.primary.main, 
+                      fontWeight: 400,
+                      textAlign: 'left',
+                      lineHeight: 1.3
+                    } 
+                  }} 
+                />
+              </ListItem>
+
+              {/* Our Scheme submenu for mobile */}
+              <ListItem
+                button
+                key="ourscheme"
+                onClick={() => setDrawerOpen(open => !open)}
+                sx={{ 
+                  pl: 2,
+                  minHeight: 48,
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                <ListItemText 
+                  primary="Our Scheme" 
+                  primaryTypographyProps={{ 
+                    sx: { 
+                      fontFamily: 'Raleway, sans-serif', 
+                      color: theme.palette.primary.main, 
+                      fontWeight: 400,
+                      textAlign: 'left',
+                      lineHeight: 1.2
+                    } 
+                  }} 
+                />
+              </ListItem>
+              {/* Render Our Scheme submenus indented under Our Scheme */}
+              {drawerOpen && schemeMenuItems.map(item => (
                 <ListItem
                   button
                   key={item.page}
                   component={RouterLink}
                   to={`/${item.page}`}
                   onClick={() => setDrawerOpen(false)}
+                  sx={{ 
+                    pl: 4,
+                    minHeight: 44,
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
                 >
-                  <ListItemText primary={item.label} primaryTypographyProps={{ sx: { fontFamily: 'Raleway, sans-serif', color: theme.palette.primary.main, fontWeight: 500 } }} />
+                  <ListItemText 
+                    primary={item.label} 
+                    primaryTypographyProps={{ 
+                      sx: { 
+                        fontFamily: 'Raleway, sans-serif', 
+                        color: theme.palette.primary.main, 
+                        fontWeight: 400,
+                        fontSize: '0.95rem',
+                        textAlign: 'left',
+                        lineHeight: 1.2
+                      } 
+                    }} 
+                  />
+                </ListItem>
+              ))}
+
+              {/* Remaining nav items */}
+              {navItems.slice(1).map((item) => (
+                <ListItem
+                  button
+                  key={item.page}
+                  component={RouterLink}
+                  to={`/${item.page}`}
+                  onClick={() => setDrawerOpen(false)}
+                  sx={{
+                    minHeight: 56,
+                    display: 'flex',
+                    alignItems: 'center',
+                    pl: 2
+                  }}
+                >
+                  <ListItemText 
+                    primary={item.label.replace('\n', ' ')} 
+                    primaryTypographyProps={{ 
+                      sx: { 
+                        fontFamily: 'Raleway, sans-serif', 
+                        color: theme.palette.primary.main, 
+                        fontWeight: 400,
+                        textAlign: 'left',
+                        lineHeight: 1.3,
+                        whiteSpace: 'normal',
+                        wordWrap: 'break-word'
+                      } 
+                    }} 
+                  />
                 </ListItem>
               ))}
               <Divider sx={{ my: 1 }} />
-              <ListItem button onClick={handleLoginLogout}>
-                <ListItemText primary={isLoggedIn ? 'Logout' : 'Login'} primaryTypographyProps={{ sx: { fontFamily: 'Raleway, sans-serif', color: theme.palette.secondary.main, fontWeight: 700 } }} />
+              <ListItem 
+                button 
+                onClick={handleLoginLogout}
+                sx={{
+                  minHeight: 48,
+                  display: 'flex',
+                  alignItems: 'center',
+                  pl: 2
+                }}
+              >
+                <ListItemText 
+                  primary={isLoggedIn ? 'Logout' : 'Login'} 
+                  primaryTypographyProps={{ 
+                    sx: { 
+                      fontFamily: 'Raleway, sans-serif', 
+                      color: theme.palette.secondary.main, 
+                      fontWeight: 700,
+                      textAlign: 'left',
+                      lineHeight: 1.2
+                    } 
+                  }} 
+                />
                 {/* Removed trailing icons to show text only */}
               </ListItem>
               {isLoggedIn && (
-                <ListItem button onClick={handleOpenCreateUser}>
-                  <ListItemText primary="Create User" />
+                <ListItem 
+                  button 
+                  onClick={handleOpenCreateUser}
+                  sx={{
+                    minHeight: 48,
+                    display: 'flex',
+                    alignItems: 'center',
+                    pl: 2
+                  }}
+                >
+                  <ListItemText 
+                    primary="Create User"
+                    primaryTypographyProps={{ 
+                      sx: { 
+                        fontFamily: 'Raleway, sans-serif', 
+                        color: theme.palette.primary.main, 
+                        fontWeight: 500,
+                        textAlign: 'left',
+                        lineHeight: 1.2
+                      } 
+                    }}
+                  />
                 </ListItem>
               )}
             </List>

@@ -6,6 +6,7 @@ export default defineConfig(({ mode }) => ({
   // Always use root path for VPS deployment (override with BASE_PATH env for GitHub Pages)
   base: process.env.BASE_PATH || '/',
   plugins: [react()],
+  assetsInclude: ['**/*.pdf', '**/*.jpg', '**/*.png', '**/*.jpeg', '**/*.gif'],
   server: {
     proxy: {
       // Proxy API requests to bypass CORS in development
