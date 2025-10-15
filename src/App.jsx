@@ -27,6 +27,7 @@ import OurManifesto from './pages/OurManifesto';
 import OurTeam from './pages/OurTeam';
 import PDFViewer from './pages/PDFViewer';
 import OurAchievements from './pages/OurAchievements';
+import ProposedScheme from './pages/ProposedScheme';
 import ChildProtection from './pages/ChildProtection';
 import ChildEducation from './pages/ChildEducation';
 import Swadhar from './pages/Swadhar';
@@ -81,6 +82,7 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
           <Route path="/history" element={<History />} />
           <Route path="/successstory" element={<SuccessStory />} />
           <Route path="/gallery" element={<Gallery />} />
+          <Route path="/photogallery" element={<Gallery />} />
           <Route path="/supportus" element={<SupportUs />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/location" element={<Location />} />
@@ -93,6 +95,7 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
           <Route path="/ourmanifesto" element={<OurManifesto />} />
           <Route path="/ourteam" element={<OurTeam />} />
           <Route path="/ourachievements" element={<OurAchievements />} />
+          <Route path="/proposedscheme" element={<ProposedScheme />} />
           <Route path="/childprotection" element={<ChildProtection />} />
           <Route path="/childeducation" element={<ChildEducation />} />
           <Route path="/swadhar" element={<Swadhar />} />
@@ -134,6 +137,7 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
               <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
                 <li><RouterLink to="/whoweare" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Who We Are</RouterLink></li>
                 <li><RouterLink to="/memorandum" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Memorandum of Association</RouterLink></li>
+                <li><RouterLink to="/ourteam" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Authority of Organization & Staff Structure</RouterLink></li>
               </Box>
             </Box>
             {/* Quick Links */}
