@@ -52,12 +52,11 @@ function App() {
 function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
   const location = useLocation();
   const isAdminRoute = location.pathname === '/admin_home' || location.pathname === '/reset_password';
-  const isMaintenanceRoute = location.pathname === '/';
 
   return (
     <Container maxWidth={false} disableGutters sx={{ width: '100vw', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', px: { xs: 0, md: 0 } }}>
-      {/* Responsive navigation bar with login/logout and menu (hidden for admin and maintenance routes) */}
-      {!isAdminRoute && !isMaintenanceRoute && (
+      {/* Responsive navigation bar with login/logout and menu (hidden for admin routes) */}
+      {!isAdminRoute && (
         <>
           <ResponsiveNavbar isLoggedIn={isLoggedIn} onLogin={() => setIsLoggedIn(true)} onLogout={() => setIsLoggedIn(false)} />
           {/* Spacer to offset fixed AppBar so routed pages start below the navbar */}
@@ -68,7 +67,7 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
       {/* Main content area with routed pages — grows to fill available space so footer stays at bottom */}
       <Box tabIndex={-1} sx={{ outline: 'none', flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
         <Routes>
-          <Route path="/" element={<MaintenanceHome />} />
+          <Route path="/" element={<Home />} />
           <Route path="/whatwedo" element={<WhatWeDo />} />
           <Route path="/latestprojects" element={<LatestProjects />} />
           <Route path="/history" element={<History />} />
@@ -98,8 +97,8 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
         </Routes>
       </Box>
 
-      {/* Footer styled like abwu.org.in (hidden for admin and maintenance routes) */}
-      {!isAdminRoute && !isMaintenanceRoute && (
+      {/* Footer styled like abwu.org.in (hidden for admin routes) */}
+      {!isAdminRoute && (
         <Box component="footer" sx={{
           bgcolor: (theme) => theme.palette.primary.main,
           color: '#fff',
@@ -146,7 +145,7 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
                 <strong>Head Office:</strong><br />
                 CK-6, Sector-II, Salt Lake City, Kolkata 700064,WB, India
               </Box>
-               <Box sx={{ mb: 1, fontSize: '0.9rem' }}>
+              <Box sx={{ mb: 1, fontSize: '0.9rem' }}>
                 <strong>Rural Office:</strong><br />
                 P.O+Vill: Baganda,Via:jangipara, Hoogly 712404,WB, India
               </Box>
