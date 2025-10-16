@@ -320,8 +320,8 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
               )}
             </Box>
           )}
-          {isLoggedIn ? (
-            // Replace icon with text button for Logout
+          {isLoggedIn && (
+            // Show Logout button only when logged in
             <Button
               onClick={handleLoginLogout}
               sx={{
@@ -347,33 +347,6 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
               aria-label="Logout"
             >
               Logout
-            </Button>
-          ) : (
-            <Button
-              onClick={handleLoginLogout}
-              sx={{
-                ml: 0.5, // Reduced margin-left to move button more to the left
-                color: '#fff',
-                backgroundColor: theme.palette.primary.main,
-                fontWeight: 700,
-                fontFamily: 'Raleway, sans-serif',
-                borderRadius: 3,
-                textTransform: 'none',
-                boxShadow: '0 2px 8px rgba(0, 91, 150, 0.18)',
-                minHeight: 40,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '8px 24px',
-                flexShrink: 0, // Prevent the button from shrinking
-                whiteSpace: 'nowrap', // Prevent text wrapping
-                '&:hover': {
-                  backgroundColor: theme.palette.primary.dark,
-                },
-              }}
-              aria-label="Login"
-            >
-              Login
             </Button>
           )}
           {/* Login Dialog (from separate component) */}
@@ -560,31 +533,34 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                   />
                 </ListItem>
               ))}
-              <Divider sx={{ my: 1 }} />
-              <ListItem 
-                button 
-                onClick={handleLoginLogout}
-                sx={{
-                  minHeight: 48,
-                  display: 'flex',
-                  alignItems: 'center',
-                  pl: 2
-                }}
-              >
-                <ListItemText 
-                  primary={isLoggedIn ? 'Logout' : 'Login'} 
-                  primaryTypographyProps={{ 
-                    sx: { 
-                      fontFamily: 'Raleway, sans-serif', 
-                      color: theme.palette.secondary.main, 
-                      fontWeight: 700,
-                      textAlign: 'left',
-                      lineHeight: 1.2
-                    } 
-                  }} 
-                />
-                {/* Removed trailing icons to show text only */}
-              </ListItem>
+              {isLoggedIn && (
+                <>
+                  <Divider sx={{ my: 1 }} />
+                  <ListItem 
+                    button 
+                    onClick={handleLoginLogout}
+                    sx={{
+                      minHeight: 48,
+                      display: 'flex',
+                      alignItems: 'center',
+                      pl: 2
+                    }}
+                  >
+                    <ListItemText 
+                      primary="Logout" 
+                      primaryTypographyProps={{ 
+                        sx: { 
+                          fontFamily: 'Raleway, sans-serif', 
+                          color: theme.palette.secondary.main, 
+                          fontWeight: 700,
+                          textAlign: 'left',
+                          lineHeight: 1.2
+                        } 
+                      }} 
+                    />
+                  </ListItem>
+                </>
+              )}
               {isLoggedIn && (
                 <ListItem 
                   button 
