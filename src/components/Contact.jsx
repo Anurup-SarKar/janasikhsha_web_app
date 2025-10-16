@@ -42,7 +42,7 @@ export default function Contact() {
               <span style={{ fontSize: '0.9rem', fontWeight: 400 }}>Executive Director</span>
             </Typography>
             <Typography sx={{ fontFamily: 'Raleway, sans-serif' }}>
-              <strong>Mobile:</strong> <Link href="tel:+918697001939" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>+91 8697001939</Link>
+              <strong>Mobile:</strong> <Link href="tel:+918697001939/8240016399" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>+91 8697001939/8240016399</Link>
             </Typography>
           </Box>
         </Box>
@@ -54,7 +54,6 @@ export default function Contact() {
           </Typography>
           <Typography sx={{ fontFamily: 'Raleway, sans-serif' }}>
             <strong>Primary:</strong> <Link href="mailto:jpk.kolkata@gmail.com" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>jpk.kolkata@gmail.com</Link><br />
-            <strong>Alternative:</strong> <Link href="mailto:rpm@vsnl.net" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>rpm@vsnl.net</Link>
           </Typography>
         </Box>
       </Box>
@@ -62,22 +61,21 @@ export default function Contact() {
       {/* Registered Office */}
       <Box mb={3} sx={{ bgcolor: '#f8f9fa', p: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
         <Typography variant="h6" sx={{ color: (theme) => theme.palette.primary.main, fontWeight: 600, fontFamily: 'Raleway, sans-serif', mb: 1 }}>
-          Registered Office
+          Liaison Office
         </Typography>
         <Typography sx={{ fontFamily: 'Raleway, sans-serif', mb: 1 }}>
-          57-B, College Street,<br />
-          Kolkata 700073<br />
-          West Bengal, India
+          31B, Bhabani Dutta Lane,<br />
+          Kolkata 700073,WB,India<br />
         </Typography>
         <Typography sx={{ fontFamily: 'Raleway, sans-serif', mb: 2 }}>
-          <strong>Tel:</strong> <Link href="tel:+913322413324" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>+91-(033) 2241-3324</Link> / <Link href="tel:+913322571408" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>2257-1408</Link><br />
-          <strong>Fax:</strong> +91-(033) 2241-3324
+          <strong>Mob : </strong> <Link href="tel:+919330407157" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>+91-9330407157</Link><br />
+          <strong>Email : </strong> <Link href="mailto:jpk.kolkata@gmail.com" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>jpk.kolkata@gmail.com</Link>
         </Typography>
-        {/* Map for Registered Office */}
+        {/* Map for Liaison Office */}
         <Box sx={{ mt: 2 }}>
           <iframe
-            title="Registered Office - College Street, Kolkata"
-            src="https://www.google.com/maps?q=57-B+College+Street,+Kolkata+700073,+West+Bengal,+India&output=embed"
+            title="Liaison - 31B, Bhabani Dutta Lane, Kolkata"
+            src="https://www.google.com/maps?q=31B+Bhabani+Dutta+Lane,+Kolkata+700073,+West+Bengal,+India&output=embed"
             width="100%"
             height="200"
             style={{ border: 0, borderRadius: 8 }}
@@ -90,16 +88,15 @@ export default function Contact() {
       {/* City Office */}
       <Box mb={3} sx={{ bgcolor: '#f0f7ff', p: 2, borderRadius: 2, border: '1px solid #e3f2fd' }}>
         <Typography variant="h6" sx={{ color: (theme) => theme.palette.primary.main, fontWeight: 600, fontFamily: 'Raleway, sans-serif', mb: 1 }}>
-          City Office
+          Head Office
         </Typography>
         <Typography sx={{ fontFamily: 'Raleway, sans-serif', mb: 1 }}>
-          CK – 6, Sector – II<br />
-          Salt Lake City<br />
-          Kolkata 700064<br />
-          West Bengal, India
+          CK – 6, Sector – II,Salt Lake City<br />
+          Kolkata 700091,WB,India<br />
         </Typography>
         <Typography sx={{ fontFamily: 'Raleway, sans-serif', mb: 2 }}>
-          <strong>Phone:</strong> <Link href="tel:+913323597259" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>+91-033-2359 7259</Link>
+          <strong>Mob : </strong> <Link href="tel:+917980320462" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>+91-7980320462</Link><br />
+          <strong>Email : </strong> <Link href="mailto:jpk.saltlake91@gmail.com" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>jpk.saltlake91@gmail.com</Link>
         </Typography>
         {/* Map for City Office */}
         <Box sx={{ mt: 2 }}>
@@ -115,24 +112,23 @@ export default function Contact() {
         </Box>
       </Box>
 
-      {/* Rural Field Station */}
+      {/* Rural Field Office */}
       <Box mb={3} sx={{ bgcolor: '#f0fff4', p: 2, borderRadius: 2, border: '1px solid #e8f5e8' }}>
         <Typography variant="h6" sx={{ color: (theme) => theme.palette.primary.main, fontWeight: 600, fontFamily: 'Raleway, sans-serif', mb: 1 }}>
-          Rural Field Station
+          Rural Field Office
         </Typography>
         <Typography sx={{ fontFamily: 'Raleway, sans-serif', mb: 1 }}>
-          P.O. & Vill: Baganda<br />
-          Via: Jangipara<br />
-          Dist: Hooghly<br />
-          West Bengal, India
+          P.O. & Vill: Baganda Via: Jangipara<br />
+          Dist: Hooghly, Pin-712404,WB,India<br />
         </Typography>
         <Typography sx={{ fontFamily: 'Raleway, sans-serif', mb: 2 }}>
-          <strong>Phone:</strong> <Link href="tel:+913212227263" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>+91-03212-27263</Link>
+          <strong>Mob : </strong> <Link href="tel:+919883014760" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>+91-9883014760</Link><br />
+        <strong>Email : </strong> <Link href="mailto:jpk.baganda2019@gmail.com" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>jpk.baganda2019@gmail.com</Link>
         </Typography>
-        {/* Map for Rural Field Station */}
+        {/* Map for Rural Field Office */}
         <Box sx={{ mt: 2 }}>
           <iframe
-            title="Rural Field Station - Baganda, Jangipara, Hooghly"
+            title="Rural Field Office - Baganda, Jangipara, Hooghly"
             src="https://www.google.com/maps?q=Baganda+Jangipara+Hooghly+West+Bengal+India&output=embed"
             width="100%"
             height="200"
