@@ -74,18 +74,17 @@ export default function ResetPassword() {
         try {
             const res = await performPasswordReset(email, token, newPassword);
             if (res?.statusCode === 200) {
-                // Success: redirect based on user type
-                setMessage('Password reset successful! Redirecting to login...');
+                // Success: redirect to JPK home page
+                setMessage('Password reset successful! Redirecting to home page...');
                 setTimeout(() => {
                     if (isAdmin) {
                         // Clean up admin reset tokens
                         localStorage.removeItem('admin_reset_token');
                         localStorage.removeItem('admin_reset_expiresAt');
                         localStorage.removeItem('admin_reset_email');
-                        navigate('/admin_home');
-                    } else {
-                        navigate('/login');
                     }
+                    // Redirect to home page for both admin and normal users
+                    navigate('/');
                 }, 2000);
             } else {
                 setMessage(res?.statusMessage || 'Password reset failed.');
