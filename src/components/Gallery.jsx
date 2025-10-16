@@ -57,7 +57,7 @@ export default function Gallery() {
         sx={{
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           color: 'white',
-          py: 8,
+          py: { xs: 4, md: 8 },
           textAlign: 'center'
         }}
       >
@@ -68,7 +68,8 @@ export default function Gallery() {
             gutterBottom
             sx={{ 
               fontWeight: 700,
-              mb: 2
+              mb: 2,
+              fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' }
             }}
           >
             Photo Gallery
@@ -78,35 +79,72 @@ export default function Gallery() {
             sx={{ 
               fontWeight: 400,
               opacity: 0.9,
-              mb: 4
+              mb: 4,
+              fontSize: { xs: '1rem', sm: '1.2rem', md: '1.5rem' }
             }}
           >
             Capturing moments from our Urban and Rural initiatives
           </Typography>
           
           {/* Statistics */}
-          <Grid container spacing={4} sx={{ mt: 2 }}>
+          <Grid container spacing={{ xs: 2, md: 4 }} sx={{ mt: 2 }}>
             <Grid item xs={12} sm={4}>
-              <Typography variant="h3" sx={{ fontWeight: 800 }}>
+              <Typography 
+                variant="h3" 
+                sx={{ 
+                  fontWeight: 800,
+                  fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' }
+                }}
+              >
                 {urbanImages.length + ruralImages.length}
               </Typography>
-              <Typography variant="body1" sx={{ opacity: 0.9 }}>
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  opacity: 0.9,
+                  fontSize: { xs: '0.875rem', md: '1rem' }
+                }}
+              >
                 Total Photos
               </Typography>
             </Grid>
             <Grid item xs={12} sm={4}>
-              <Typography variant="h3" sx={{ fontWeight: 800 }}>
+              <Typography 
+                variant="h3" 
+                sx={{ 
+                  fontWeight: 800,
+                  fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' }
+                }}
+              >
                 {urbanImages.length}
               </Typography>
-              <Typography variant="body1" sx={{ opacity: 0.9 }}>
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  opacity: 0.9,
+                  fontSize: { xs: '0.875rem', md: '1rem' }
+                }}
+              >
                 Urban Activities
               </Typography>
             </Grid>
             <Grid item xs={12} sm={4}>
-              <Typography variant="h3" sx={{ fontWeight: 800 }}>
+              <Typography 
+                variant="h3" 
+                sx={{ 
+                  fontWeight: 800,
+                  fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' }
+                }}
+              >
                 {ruralImages.length}
               </Typography>
-              <Typography variant="body1" sx={{ opacity: 0.9 }}>
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  opacity: 0.9,
+                  fontSize: { xs: '0.875rem', md: '1rem' }
+                }}
+              >
                 Rural Programs
               </Typography>
             </Grid>
@@ -115,18 +153,19 @@ export default function Gallery() {
       </Box>
 
       {/* Tabs Section */}
-      <Container maxWidth="xl" sx={{ py: 4 }}>
-        <Paper elevation={2} sx={{ mb: 4 }}>
+      <Container maxWidth="xl" sx={{ py: { xs: 2, md: 4 }, px: { xs: 1, md: 3 } }}>
+        <Paper elevation={2} sx={{ mb: { xs: 2, md: 4 } }}>
           <Tabs 
             value={tabValue} 
             onChange={handleTabChange} 
             centered
+            variant={window.innerWidth < 600 ? "fullWidth" : "standard"}
             sx={{ 
               '& .MuiTab-root': { 
-                fontSize: '1.1rem', 
+                fontSize: { xs: '0.9rem', md: '1.1rem' }, 
                 fontWeight: 600,
                 textTransform: 'none',
-                minWidth: 200
+                minWidth: { xs: 120, md: 200 }
               }
             }}
           >
@@ -183,6 +222,7 @@ export default function Gallery() {
                         height="280"
                         image={image}
                         alt={`Urban activity ${index + 1}`}
+                        loading="lazy"
                         sx={{ 
                           objectFit: 'cover',
                           cursor: 'pointer'
@@ -253,6 +293,7 @@ export default function Gallery() {
                         height="280"
                         image={image}
                         alt={`Rural program ${index + 1}`}
+                        loading="lazy"
                         sx={{ 
                           objectFit: 'cover',
                           cursor: 'pointer'

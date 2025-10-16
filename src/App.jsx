@@ -13,6 +13,7 @@ import Contact from './components/Contact';
 import DonationForm from './components/DonationForm';
 import LoginDialog from './components/LoginDialog';
 import LiveCCTV from './components/LiveCCTV';
+import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import WhatWeDo from './pages/WhatWeDo';
@@ -40,6 +41,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter basename={import.meta.env.BASE_URL}>
+        <ScrollToTop />
         <AppRoutes isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       </BrowserRouter>
     </ThemeProvider>
