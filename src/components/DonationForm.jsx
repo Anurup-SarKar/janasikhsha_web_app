@@ -317,49 +317,405 @@ export default function DonationForm() {
   };
 
   return (
-    <>
-      <Box sx={{ bgcolor: '#fff', borderRadius: 3, boxShadow: 2, p: { xs: 2, md: 4 }, mb: 3, maxWidth: 400, mx: 'auto' }}>
-        <Typography variant="h4" mb={2}>
-          {submitted && paymentSuccess ? 'Thank You For Your Donation' : 'Make a Donation'}
-        </Typography>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        position: 'relative',
+        py: { xs: 4, md: 6 },
+        px: 2,
+        background: `
+          radial-gradient(circle at 20% 30%, rgba(102, 126, 234, 0.3) 0%, transparent 50%),
+          radial-gradient(circle at 80% 70%, rgba(118, 75, 162, 0.3) 0%, transparent 50%),
+          radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.2) 0%, transparent 70%),
+          linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)
+        `,
+        backdropFilter: 'blur(100px)',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: `
+            radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 40%),
+            radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 40%),
+            radial-gradient(circle at 50% 10%, rgba(139, 92, 246, 0.2) 0%, transparent 50%)
+          `,
+          filter: 'blur(60px)',
+          animation: 'float 20s ease-in-out infinite',
+        },
+        '@keyframes float': {
+          '0%, 100%': { transform: 'translate(0, 0)' },
+          '33%': { transform: 'translate(30px, -30px)' },
+          '66%': { transform: 'translate(-20px, 20px)' },
+        },
+      }}
+    >
+      <Box
+        sx={{
+          bgcolor: 'rgba(255, 255, 255, 0.85)',
+          borderRadius: 4,
+          boxShadow: '0 25px 70px rgba(102, 126, 234, 0.25), 0 10px 40px rgba(0,0,0,0.1)',
+          backdropFilter: 'blur(30px)',
+          border: '1px solid rgba(255, 255, 255, 0.5)',
+          p: { xs: 3, md: 5 },
+          mb: 3,
+          maxWidth: 600,
+          mx: 'auto',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
+        {/* Header Section */}
+        <Box textAlign="center" mb={4}>
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: 800,
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              mb: 1,
+            }}
+          >
+            {submitted && paymentSuccess ? '🎉 Thank You!' : '💖 Make a Donation'}
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ fontSize: '1.1rem' }}>
+            {submitted && paymentSuccess
+              ? 'Your generosity makes a difference'
+              : 'Support our mission to empower communities'}
+          </Typography>
+        </Box>
+
+        {/* Success State */}
         {submitted && paymentSuccess ? (
           <Box textAlign="center">
-            <Typography color="primary" fontWeight={600}>Thank you for your support, {form.name}!</Typography>
-            {orderId && (
-              <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">Order ID: {orderId}</Typography>
-            )}
-            <Button variant="outlined" color="primary" sx={{ mt: 2 }} onClick={generatePDF}>Download Receipt (PDF)</Button>
-            <Box sx={{ mt: 2, display: 'flex', gap: 1, justifyContent: 'center' }}>
-              <Button variant="contained" onClick={resetForm}>Donate More</Button>
-              <Button variant="text" onClick={() => navigate('/')}>Go Home</Button>
+            <Box
+              sx={{
+                bgcolor: '#f0fdf4',
+                border: '2px solid #86efac',
+                borderRadius: 3,
+                p: 3,
+                mb: 3,
+              }}
+            >
+              <Typography variant="h5" sx={{ color: '#15803d', fontWeight: 700, mb: 1 }}>
+                Thank you for your support, {form.name}!
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Your contribution of ₹{formatAmountINR(form.amount)} has been received successfully.
+              </Typography>
+              {orderId && (
+                <Typography sx={{ mt: 2, fontSize: '0.9rem', fontFamily: 'monospace' }} color="text.secondary">
+                  Order ID: {orderId}
+                </Typography>
+              )}
+              {paymentId && (
+                <Typography sx={{ mt: 0.5, fontSize: '0.9rem', fontFamily: 'monospace' }} color="text.secondary">
+                  Payment ID: {paymentId}
+                </Typography>
+              )}
+            </Box>
+
+            <Button
+              variant="contained"
+              size="large"
+              sx={{
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: '#fff',
+                fontWeight: 700,
+                px: 4,
+                py: 1.5,
+                borderRadius: 3,
+                mb: 2,
+                '&:hover': {
+                  background: 'linear-gradient(135deg, #5568d3 0%, #6b3f8f 100%)',
+                },
+              }}
+              onClick={generatePDF}
+            >
+              📄 Download Receipt (PDF)
+            </Button>
+
+            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Button
+                variant="outlined"
+                size="large"
+                sx={{
+                  borderColor: '#667eea',
+                  color: '#667eea',
+                  fontWeight: 600,
+                  px: 3,
+                  borderRadius: 3,
+                  '&:hover': {
+                    borderColor: '#5568d3',
+                    bgcolor: '#f5f7ff',
+                  },
+                }}
+                onClick={resetForm}
+              >
+                💝 Donate More
+              </Button>
+              <Button
+                variant="text"
+                size="large"
+                sx={{ color: '#667eea', fontWeight: 600, px: 3 }}
+                onClick={() => navigate('/')}
+              >
+                🏠 Go Home
+              </Button>
             </Box>
           </Box>
         ) : submitted && !paymentSuccess ? (
+          // Failure State
           <Box textAlign="center">
-            <Typography color="error" fontWeight={700}>Payment Failed</Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>{failureMessage || 'Your payment could not be completed.'}</Typography>
-            {orderId && (
-              <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">Order ID: {orderId}</Typography>
-            )}
-            <Box sx={{ mt: 2, display: 'flex', gap: 1, justifyContent: 'center' }}>
-              <Button variant="contained" onClick={resetForm}>Donate More</Button>
-              <Button variant="text" onClick={() => navigate('/')}>Go Home</Button>
+            <Box
+              sx={{
+                bgcolor: '#fef2f2',
+                border: '2px solid #fca5a5',
+                borderRadius: 3,
+                p: 3,
+                mb: 3,
+              }}
+            >
+              <Typography variant="h5" sx={{ color: '#dc2626', fontWeight: 700, mb: 1 }}>
+                ❌ Payment Failed
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                {failureMessage || 'Your payment could not be completed. Please try again.'}
+              </Typography>
+              {orderId && (
+                <Typography sx={{ mt: 2, fontSize: '0.9rem', fontFamily: 'monospace' }} color="text.secondary">
+                  Order ID: {orderId}
+                </Typography>
+              )}
+            </Box>
+
+            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Button
+                variant="contained"
+                size="large"
+                sx={{
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  color: '#fff',
+                  fontWeight: 700,
+                  px: 4,
+                  py: 1.5,
+                  borderRadius: 3,
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #5568d3 0%, #6b3f8f 100%)',
+                  },
+                }}
+                onClick={resetForm}
+              >
+                🔄 Try Again
+              </Button>
+              <Button
+                variant="text"
+                size="large"
+                sx={{ color: '#667eea', fontWeight: 600, px: 3 }}
+                onClick={() => navigate('/')}
+              >
+                🏠 Go Home
+              </Button>
             </Box>
           </Box>
         ) : (
-          <Box component="form" onSubmit={handlePayment} display="flex" flexDirection="column" gap={2}>
-            <TextField name="name" label="Name" value={form.name} onChange={handleChange} required fullWidth />
-            <TextField name="address" label="Address" value={form.address} onChange={handleChange} required fullWidth />
-            <TextField name="phone" label="Phone" value={form.phone} onChange={handleChange} required fullWidth />
-            <TextField name="email" label="Email" type="email" value={form.email} onChange={handleChange} required fullWidth />
-            <TextField name="pan" label="PAN (optional)" value={form.pan} onChange={handleChange} fullWidth inputProps={{ style: { textTransform: 'uppercase' } }} />
-            <TextField name="amount" label="Amount (INR)" type="number" value={form.amount} onChange={handleChange} required fullWidth inputProps={{ min: 1, step: 1, pattern: '[0-9]*' }} helperText="Enter whole rupees only (no decimals)" />
-            <Button type="submit" variant="contained" color="secondary" disabled={loading} startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}>
-              {loading ? 'Processing...' : 'Donate & Pay'}
+          // Donation Form
+          <Box component="form" onSubmit={handlePayment} display="flex" flexDirection="column" gap={3}>
+            {/* Quick Amount Selector */}
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 600, color: '#4b5563' }}>
+                Quick Select Amount
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
+                {[500, 1000, 2500, 5000, 10000].map((amt) => (
+                  <Button
+                    key={amt}
+                    variant={form.amount === String(amt) ? 'contained' : 'outlined'}
+                    size="small"
+                    sx={{
+                      flex: '1 1 auto',
+                      minWidth: '80px',
+                      borderRadius: 2,
+                      fontWeight: 600,
+                      ...(form.amount === String(amt)
+                        ? {
+                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                          border: 'none',
+                        }
+                        : {
+                          borderColor: '#d1d5db',
+                          color: '#6b7280',
+                          '&:hover': { borderColor: '#667eea', bgcolor: '#f5f7ff' },
+                        }),
+                    }}
+                    onClick={() => setForm({ ...form, amount: String(amt) })}
+                  >
+                    ₹{formatAmountINR(amt)}
+                  </Button>
+                ))}
+              </Box>
+            </Box>
+
+            {/* Form Fields */}
+            <TextField
+              name="amount"
+              label="Donation Amount (INR)"
+              type="number"
+              value={form.amount}
+              onChange={handleChange}
+              required
+              fullWidth
+              inputProps={{ min: 1, step: 1, pattern: '[0-9]*' }}
+              helperText="Enter custom amount or select from above"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 2,
+                  '&:hover fieldset': { borderColor: '#667eea' },
+                  '&.Mui-focused fieldset': { borderColor: '#667eea' },
+                },
+              }}
+            />
+
+            <TextField
+              name="name"
+              label="Full Name"
+              value={form.name}
+              onChange={handleChange}
+              required
+              fullWidth
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 2,
+                  '&:hover fieldset': { borderColor: '#667eea' },
+                  '&.Mui-focused fieldset': { borderColor: '#667eea' },
+                },
+              }}
+            />
+
+            <TextField
+              name="email"
+              label="Email Address"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              required
+              fullWidth
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 2,
+                  '&:hover fieldset': { borderColor: '#667eea' },
+                  '&.Mui-focused fieldset': { borderColor: '#667eea' },
+                },
+              }}
+            />
+
+            <TextField
+              name="phone"
+              label="Phone Number"
+              value={form.phone}
+              onChange={handleChange}
+              required
+              fullWidth
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 2,
+                  '&:hover fieldset': { borderColor: '#667eea' },
+                  '&.Mui-focused fieldset': { borderColor: '#667eea' },
+                },
+              }}
+            />
+
+            <TextField
+              name="address"
+              label="Address"
+              value={form.address}
+              onChange={handleChange}
+              required
+              fullWidth
+              multiline
+              rows={2}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 2,
+                  '&:hover fieldset': { borderColor: '#667eea' },
+                  '&.Mui-focused fieldset': { borderColor: '#667eea' },
+                },
+              }}
+            />
+
+            <TextField
+              name="pan"
+              label="PAN Number (Optional for 80G Receipt)"
+              value={form.pan}
+              onChange={handleChange}
+              fullWidth
+              inputProps={{ style: { textTransform: 'uppercase' } }}
+              helperText="PAN is optional but recommended for tax benefits"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 2,
+                  '&:hover fieldset': { borderColor: '#667eea' },
+                  '&.Mui-focused fieldset': { borderColor: '#667eea' },
+                },
+              }}
+            />
+
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              variant="contained"
+              size="large"
+              disabled={loading}
+              sx={{
+                background: loading
+                  ? '#d1d5db'
+                  : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: '#fff',
+                fontWeight: 700,
+                fontSize: '1.1rem',
+                py: 1.8,
+                borderRadius: 3,
+                mt: 2,
+                boxShadow: '0 4px 14px rgba(102, 126, 234, 0.4)',
+                '&:hover': {
+                  background: loading
+                    ? '#d1d5db'
+                    : 'linear-gradient(135deg, #5568d3 0%, #6b3f8f 100%)',
+                  boxShadow: '0 6px 20px rgba(102, 126, 234, 0.6)',
+                },
+                '&:disabled': {
+                  background: '#e5e7eb',
+                  color: '#9ca3af',
+                },
+              }}
+              startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
+            >
+              {loading ? 'Processing Payment...' : '💳 Proceed to Pay'}
             </Button>
+
+            {/* Security Note */}
+            <Box
+              sx={{
+                bgcolor: '#f9fafb',
+                borderRadius: 2,
+                p: 2,
+                border: '1px solid #e5e7eb',
+                textAlign: 'center',
+              }}
+            >
+              <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                🔒 Secure payment powered by Razorpay
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Your payment information is encrypted and secure
+              </Typography>
+            </Box>
           </Box>
         )}
       </Box>
-    </>
+    </Box>
   );
 }
