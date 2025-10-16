@@ -3,7 +3,7 @@
 // Handles routing, authentication state, and renders the main layout and all feature pages.
 // Uses Material-UI for styling and theming. Follows modern, accessible, and empathetic design.
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ThemeProvider, Container, Box, Toolbar } from '@mui/material';
 import { BrowserRouter, Routes, Route, Navigate, Link as RouterLink, useLocation } from 'react-router-dom';
 import theme from './theme';
@@ -17,21 +17,12 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import WhatWeDo from './pages/WhatWeDo';
 import LatestProjects from './pages/LatestProjects';
-import NewsRoom from './pages/NewsRoom';
 import History from './pages/History';
-import SuccessStory from './pages/SuccessStory';
-import SupportUs from './pages/SupportUs';
-import Location from './pages/Location';
 import WhoWeAre from './pages/WhoWeAre';
-import OurManifesto from './pages/OurManifesto';
 import OurTeam from './pages/OurTeam';
 import PDFViewer from './pages/PDFViewer';
 import OurAchievements from './pages/OurAchievements';
 import ProposedScheme from './pages/ProposedScheme';
-import ChildProtection from './pages/ChildProtection';
-import ChildEducation from './pages/ChildEducation';
-import Swadhar from './pages/Swadhar';
-import ElderlyCare from './pages/ElderlyCare';
 import BeneficiaryDetails from './pages/BeneficiaryDetails';
 import AdminHome from './pages/AdminHome';
 import ResetPassword from './pages/ResetPassword';
@@ -76,31 +67,22 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
           <Route path="/" element={<Home />} />
           <Route path="/whatwedo" element={<WhatWeDo />} />
           <Route path="/latestprojects" element={<LatestProjects />} />
-          <Route path="/newsroom" element={<NewsRoom />} />
           <Route path="/history" element={<History />} />
-          <Route path="/successstory" element={<SuccessStory />} />
-          <Route path="/gallery" element={<Gallery />} />
           <Route path="/photogallery" element={<Gallery />} />
-          <Route path="/supportus" element={<SupportUs />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/location" element={<Location />} />
           <Route path="/donate" element={<DonationForm />} />
           <Route path="/donationform" element={<DonationForm />} />
           <Route path="/livecctv" element={isLoggedIn ? <LiveCCTV /> : <Navigate to="/login" />} />
           <Route path="/whoweare" element={<WhoWeAre />} />
           <Route path="/memorandum" element={<PDFViewer />} />
-          <Route path="/pdf/:documentId" element={<PDFViewer />} />
-          <Route path="/ourmanifesto" element={<OurManifesto />} />
-          <Route path="/ourteam" element={<OurTeam />} />
-          <Route path="/ourachievements" element={<OurAchievements />} />
           <Route path="/proposedscheme" element={<ProposedScheme />} />
-          <Route path="/childprotection" element={<ChildProtection />} />
-          <Route path="/childeducation" element={<ChildEducation />} />
-          <Route path="/swadhar" element={<Swadhar />} />
-          <Route path="/elderlycare" element={<ElderlyCare />} />
-          <Route path="/beneficiarydetails" element={<BeneficiaryDetails />} />
           <Route path="/admin_home" element={<AdminHome />} />
           <Route path="/reset_password" element={<ResetPassword />} />
+          <Route path="/pdf/:documentId" element={<PDFViewer />} />
+          <Route path="/ourteam" element={<OurTeam />} />
+          <Route path="/ourachievements" element={<OurAchievements />} />
+          <Route path="/beneficiarydetails" element={<BeneficiaryDetails />} />
+
           <Route path="/login" element={
             <LoginDialog
               open={true}
@@ -142,10 +124,11 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
             <Box sx={{ minWidth: 180, mb: { xs: 2, md: 0 } }}>
               <Box sx={{ fontWeight: 700, fontSize: '1.1rem', mb: 1, color: 'secondary.main' }}>QUICK LINKS</Box>
               <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
-                <li><RouterLink to="/latestprojects" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Our Scheme</RouterLink></li>
+                <li><RouterLink to="/latestprojects" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Running Scheme</RouterLink></li>
+                <li><RouterLink to="/proposedscheme" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Proposed Scheme</RouterLink></li>
                 <li><RouterLink to="/ourachievements" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Our Achivements</RouterLink></li>
                 <li><RouterLink to="/history" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;History Of Organization</RouterLink></li>
-                <li><RouterLink to="/gallery" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Photo Gallery</RouterLink></li>
+                <li><RouterLink to="/photogallery" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Photo Gallery</RouterLink></li>
                 
               </Box>
             </Box>
