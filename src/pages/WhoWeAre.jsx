@@ -122,7 +122,7 @@ export default function WhoWeAre() {
           sx={{ 
             color: (theme) => theme.palette.text.secondary, 
             fontFamily: 'Raleway, sans-serif', 
-            fontWeight: 400, 
+            fontWeight: 600, 
             mb: 4,
             maxWidth: 800,
             mx: 'auto',

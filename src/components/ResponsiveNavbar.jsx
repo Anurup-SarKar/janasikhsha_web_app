@@ -111,7 +111,8 @@ const Brand = styled(Typography)(({ theme }) => ({
 const aboutMenuItems = [
   { label: 'Who We Are', page: 'whoweare' },
   { label: 'Memorandum of Association', page: 'memorandum' },
-  { label: 'Authority of Organization & Staff Structure', page: 'ourteam' },
+  { label: 'Authority of Organization', page: 'ourteam' },
+  { label: 'Staff Structure', page: 'staff' },
 ];
 
 const schemeMenuItems = [
