@@ -3,8 +3,8 @@
 // Displays a hero image carousel and introductory content about the NGO's mission and impact.
 // Follows accessible, modern, and empathetic design.
 
-import React from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ImageCarousel from '../components/ImageCarousel';
 import { ngoImages } from '../assets/CarouselImages';
@@ -16,6 +16,15 @@ import { ngoImages } from '../assets/CarouselImages';
  */
 export default function Home() {
   const navigate = useNavigate();
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleDonateClick = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
   return (
     <Box sx={{ width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
@@ -63,7 +72,7 @@ export default function Home() {
             color: 'primary.main',
             fontWeight: 700,
             mb: 1,
-            fontSize: { xs: '2rem', md: '3.75rem' },
+            fontSize: { xs: '2.5rem', md: '3.5rem' },
             textShadow: '0 2px 8px rgba(0, 91, 150, 0.12)',
             letterSpacing: 1,
           }}
@@ -103,7 +112,7 @@ export default function Home() {
         <Button
           variant="contained"
           size="large"
-          onClick={() => navigate('/donate')}
+          onClick={handleDonateClick}
           sx={{
             fontFamily: 'Raleway, sans-serif',
             fontWeight: 700,
@@ -137,6 +146,55 @@ export default function Home() {
           Your contribution will provide underprivileged children and girls with a chance to learn and aspire.
         </Typography>
       </Box>
+
+      {/* Donation Dialog */}
+      <Dialog 
+        open={openDialog} 
+        onClose={handleCloseDialog}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle sx={{ 
+          textAlign: 'center', 
+          fontFamily: 'Raleway, sans-serif',
+          fontWeight: 700,
+          color: 'primary.main'
+        }}>
+          Donation Currently Unavailable
+        </DialogTitle>
+        <DialogContent sx={{ textAlign: 'center', py: 3 }}>
+          <Typography sx={{ 
+            fontFamily: 'Raleway, sans-serif',
+            fontSize: '1.1rem',
+            color: 'text.primary',
+            mb: 2
+          }}>
+            We appreciate your willingness to support our cause!
+          </Typography>
+          <Typography sx={{ 
+            fontFamily: 'Raleway, sans-serif',
+            color: 'text.secondary'
+          }}>
+            Our online donation system is currently under maintenance. Please contact us directly for donation information.
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'center', pb: 3 }}>
+          <Button 
+            onClick={handleCloseDialog}
+            variant="contained"
+            sx={{
+              fontFamily: 'Raleway, sans-serif',
+              fontWeight: 600,
+              backgroundColor: 'secondary.main',
+              '&:hover': {
+                backgroundColor: 'secondary.dark',
+              }
+            }}
+          >
+            Understood
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

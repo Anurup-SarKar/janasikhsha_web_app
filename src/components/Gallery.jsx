@@ -102,7 +102,7 @@ export default function Gallery() {
               fontFamily: 'Raleway, sans-serif',
               fontWeight: 800,
               mb: 2,
-              fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' }
+              fontSize: { xs: '2.5rem', md: '3.5rem' }
             }}
           >
             Photo Gallery

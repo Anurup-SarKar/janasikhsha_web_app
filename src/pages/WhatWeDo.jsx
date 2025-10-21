@@ -56,7 +56,7 @@ export default function WhatWeDo() {
           sx={{ 
             mb: 2, 
             fontWeight: 700,
-            fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' }
+            fontSize: { xs: '2.5rem', md: '3.5rem' }
           }}
         >
           What We Do
