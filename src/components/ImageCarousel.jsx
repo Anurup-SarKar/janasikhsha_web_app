@@ -21,7 +21,7 @@ export default function ImageCarousel({ images, height = 560 }) {
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true, align: 'start', duration: 20 },
-    [Autoplay({ delay: 4000, stopOnInteraction: false })]
+    [Autoplay({ delay: 6000, stopOnInteraction: false })]
   );
 
   const onSelect = useCallback(() => {
