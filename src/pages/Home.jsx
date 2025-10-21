@@ -18,12 +18,14 @@ export default function Home() {
   const navigate = useNavigate();
 
   return (
-    <Box>
+    <Box sx={{ width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
       {/* First Segment: NGO Images Carousel */}
-      <ImageCarousel images={ngoImages} />
+      <Box sx={{ width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
+        <ImageCarousel images={ngoImages} />
+      </Box>
       
       {/* Second Segment: About Us */}
-      <Box sx={{ bgcolor: '#fff', p: { xs: 2, md: 4 }, mb: 3 }}>
+      <Box sx={{ bgcolor: '#fff', p: { xs: 2, md: 4 }, mb: 3, mx: { xs: 1, md: 0 } }}>
         <Typography variant="h4" mb={2} sx={{ color: 'primary.main', fontFamily: 'Raleway, sans-serif', fontWeight: 700 }}>
           About Us
         </Typography>
@@ -36,15 +38,22 @@ export default function Home() {
       {/* Third Segment: Donation Section */}
       <Box
         sx={{
-          bgcolor: 'background.paper',
+          bgcolor: '#f0f8ff',
+          border: '2px solid',
+          borderColor: 'primary.main',
+          borderRadius: 3,
           color: 'primary.main',
           py: { xs: 4, md: 7 },
           px: { xs: 2, md: 4 },
+          mx: { xs: 1, md: 0 },
           textAlign: 'center',
           boxShadow: 3,
           mb: 3,
           position: 'relative',
           overflow: 'hidden',
+          width: { xs: 'calc(100% - 16px)', md: '100%' },
+          maxWidth: '100%',
+          boxSizing: 'border-box',
         }}
       >
         <Typography

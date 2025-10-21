@@ -16,6 +16,13 @@ const InfoCard = styled(Card)(({ theme }) => ({
   border: `2px solid ${theme.palette.primary.main}`,
   borderRadius: '16px',
   transition: 'all 0.3s ease-in-out',
+  width: '100%',
+  maxWidth: '100%',
+  minWidth: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  boxSizing: 'border-box',
+  overflow: 'hidden',
   '&:hover': {
     transform: 'translateY(-8px)',
     boxShadow: '0 12px 24px rgba(0, 91, 150, 0.15)',
@@ -130,11 +137,32 @@ export default function WhoWeAre() {
       {/* Organization Info Grid */}
       <Grid container spacing={4}>
         {organizationInfo.map((info, index) => (
-          <Grid item xs={12} md={6} key={index}>
+          <Grid 
+            item 
+            xs={12} 
+            md={6} 
+            key={index}
+            sx={{
+              display: 'flex',
+              width: '100%',
+              maxWidth: '100%',
+            }}
+          >
             <InfoCard>
-              <CardContent sx={{ p: 4, display: 'flex', flexDirection: 'column' }}>
+              <CardContent sx={{ 
+                p: 2.5, 
+                display: 'flex', 
+                flexDirection: 'column', 
+                width: '100%',
+                maxWidth: '100%',
+                overflow: 'hidden',
+                boxSizing: 'border-box'
+              }}>
                 {/* Icon, Title and Category */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 2 }}>
+                  <Typography variant="h3" sx={{ fontSize: '2.5rem' }}>
+                    {info.icon}
+                  </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1, flex: 1 }}>
                     <Typography 
                       variant="h5" 
@@ -152,25 +180,41 @@ export default function WhoWeAre() {
                       size="medium"
                     />
                   </Box>
-                  <Typography variant="h3" sx={{ fontSize: '2.5rem', ml: 1 }}>
-                    {info.icon}
-                  </Typography>
                 </Box>
 
                 {/* Description */}
-                <Typography 
-                  variant="body1" 
+                <Box 
                   sx={{ 
-                    fontFamily: 'Raleway, sans-serif', 
-                    color: (theme) => theme.palette.text.primary, 
-                    fontSize: '1rem', 
-                    textAlign: 'justify', 
-                    lineHeight: 1.6,
-                    mb: 2
+                    width: '100%',
+                    maxWidth: '100%',
+                    overflow: 'hidden',
+                    pr: 2,
+                    boxSizing: 'border-box'
                   }}
                 >
-                  {info.description}
-                </Typography>
+                  <Typography 
+                    variant="body1" 
+                    sx={{ 
+                      fontFamily: 'Raleway, sans-serif', 
+                      color: (theme) => theme.palette.text.primary, 
+                      fontSize: '0.9rem', 
+                      textAlign: 'justify', 
+                      lineHeight: 1.4,
+                      mb: 2,
+                      width: '100%',
+                      maxWidth: '100%',
+                      wordBreak: 'break-word',
+                      overflowWrap: 'break-word',
+                      ...(index < 3 && {
+                        maxHeight: '5.6em', // Approximately 4 lines
+                        overflow: 'hidden',
+                        position: 'relative',
+                      })
+                    }}
+                  >
+                    {info.description}
+                  </Typography>
+                </Box>
 
                 {/* Additional Details for Registration */}
                 {info.details && (
@@ -248,25 +292,56 @@ export default function WhoWeAre() {
       </Grid>
 
       {/* Footer Message */}
-      <Box sx={{ textAlign: 'center', mt: 6, p: 4, bgcolor: 'primary.main', color: 'white', borderRadius: 3 }}>
+      <Box sx={{ 
+        textAlign: 'center', 
+        mt: 6, 
+        p: { xs: 4, md: 6 }, 
+        background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 50%, #64b5f6 100%)',
+        color: 'white', 
+        borderRadius: 4,
+        boxShadow: '0 8px 32px rgba(25, 118, 210, 0.3)',
+        border: '2px solid',
+        borderColor: 'secondary.main',
+        position: 'relative',
+        overflow: 'hidden',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%)',
+          pointerEvents: 'none',
+        },
+      }}>
+        <Typography 
+          variant="h4" 
+          sx={{ 
+            fontFamily: 'Raleway, sans-serif', 
+            fontWeight: 700, 
+            mb: 3,
+            fontSize: { xs: '1.8rem', md: '2.2rem' },
+            textShadow: '0 2px 8px rgba(0,0,0,0.2)',
+            position: 'relative',
+            zIndex: 1,
+          }}
+        >
+          🌟 Continuing Our Legacy of Service 🌟
+        </Typography>
         <Typography 
           variant="h6" 
           sx={{ 
             fontFamily: 'Raleway, sans-serif', 
-            fontWeight: 600, 
-            mb: 2 
-          }}
-        >
-          Continuing Our Legacy of Service
-        </Typography>
-        <Typography 
-          variant="body1" 
-          sx={{ 
-            fontFamily: 'Raleway, sans-serif', 
-            fontSize: '1.1rem',
-            maxWidth: 800,
+            fontSize: { xs: '1.2rem', md: '1.4rem' },
+            fontWeight: 500,
+            maxWidth: 900,
             mx: 'auto',
-            opacity: 0.95
+            opacity: 0.95,
+            lineHeight: 1.6,
+            position: 'relative',
+            zIndex: 1,
+            textShadow: '0 1px 4px rgba(0,0,0,0.1)',
           }}
         >
           For over four decades, we have been dedicated to serving the most vulnerable members of our society. 
