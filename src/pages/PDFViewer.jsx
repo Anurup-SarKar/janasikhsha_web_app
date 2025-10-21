@@ -43,7 +43,8 @@ export default function PDFViewer() {
           Back
         </Button>
         
-        <Typography variant="h4" sx={{ color: 'primary.main', flex: 1, textAlign: 'center' }}>
+        <Typography variant="h2" component ="h1" sx={{ fontFamily: 'Raleway, sans-serif', 
+            fontWeight: 800, xs: '2.5rem', md: '3.5rem', mb: 3, color: (theme) => theme.palette.primary.main, flex: 1, textAlign: 'center' }}>
           {document.title}
         </Typography>
 
