@@ -92,12 +92,13 @@ export default function OurAchievements() {
       {/* Header Section */}
       <Box sx={{ textAlign: 'center', mb: 6 }}>
         <Typography 
-          variant="h3" 
+          variant="h2" 
           sx={{ 
             color: (theme) => theme.palette.primary.main, 
             fontFamily: 'Raleway, sans-serif', 
             fontWeight: 700, 
             mb: 2,
+            fontSize: { xs: '2.5rem', md: '3.5rem' },
             textShadow: '0 2px 8px rgba(0, 91, 150, 0.12)' 
           }}
         >

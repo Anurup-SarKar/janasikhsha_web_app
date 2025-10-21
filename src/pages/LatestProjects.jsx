@@ -193,7 +193,7 @@ export default function LatestProjects() {
             fontSize: { xs: '2.5rem', md: '3.5rem' }
           }}
         >
-          Latest Projects
+          Running Scheme
         </Typography>
         <Typography
           variant="h6"

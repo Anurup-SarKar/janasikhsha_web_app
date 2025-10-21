@@ -151,7 +151,7 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
               </Box>
               <Box sx={{ mb: 1 }}><a href="tel:+913322413324" style={{ color: '#fff', textDecoration: 'none' }}>+91-(033) 2241-3324</a></Box>
               <Box sx={{ mb: 1 }}><a href="mailto:jpk.kolkata@gmail.com" style={{ color: '#fff', textDecoration: 'none' }}>jpk.kolkata@gmail.com</a></Box>
-              <Box sx={{ mb: 1 }}><a href="https://www.facebook.com/ABWUIndia" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none' }}>Follow us on Facebook</a></Box>
+              <Box sx={{ mb: 1 }}><a href="https://www.facebook.com/share/19tNrUoq1o/" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none' }}>Follow us on Facebook</a></Box>
             </Box>
           </Box>
           <Box sx={{ borderTop: '1px solid #fff', pt: 2, textAlign: 'center', fontWeight: 600, fontSize: '1rem', letterSpacing: 0.5 }}>
