@@ -1,16 +1,16 @@
 // LatestProjects.jsx
 // Latest Projects page for the NGO showcasing all current initiatives and programs.
 import React from 'react';
-import { 
-  Box, 
-  Typography, 
-  Card, 
-  CardContent, 
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
   CardMedia,
-  Grid, 
+  Grid,
   Container,
   Chip,
-  Divider 
+  Divider
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import projectImages, { placeholderImage } from '../assets/images/projectImages';
@@ -58,14 +58,14 @@ const projects = [
   {
     id: 1,
     title: "Home Under J.J.Act: (CNCP Home for girls)",
-description: `Under the Government of West Bengal, Department of Social Welfare Notification No. 2118/1(200) SW dt. 22.05.1998, we established a Home accommodating 25 girls with red light antecedents for protection, care and rehabilitation through normal channels of development like education, counselling, health care, skill upgradation, games and recreation. Out of 22 girls residing as on 31.03.2012, all were admitted in government-aided schools and it is expected that in course of time they will be mainstreamed to enjoy a peaceful family life with dignity.
+    description: `Under the Government of West Bengal, Department of Social Welfare Notification No. 2118/1(200) SW dt. 22.05.1998, we established a Home accommodating 25 girls with red light antecedents for protection, care and rehabilitation through normal channels of development like education, counselling, health care, skill upgradation, games and recreation. Out of 22 girls residing as on 31.03.2012, all were admitted in government-aided schools and it is expected that in course of time they will be mainstreamed to enjoy a peaceful family life with dignity.
 We have already applied for enhancement of the inmates from 25 to 50, which has been recommended by the District Magistrate, Hooghly to the Director of Social Welfare, Government of West Bengal. It is expected that the sanction of the competent authority will soon be received.`,
     category: "Child Protection"
   },
   {
     id: 2,
     title: "Cottage Home",
-description: `The Government of West Bengal has since sanctioned a Destitute Home (Cottage) sheltering
+    description: `The Government of West Bengal has since sanctioned a Destitute Home (Cottage) sheltering
 25 girls. At present 6 inmates out of 11 recommended by the Government are staying in the cottage
 for care, protection, and empowerment through natural course of development like school education,
 coaching, counselling, health care, and cultural development.`,
@@ -149,7 +149,7 @@ are also allowed free-of-cost health check-up by Home physicians.`,
   {
     id: 8,
     title: "Vocational Training cum Production Centre",
-    description:`About 130 adolescent girls mainly of red light areas received training
+    description: `About 130 adolescent girls mainly of red light areas received training
 in vocational trades like embroidery, tailoring, knitting, batique, bandhni,
 beautician, etc., in seven (7) centres during the year under review. This
 training will help them to stand on their feet in course of time.`,
@@ -167,7 +167,7 @@ library.`,
 
 const categoryColors = {
   "Child Protection": "#FF6B35",
-  "Child Welfare": "#4ECDC4", 
+  "Child Welfare": "#4ECDC4",
   "Child Development": "#00BCD4",
   "Women Empowerment": "#E91E63",
   "Women Protection": "#AD1457",
@@ -183,11 +183,11 @@ export default function LatestProjects() {
     <Container maxWidth="xl" sx={{ py: { xs: 4, md: 6 }, px: { xs: 2, sm: 3, md: 4 } }}>
       {/* Header Section */}
       <Box sx={{ textAlign: 'center', mb: { xs: 4, md: 6 } }}>
-        <Typography 
-          variant="h2" 
-          sx={{ 
-            color: 'primary.main', 
-            fontFamily: 'Raleway, sans-serif', 
+        <Typography
+          variant="h2"
+          sx={{
+            color: 'primary.main',
+            fontFamily: 'Raleway, sans-serif',
             fontWeight: 900,
             mb: 2,
             fontSize: { xs: '2.5rem', md: '3.5rem' }
@@ -195,10 +195,10 @@ export default function LatestProjects() {
         >
           Latest Projects
         </Typography>
-        <Typography 
-          variant="h6" 
-          sx={{ 
-            color: 'text.secondary', 
+        <Typography
+          variant="h6"
+          sx={{
+            color: 'text.secondary',
             fontFamily: 'Raleway, sans-serif',
             maxWidth: 800,
             mx: 'auto',
@@ -206,8 +206,8 @@ export default function LatestProjects() {
             fontWeight: 400
           }}
         >
-          Our core initiatives spanning child protection, women empowerment, elderly care, 
-          and community development programs supported by various government schemes including 
+          Our core initiatives spanning child protection, women empowerment, elderly care,
+          and community development programs supported by various government schemes including
           Mission Vatsalya, Mission Shakti, and National Action Plans.
         </Typography>
         <Divider sx={{ mt: 3, mb: 4, width: 100, mx: 'auto', height: 3, bgcolor: 'secondary.main' }} />
@@ -215,139 +215,303 @@ export default function LatestProjects() {
 
       {/* Projects Grid */}
       <Grid container spacing={4}>
-        {projects.map((project) => (
-          <Grid item xs={12} key={project.id}>
-            <ProjectCard>
-              <CardContent sx={{ 
-                p: { xs: 2.5, sm: 3 }, 
-                display: 'flex', 
-                flexDirection: 'column',
-              }}>
-                {/* Title Section */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
-                  <ProjectTitle sx={{ flex: 1, mr: 2 }}>
-                    {project.title}
-                  </ProjectTitle>
-                  <Chip 
-                    label={project.category}
-                    size="small"
-                    sx={{
-                      backgroundColor: categoryColors[project.category] + '20',
-                      color: categoryColors[project.category],
-                      fontWeight: 600,
-                      fontSize: '0.75rem',
-                      height: '28px',
-                      flexShrink: 0
-                    }}
-                  />
-                </Box>
-
-                {/* Content Section - Image Left, Description Right */}
-                <Box sx={{ 
-                  display: 'flex', 
-                  gap: 3, 
-                  flexDirection: { xs: 'column', md: 'row' },
-                  alignItems: 'flex-start' 
+        {projects.map((project) => {
+          return (
+            <Grid item xs={12} key={project.id}>
+              <ProjectCard>
+                <CardContent sx={{
+                  p: { xs: 2.5, sm: 3 },
+                  display: 'flex',
+                  flexDirection: 'column',
                 }}>
-                  {/* Image Section - Only show if image exists */}
-                  {projectImages[project.id] && (
-                    <Box sx={{ 
-                      flex: { xs: '1', md: '0 0 400px' },
-                      minHeight: { xs: '220px', md: '300px' }
-                    }}>
-                      <CardMedia
-                        component="img"
-                        image={projectImages[project.id]}
-                        alt={project.title}
-                        sx={{ 
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          borderRadius: '12px',
-                          transition: 'transform 0.3s ease-in-out',
-                          '&:hover': {
-                            transform: 'scale(1.02)'
-                          }
-                        }}
-                      />
-                    </Box>
-                  )}
-                  
-                  {/* Description Section */}
-                  <Box sx={{ 
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-start'
-                  }}>
-                    <ProjectDescription sx={{ 
-                      textAlign: 'justify',
-                      lineHeight: 1.7
-                    }}>
-                      {project.description}
-                    </ProjectDescription>
+                  {/* Title Section */}
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
+                    <ProjectTitle sx={{ flex: 1, mr: 2 }}>
+                      {project.title}
+                    </ProjectTitle>
+                    <Chip
+                      label={project.category}
+                      size="small"
+                      sx={{
+                        backgroundColor: categoryColors[project.category] + '20',
+                        color: categoryColors[project.category],
+                        fontWeight: 600,
+                        fontSize: '0.75rem',
+                        height: '28px',
+                        flexShrink: 0
+                      }}
+                    />
                   </Box>
-                </Box>
-              </CardContent>
-            </ProjectCard>
-          </Grid>
-        ))}
+
+                  {/* Content Section - Image on Left with Text Wrap */}
+                  <Box sx={{ position: 'relative' }}>
+                    {projectImages[project.id] ? (
+                      <>
+                        {/* Image that floats left */}
+                        <Box
+                          sx={{
+                            float: { xs: 'none', md: 'left' },
+                            width: { xs: '100%', md: '450px' },
+                            height: { xs: '150px', md: '225px' },
+                            overflow: 'hidden',
+                            borderRadius: '12px',
+                            mr: { xs: 0, md: 3 },
+                            mb: { xs: 2, md: 2 },
+                            flexShrink: 0
+                          }}
+                        >
+                          <CardMedia
+                            component="img"
+                            image={projectImages[project.id]}
+                            alt={project.title}
+                            sx={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover',
+                              transition: 'transform 0.3s ease-in-out',
+                              '&:hover': {
+                                transform: 'scale(1.05)'
+                              }
+                            }}
+                          />
+                        </Box>
+
+                        {/* Text that wraps around the image */}
+                        <ProjectDescription sx={{
+                          textAlign: 'justify',
+                          lineHeight: 1.7,
+                          overflow: 'hidden'
+                        }}>
+                          {project.description}
+                        </ProjectDescription>
+
+                        {/* Clear float */}
+                        <Box sx={{ clear: 'both' }} />
+                      </>
+                    ) : (
+                      <ProjectDescription sx={{
+                        textAlign: 'justify',
+                        lineHeight: 1.7
+                      }}>
+                        {project.description}
+                      </ProjectDescription>
+                    )}
+                  </Box>
+                </CardContent>
+              </ProjectCard>
+            </Grid>
+          );
+        })}
       </Grid>
 
       {/* Statistics Section */}
-      <Box sx={{ mt: 6, mb: 4, p: 4, bgcolor: 'secondary.main', borderRadius: 2, textAlign: 'center' }}>
-        <Typography 
-          variant="h5" 
-          sx={{ 
-            color: 'white', 
+      <Box sx={{
+        mt: 6,
+        mb: 4,
+        p: { xs: 3, md: 5 },
+        bgcolor: 'white',
+        borderRadius: 3,
+        border: '3px solid',
+        borderColor: 'primary.main',
+        textAlign: 'center',
+        boxShadow: '0 8px 24px rgba(0, 91, 150, 0.12)'
+      }}>
+        <Typography
+          variant="h6"
+          sx={{
+            color: 'primary.main',
             fontFamily: 'Raleway, sans-serif',
-            fontWeight: 700,
-            mb: 3
+            fontWeight: 800,
+            mb: 5,
+            fontSize: { xs: '1.75rem', md: '2.5rem' }
           }}
         >
           Our Impact at a Glance
         </Typography>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={3}>
-            <Typography variant="h4" sx={{ color: 'white', fontWeight: 800 }}>9</Typography>
-            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)' }}>Core Projects</Typography>
+        <Grid container spacing={4} justifyContent="center" alignItems="center">
+          <Grid item xs={12} sm={6} md={3}>
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 1,
+              p: { xs: 2, md: 3 },
+              borderRadius: 2,
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                bgcolor: 'rgba(0, 91, 150, 0.05)',
+                transform: 'translateY(-5px)'
+              }
+            }}>
+              <Typography
+                variant="h2"
+                sx={{
+                  color: 'primary.main',
+                  fontWeight: 900,
+                  fontSize: { xs: '4rem', md: '5rem' },
+                  lineHeight: 1
+                }}
+              >
+                9
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: 'text.secondary',
+                  fontWeight: 600,
+                  fontSize: { xs: '1.2rem', md: '1.5rem' }
+                }}
+              >
+                Core Projects
+              </Typography>
+            </Box>
           </Grid>
-          <Grid item xs={12} sm={3}>
-            <Typography variant="h4" sx={{ color: 'white', fontWeight: 800 }}>1000+</Typography>
-            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)' }}>Lives Impacted</Typography>
+          <Grid item xs={12} sm={6} md={3}>
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 1,
+              p: { xs: 2, md: 3 },
+              borderRadius: 2,
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                bgcolor: 'rgba(0, 91, 150, 0.05)',
+                transform: 'translateY(-5px)'
+              }
+            }}>
+              <Typography
+                variant="h2"
+                sx={{
+                  color: 'primary.main',
+                  fontWeight: 900,
+                  fontSize: { xs: '4rem', md: '5rem' },
+                  lineHeight: 1
+                }}
+              >
+                1000+
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: 'text.secondary',
+                  fontWeight: 600,
+                  fontSize: { xs: '1.2rem', md: '1.5rem' }
+                }}
+              >
+                Lives Impacted
+              </Typography>
+            </Box>
           </Grid>
-          <Grid item xs={12} sm={3}>
-            <Typography variant="h4" sx={{ color: 'white', fontWeight: 800 }}>30+</Typography>
-            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)' }}>Years of Service</Typography>
+          <Grid item xs={12} sm={6} md={3}>
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 1,
+              p: { xs: 2, md: 3 },
+              borderRadius: 2,
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                bgcolor: 'rgba(0, 91, 150, 0.05)',
+                transform: 'translateY(-5px)'
+              }
+            }}>
+              <Typography
+                variant="h2"
+                sx={{
+                  color: 'primary.main',
+                  fontWeight: 900,
+                  fontSize: { xs: '4rem', md: '5rem' },
+                  lineHeight: 1
+                }}
+              >
+                30+
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: 'text.secondary',
+                  fontWeight: 600,
+                  fontSize: { xs: '1.2rem', md: '1.5rem' }
+                }}
+              >
+                Years of Service
+              </Typography>
+            </Box>
           </Grid>
-          <Grid item xs={12} sm={3}>
-            <Typography variant="h4" sx={{ color: 'white', fontWeight: 800 }}>5</Typography>
-            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)' }}>Government Partners</Typography>
+          <Grid item xs={12} sm={6} md={3}>
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 1,
+              p: { xs: 2, md: 3 },
+              borderRadius: 2,
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                bgcolor: 'rgba(0, 91, 150, 0.05)',
+                transform: 'translateY(-5px)'
+              }
+            }}>
+              <Typography
+                variant="h2"
+                sx={{
+                  color: 'primary.main',
+                  fontWeight: 900,
+                  fontSize: { xs: '4rem', md: '5rem' },
+                  lineHeight: 1
+                }}
+              >
+                5
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: 'text.secondary',
+                  fontWeight: 600,
+                  fontSize: { xs: '1.2rem', md: '1.5rem' }
+                }}
+              >
+                Government Partners
+              </Typography>
+            </Box>
           </Grid>
         </Grid>
       </Box>
 
       {/* Footer Note */}
-      <Box sx={{ mt: 4, p: 3, bgcolor: 'primary.main', borderRadius: 2, textAlign: 'center' }}>
-        <Typography 
-          variant="body1" 
-          sx={{ 
-            color: 'white', 
+      <Box sx={{
+        mt: 4,
+        p: 3,
+        bgcolor: 'white',
+        borderRadius: 3,
+        border: '3px solid',
+        borderColor: 'primary.main',
+        textAlign: 'center',
+        boxShadow: '0 8px 24px rgba(0, 91, 150, 0.12)'
+      }}>
+        <Typography
+          variant="body1"
+          sx={{
+            color: 'primary.main',
             fontFamily: 'Raleway, sans-serif',
-            fontWeight: 500,
-            mb: 1
+            fontWeight: 600,
+            mb: 1,
+            fontSize: { xs: '1rem', md: '1.1rem' }
           }}
         >
           Transforming Lives Through Dedicated Service Since 1991
         </Typography>
-        <Typography 
-          variant="body2" 
-          sx={{ 
-            color: 'rgba(255,255,255,0.8)', 
-            fontFamily: 'Raleway, sans-serif'
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'text.secondary',
+            fontFamily: 'Raleway, sans-serif',
+            fontSize: { xs: '0.9rem', md: '1rem' }
           }}
         >
-          Operating across rural Hooghly and urban Kolkata areas in partnership with Government of India 
+          Operating across rural Hooghly and urban Kolkata areas in partnership with Government of India
           and West Bengal Government initiatives
         </Typography>
       </Box>
