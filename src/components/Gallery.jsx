@@ -101,7 +101,7 @@ export default function Gallery() {
               color: 'primary.main',
               fontFamily: 'Raleway, sans-serif',
               fontWeight: 800,
-              mb: 2,
+              mb: 3,
               fontSize: { xs: '2.5rem', md: '3.5rem' }
             }}
           >
@@ -112,8 +112,8 @@ export default function Gallery() {
             sx={{
               color: 'text.secondary',
               fontFamily: 'Raleway, sans-serif',
-              fontWeight: 400,
-              mb: 5,
+              fontWeight: 600,
+              mb: 4,
               fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' },
               maxWidth: 800,
               mx: 'auto'

@@ -118,7 +118,6 @@ export default function StaffList() {
           fontWeight: 600, 
           mb: 4, 
           textAlign: 'center',
-          fontSize: { xs: '1.1rem', md: '1.3rem' }
         }}
       >
         Our dedicated staff members working across various projects

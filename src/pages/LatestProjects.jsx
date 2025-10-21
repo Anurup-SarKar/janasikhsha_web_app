@@ -188,22 +188,23 @@ export default function LatestProjects() {
           sx={{
             color: 'primary.main',
             fontFamily: 'Raleway, sans-serif',
-            fontWeight: 900,
-            mb: 2,
+            fontWeight: 800,
+            mb: 3,
             fontSize: { xs: '2.5rem', md: '3.5rem' }
           }}
         >
           Running Scheme
         </Typography>
         <Typography
-          variant="h6"
+          variant="h5"
           sx={{
             color: 'text.secondary',
             fontFamily: 'Raleway, sans-serif',
             maxWidth: 800,
             mx: 'auto',
             lineHeight: 1.6,
-            fontWeight: 400
+            fontWeight: 600,
+            mb: 4
           }}
         >
           Our core initiatives spanning child protection, women empowerment, elderly care,
