@@ -7,18 +7,17 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  Chip
+  Button
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import DownloadIcon from '@mui/icons-material/Download';
+import { getDocumentById } from '../assets/documents/documentsPaths';
 
 export default function WhatWeDo() {
   const navigate = useNavigate();
   const [selectedYear, setSelectedYear] = useState('');
+  const [showPDF, setShowPDF] = useState(false);
 
   const reports = [
     {
@@ -39,146 +38,139 @@ export default function WhatWeDo() {
 
   const handleYearChange = (event) => {
     setSelectedYear(event.target.value);
+    setShowPDF(false); // Hide PDF when year changes
   };
 
   const handleViewPDF = () => {
     if (selectedReport) {
-      navigate(`/pdf/${selectedReport.id}`);
+      setShowPDF(true); // Show PDF viewer
+    }
+  };
+
+  const handleDownload = () => {
+    if (selectedReport) {
+      const reportDocument = getDocumentById(selectedReport.id);
+      if (reportDocument) {
+        const link = document.createElement('a');
+        link.href = reportDocument.path;
+        link.download = `${reportDocument.title}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     }
   };
 
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 3, md: 6 }, px: { xs: 2, md: 3 } }}>
+      {/* Page Header */}
       <Box sx={{ textAlign: 'center', mb: { xs: 4, md: 6 } }}>
         <Typography 
           variant="h2" 
+          component="h1" 
           color="primary.main" 
           sx={{ 
-            mb: 2, 
-            fontWeight: 700,
+            mb: 3, 
+            fontWeight: 800,
             fontSize: { xs: '2.5rem', md: '3.5rem' }
           }}
         >
           What We Do
         </Typography>
         <Typography 
-          variant="h6" 
-          color="text.secondary" 
+          variant="h5" 
+          color="text.secondary"
           sx={{ 
-            mb: 2,
-            fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }
+            mb: 4,
+            fontWeight: 600,
           }}
         >
           Explore our annual reports to understand our programs and impact
         </Typography>
-        <Chip 
-          label="Annual Reports & Activities" 
-          color="secondary" 
-          sx={{ 
-            fontWeight: 600,
-            fontSize: { xs: '0.75rem', md: '0.875rem' }
-          }} 
-        />
       </Box>
 
-      <Grid container spacing={{ xs: 2, md: 4 }}>
-        <Grid item xs={12} md={6}>
-          <Card sx={{ p: { xs: 2, md: 3 } }}>
-            <CardContent>
-              <Typography 
-                variant="h5" 
-                sx={{ 
-                  mb: 3, 
-                  fontWeight: 600,
-                  fontSize: { xs: '1.25rem', md: '1.5rem' }
-                }}
-              >
-                Select Report Year
-              </Typography>
-              
-              <FormControl 
-                fullWidth 
-                sx={{ 
-                  mb: 3, 
-                  minWidth: { xs: 'auto', sm: 300 }
-                }}
-              >
-                <InputLabel>Choose Annual Report Year</InputLabel>
-                <Select
-                  value={selectedYear}
-                  label="Choose Annual Report Year"
-                  onChange={handleYearChange}
-                  sx={{ 
-                    minWidth: { xs: 'auto', sm: 300 },
-                    '& .MuiSelect-select': {
-                      paddingRight: '32px !important',
-                      minWidth: { xs: 'auto', sm: '250px' }
-                    }
-                  }}
-                >
-                  <MenuItem value="">
-                    <em>Select a year</em>
-                  </MenuItem>
-                  {reports.map((report) => (
-                    <MenuItem key={report.id} value={report.id}>
-                      {report.year}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+      {/* Centered Dropdown and Button */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2, mb: 4 }}>
+        <FormControl sx={{ minWidth: 300 }}>
+          <InputLabel>Select Annual Report Year</InputLabel>
+          <Select
+            value={selectedYear}
+            label="Select Annual Report Year"
+            onChange={handleYearChange}
+          >
+            <MenuItem value="">
+              <em>Choose a year</em>
+            </MenuItem>
+            {reports.map((report) => (
+              <MenuItem key={report.id} value={report.id}>
+                {report.year}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        
+        <Button
+          variant="contained"
+          onClick={handleViewPDF}
+          startIcon={<PictureAsPdfIcon />}
+          disabled={!selectedYear}
+          sx={{ 
+            fontWeight: 600,
+            height: 56 // Match the Select height
+          }}
+        >
+          View PDF
+        </Button>
+      </Box>
 
-              {selectedReport && (
-                <Box>
-                  <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
-                    {selectedReport.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                    {selectedReport.description}
-                  </Typography>
-                  
-                  <Button
-                    variant="contained"
-                    onClick={handleViewPDF}
-                    startIcon={<PictureAsPdfIcon />}
-                    sx={{ fontWeight: 600 }}
-                  >
-                    View PDF
-                  </Button>
-                </Box>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
+      {/* Report Details (only shown when year is selected) */}
+      {selectedReport && (
+        <Box sx={{ textAlign: 'center', mb: 4 }}>
+          <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+            {selectedReport.title}
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+            {selectedReport.description}
+          </Typography>
+          
+          <Button
+            variant="outlined"
+            onClick={handleDownload}
+            startIcon={<DownloadIcon />}
+            sx={{ fontWeight: 600 }}
+          >
+            Download PDF
+          </Button>
+        </Box>
+      )}
 
-        <Grid item xs={12} md={6}>
-          <Card sx={{ 
-            p: { xs: 2, md: 3 }, 
-            textAlign: 'center', 
-            minHeight: { xs: 200, md: 300 }, 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center' 
-          }}>
-            {selectedReport ? (
-              <Box>
-                <PictureAsPdfIcon sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                  {selectedReport.title}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Click "View PDF" to open this report
-                </Typography>
-              </Box>
-            ) : (
-              <Box>
-                <Typography variant="h6" color="text.secondary">
-                  Select a year to preview the report
-                </Typography>
-              </Box>
-            )}
-          </Card>
-        </Grid>
-      </Grid>
+      {/* PDF Viewer (only shown when showPDF is true) */}
+      {showPDF && selectedReport && (
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h5" sx={{ mb: 2, textAlign: 'center', fontWeight: 600 }}>
+            {selectedReport.title}
+          </Typography>
+          <Box 
+            sx={{ 
+              width: '100%', 
+              height: 'calc(100vh - 400px)', 
+              minHeight: '600px',
+              border: '2px solid', 
+              borderColor: 'primary.main',
+              borderRadius: 2,
+              overflow: 'hidden'
+            }}
+          >
+            <iframe
+              src={getDocumentById(selectedReport.id)?.path + '#toolbar=1'}
+              width="100%"
+              height="100%"
+              style={{ border: 'none' }}
+              title={selectedReport.title}
+            />
+          </Box>
+        </Box>
+      )}
     </Container>
   );
 }

@@ -28,8 +28,8 @@ export default function ProposedScheme() {
           sx={{ 
             color: 'primary.main', 
             fontFamily: 'Raleway, sans-serif', 
-            fontWeight: 900,
-            mb: 2,
+            fontWeight: 800,
+            mb: 3,
             fontSize: { xs: '2.5rem', md: '3.5rem' }
           }}
         >
