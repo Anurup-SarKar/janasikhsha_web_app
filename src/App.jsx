@@ -141,14 +141,10 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
             <Box sx={{ minWidth: 280 }}>
               <Box sx={{ fontWeight: 700, fontSize: '1.1rem', mb: 1, color: 'secondary.main' }}>CONTACT US</Box>
               <Box sx={{ mb: 1, fontSize: '0.9rem' }}>
-                <strong>Liaison Office:</strong><br />
-                31B,Bhabani Dutta Lane, Kolkata-700073, WB, India
-              </Box>
-              <Box sx={{ mb: 1, fontSize: '0.9rem' }}>
                 <strong>Head Office:</strong><br />
                 CK-6, Sector-II, Salt Lake City, Kolkata 700064,WB, India
               </Box>
-              <Box sx={{ mb: 1, fontSize: '0.9rem' }}>
+               <Box sx={{ mb: 1, fontSize: '0.9rem' }}>
                 <strong>Rural Office:</strong><br />
                 P.O+Vill: Baganda,Via:jangipara, Hoogly 712404,WB, India
               </Box>
