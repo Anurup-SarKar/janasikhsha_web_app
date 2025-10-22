@@ -675,25 +675,39 @@ people.
         >
           Our Core Values
         </Typography>
-        <Grid container spacing={2}>
+        <Box sx={{ 
+          display: 'grid', 
+          gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+          gap: 3
+        }}>
           {coreValues.map((value, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
-              <Box sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
-                <HistoryIcon sx={{ color: 'secondary.main', mr: 2 }} />
-                <Typography 
-                  variant="body1" 
-                  sx={{ 
-                    fontFamily: 'Raleway, sans-serif',
-                    color: 'text.primary',
-                    fontWeight: 500
-                  }}
-                >
-                  {value}
-                </Typography>
-              </Box>
-            </Grid>
+            <Box 
+              key={index}
+              sx={{ 
+                display: 'flex', 
+                alignItems: 'flex-start',
+                gap: 1.5
+              }}
+            >
+              <HistoryIcon sx={{ 
+                color: 'secondary.main',
+                fontSize: 24,
+                flexShrink: 0
+              }} />
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  fontFamily: 'Raleway, sans-serif',
+                  color: 'text.primary',
+                  fontWeight: 500,
+                  lineHeight: 1.6
+                }}
+              >
+                {value}
+              </Typography>
+            </Box>
           ))}
-        </Grid>
+        </Box>
       </Paper>
 
       {/* Legacy and Impact */}
