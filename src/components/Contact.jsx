@@ -58,41 +58,15 @@ export default function Contact() {
         </Box>
       </Box>
       
-      {/* Registered Office */}
-      <Box mb={3} sx={{ bgcolor: '#f8f9fa', p: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
-        <Typography variant="h6" sx={{ color: (theme) => theme.palette.primary.main, fontWeight: 600, fontFamily: 'Raleway, sans-serif', mb: 1 }}>
-          Liaison Office
-        </Typography>
-        <Typography sx={{ fontFamily: 'Raleway, sans-serif', mb: 1 }}>
-          31B, Bhabani Dutta Lane,<br />
-          Kolkata 700073,WB,India<br />
-        </Typography>
-        <Typography sx={{ fontFamily: 'Raleway, sans-serif', mb: 2 }}>
-          <strong>Mob : </strong> <Link href="tel:+919330407157" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>+91-9330407157</Link><br />
-          <strong>Email : </strong> <Link href="mailto:jpk.kolkata@gmail.com" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>jpk.kolkata@gmail.com</Link>
-        </Typography>
-        {/* Map for Liaison Office */}
-        <Box sx={{ mt: 2 }}>
-          <iframe
-            title="Liaison - 31B, Bhabani Dutta Lane, Kolkata"
-            src="https://www.google.com/maps?q=31B+Bhabani+Dutta+Lane,+Kolkata+700073,+West+Bengal,+India&output=embed"
-            width="100%"
-            height="200"
-            style={{ border: 0, borderRadius: 8 }}
-            allowFullScreen=""
-            loading="lazy"
-          ></iframe>
-        </Box>
-      </Box>
-
-      {/* City Office */}
+    
+     {/* City Office */}
       <Box mb={3} sx={{ bgcolor: '#f0f7ff', p: 2, borderRadius: 2, border: '1px solid #e3f2fd' }}>
         <Typography variant="h6" sx={{ color: (theme) => theme.palette.primary.main, fontWeight: 600, fontFamily: 'Raleway, sans-serif', mb: 1 }}>
           Head Office
         </Typography>
         <Typography sx={{ fontFamily: 'Raleway, sans-serif', mb: 1 }}>
-          CK – 6, Sector – II,Salt Lake City<br />
-          Kolkata 700091,WB,India<br />
+          Block-CK, Plot-6, Sector-II, Salt Lake City<br />
+          P.S:-Bidhannagar (East), Dist:-North(24) Parganas, Kolkata, WB, India, PIN-700091
         </Typography>
         <Typography sx={{ fontFamily: 'Raleway, sans-serif', mb: 2 }}>
           <strong>Mob : </strong> <Link href="tel:+917980320462" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>+91-7980320462</Link><br />
@@ -102,12 +76,13 @@ export default function Contact() {
         <Box sx={{ mt: 2 }}>
           <iframe
             title="City Office - Salt Lake City, Kolkata"
-            src="https://www.google.com/maps?q=CK-6+Sector-II+Salt+Lake+City+Kolkata+700064+West+Bengal+India&output=embed"
+            src="https://www.google.com/maps?q=Block+CK+Plot+6+Sector+2+Salt+Lake+City+Bidhannagar+Kolkata+West+Bengal+700091+India&output=embed"
             width="100%"
-            height="200"
+            height="250"
             style={{ border: 0, borderRadius: 8 }}
             allowFullScreen=""
             loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
           ></iframe>
         </Box>
       </Box>
@@ -118,8 +93,8 @@ export default function Contact() {
           Rural Field Office
         </Typography>
         <Typography sx={{ fontFamily: 'Raleway, sans-serif', mb: 1 }}>
-          P.O. & Vill: Baganda Via: Jangipara<br />
-          Dist: Hooghly, Pin-712404,WB,India<br />
+          P.O. & Vill: Baganda<br />
+          P.S:-Jangipara, Sub Division:-Srirampore, District:-Hooghly,WB, India, PIN- 712404<br />
         </Typography>
         <Typography sx={{ fontFamily: 'Raleway, sans-serif', mb: 2 }}>
           <strong>Mob : </strong> <Link href="tel:+919883014760" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>+91-9883014760</Link><br />
@@ -129,12 +104,13 @@ export default function Contact() {
         <Box sx={{ mt: 2 }}>
           <iframe
             title="Rural Field Office - Baganda, Jangipara, Hooghly"
-            src="https://www.google.com/maps?q=Baganda+Jangipara+Hooghly+West+Bengal+India&output=embed"
+src="https://www.google.com/maps?q=Baganda+Village+Jangipara+Hooghly+West+Bengal+712404+India&output=embed"
             width="100%"
-            height="200"
+            height="250"
             style={{ border: 0, borderRadius: 8 }}
             allowFullScreen=""
             loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
           ></iframe>
         </Box>
       </Box>

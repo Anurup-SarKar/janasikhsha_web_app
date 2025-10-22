@@ -8,6 +8,7 @@ import { AppBar, Toolbar, Typography, Button, IconButton, Drawer, List, ListItem
 import MenuIcon from '@mui/icons-material/Menu';
 // Removed LoginIcon/LogoutIcon imports
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from '@mui/material/styles';
 import theme from '../theme';
 import LoginDialog from './LoginDialog';
@@ -32,9 +33,14 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  paddingLeft: theme.spacing(2),
-  paddingRight: theme.spacing(2),
-  gap: theme.spacing(1), // Add consistent spacing between elements
+  paddingLeft: theme.spacing(1), // Reduced padding for mobile
+  paddingRight: theme.spacing(1), // Ensure equal right padding
+  gap: theme.spacing(0.5), // Reduced gap for mobile
+  [theme.breakpoints.up('sm')]: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    gap: theme.spacing(1),
+  },
 }));
 const NavButton = styled(Button)(({ theme }) => ({
   fontFamily: 'Raleway, sans-serif',
@@ -64,40 +70,58 @@ const NavButton = styled(Button)(({ theme }) => ({
 const BrandContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(1.5),
+  gap: theme.spacing(0.25), // Very small gap on mobile
   cursor: 'pointer',
   textDecoration: 'none',
   outline: 'none',
-  flex: '0 0 auto',
-  maxWidth: '400px',
+  flex: '1 1 auto',
+  maxWidth: '100%',
   minWidth: 0,
+  overflow: 'hidden',
+  [theme.breakpoints.up('sm')]: {
+    gap: theme.spacing(1.5),
+    maxWidth: '400px',
+  },
 }));
 
 const LogoImage = styled('img')(({ theme }) => ({
-  width: 40,
-  height: 40,
+  width: 22, // Much smaller for mobile
+  height: 22,
   borderRadius: '50%',
   objectFit: 'cover',
   flexShrink: 0, // Prevent logo from shrinking
   border: `2px solid ${theme.palette.primary.light}`,
   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+  [theme.breakpoints.up('sm')]: {
+    width: 35,
+    height: 35,
+  },
+  [theme.breakpoints.up('md')]: {
+    width: 40,
+    height: 40,
+  },
 }));
 
 const Brand = styled(Typography)(({ theme }) => ({
   fontFamily: 'Raleway, sans-serif',
   fontWeight: 900,
-  fontSize: '0.95rem', // Further decreased for smaller title
+  fontSize: '0.7rem', // Even smaller for two-line mobile layout
   color: theme.palette.primary.main,
-  letterSpacing: 0.8,
+  letterSpacing: 0.3,
   textShadow: '0 2px 8px rgba(0, 91, 150, 0.1)',
-  whiteSpace: 'nowrap',
   overflow: 'hidden',
-  textOverflow: 'ellipsis',
   minWidth: 0, // Allow text to shrink
   display: 'flex',
-  alignItems: 'center', // Vertically center the text
-  justifyContent: 'center', // Horizontally center the text
+  flexDirection: 'column',
+  alignItems: 'center', // Center align the text lines
+  justifyContent: 'center', // Vertically center the text
   textAlign: 'center', // Center text alignment
+  lineHeight: 1.1, // Tighter line height for mobile
+  [theme.breakpoints.up('sm')]: {
+    fontSize: '0.95rem', // Larger font on tablets and up
+    letterSpacing: 0.8,
+    flexDirection: 'row', // Single line on larger screens
+  },
   lineHeight: 1, // Adjust line height for better vertical centering
   // Remove any visible border/outline when the brand link is focused/active/hovered
   '&:focus, &:active, &:hover': {
@@ -135,6 +159,9 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
   const [schemeAnchorEl, setSchemeAnchorEl] = React.useState(null);
   const [createUserOpen, setCreateUserOpen] = useState(false);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
+  // States for mobile submenu expansion
+  const [aboutSubmenuExpanded, setAboutSubmenuExpanded] = useState(false);
+  const [schemeSubmenuExpanded, setSchemeSubmenuExpanded] = useState(false);
   const [newUser, setNewUser] = useState({ username: '', password: '' });
   const [createUserMsg, setCreateUserMsg] = useState('');
   const [createUserError, setCreateUserError] = useState('');
@@ -206,7 +233,11 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
       <StyledAppBar position="static" elevation={2}>
         <StyledToolbar>
           {isMobile && (
-            <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => setDrawerOpen(true)}>
+            <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => {
+              setDrawerOpen(true);
+              setAboutSubmenuExpanded(false);
+              setSchemeSubmenuExpanded(false);
+            }}>
               <MenuIcon sx={{ color: theme.palette.secondary.main, fontSize: 26 }} />
             </IconButton>
           )}
@@ -214,11 +245,23 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
             <LogoImage 
               src={Logo1} 
               alt="Janasiksha Prochar Kendra Logo 1"
+              sx={{ 
+                width: { xs: 28, sm: 35, md: 40 },
+                height: { xs: 28, sm: 35, md: 40 },
+                flexShrink: 0
+              }}
             />
-            <Brand>JANASIKSHA PROCHAR KENDRA</Brand>
+            <Brand>
+              JANASIKSHA PRACHAR KENDRA
+            </Brand>
             <LogoImage 
               src={Logo2} 
               alt="Janasiksha Prochar Kendra Logo 2"
+              sx={{ 
+                width: { xs: 28, sm: 35, md: 40 },
+                height: { xs: 28, sm: 35, md: 40 },
+                flexShrink: 0
+              }}
             />
           </BrandContainer>
           {!isMobile && (
@@ -357,7 +400,11 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
             onLogin={() => { setLoginDialogOpen(false); onLogin && onLogin(); }}
           />
         </StyledToolbar>
-        <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+        <Drawer anchor="left" open={drawerOpen} onClose={() => {
+          setDrawerOpen(false);
+          setAboutSubmenuExpanded(false);
+          setSchemeSubmenuExpanded(false);
+        }}>
           <Box sx={{ width: 250, bgcolor: theme.palette.background.paper, height: '100%' }} role="presentation">
             <Box sx={{ p: 2, bgcolor: theme.palette.secondary.main, color: '#fff', textAlign: 'center' }}>
               <Typography variant="h6" sx={{ fontFamily: 'Raleway, sans-serif', fontWeight: 700 }}>Janasiksha Prochar Kendra Menu</Typography>
@@ -368,7 +415,7 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
               <ListItem
                 button
                 key="aboutus"
-                onClick={() => setDrawerOpen(open => !open)}
+                onClick={() => setAboutSubmenuExpanded(expanded => !expanded)}
                 sx={{ 
                   pl: 2,
                   minHeight: 48,
@@ -388,9 +435,17 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                     } 
                   }} 
                 />
+                <ExpandMoreIcon 
+                  sx={{ 
+                    color: theme.palette.primary.main,
+                    fontSize: '1.2rem',
+                    transform: aboutSubmenuExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.2s ease-in-out'
+                  }} 
+                />
               </ListItem>
               {/* Render About Us submenus indented under About Us */}
-              {drawerOpen && aboutMenuItems.map(item => (
+              {aboutSubmenuExpanded && aboutMenuItems.map(item => (
                 <ListItem
                   button
                   key={item.page}
@@ -451,7 +506,7 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
               <ListItem
                 button
                 key="ourscheme"
-                onClick={() => setDrawerOpen(open => !open)}
+                onClick={() => setSchemeSubmenuExpanded(expanded => !expanded)}
                 sx={{ 
                   pl: 2,
                   minHeight: 48,
@@ -471,9 +526,17 @@ export default function ResponsiveNavbar({ isLoggedIn, onLogin, onLogout }) {
                     } 
                   }} 
                 />
+                <ExpandMoreIcon 
+                  sx={{ 
+                    color: theme.palette.primary.main,
+                    fontSize: '1.2rem',
+                    transform: schemeSubmenuExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.2s ease-in-out'
+                  }} 
+                />
               </ListItem>
               {/* Render Our Scheme submenus indented under Our Scheme */}
-              {drawerOpen && schemeMenuItems.map(item => (
+              {schemeSubmenuExpanded && schemeMenuItems.map(item => (
                 <ListItem
                   button
                   key={item.page}
