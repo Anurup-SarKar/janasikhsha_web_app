@@ -1,14 +1,17 @@
 ﻿import React from 'react';
-import { Box, Typography, Button, Container } from '@mui/material';
+import { Box, Typography, Button, Container, IconButton, useMediaQuery } from '@mui/material';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DownloadIcon from '@mui/icons-material/Download';
+import { useTheme } from '@mui/material/styles';
 import { getDocumentById } from '../assets/documents/documentsPaths';
 
 export default function PDFViewer() {
   const navigate = useNavigate();
   const { documentId } = useParams();
   const location = useLocation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   
   const docId = documentId || location.state?.documentId || 'memorandumDocument';
   const document = getDocumentById(docId);
@@ -34,28 +37,72 @@ export default function PDFViewer() {
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
-        <Button 
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(-1)}
-          sx={{ color: 'primary.main' }}
-        >
-          Back
-        </Button>
-        
-        <Typography variant="h2" component ="h1" sx={{ fontFamily: 'Raleway, sans-serif', 
-            fontWeight: 800, xs: '2.5rem', md: '3.5rem', mb: 3, color: (theme) => theme.palette.primary.main, flex: 1, textAlign: 'center' }}>
-          {document.title}
-        </Typography>
+      {isMobile ? (
+        // Mobile layout: Back button on top, centered title below
+        <Box sx={{ mb: 3 }}>
+          <Box sx={{ mb: 2 }}>
+            <Button 
+              startIcon={<ArrowBackIcon />}
+              onClick={() => navigate(-1)}
+              sx={{ color: 'primary.main' }}
+            >
+              Back
+            </Button>
+          </Box>
+          <Typography 
+            variant="h2" 
+            component="h1" 
+            sx={{ 
+              fontFamily: 'Raleway, sans-serif', 
+              fontWeight: 800, 
+              fontSize: '1.5rem',
+              color: (theme) => theme.palette.primary.main, 
+              textAlign: 'center'
+            }}
+          >
+            {document.title}
+          </Typography>
+        </Box>
+      ) : (
+        // Desktop layout: Back button, centered title, download button in one row
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between', 
+          mb: 3
+        }}>
+          <Button 
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate(-1)}
+            sx={{ color: 'primary.main' }}
+          >
+            Back
+          </Button>
+          
+          <Typography 
+            variant="h2" 
+            component="h1" 
+            sx={{ 
+              fontFamily: 'Raleway, sans-serif', 
+              fontWeight: 800, 
+              fontSize: '3.5rem',
+              color: (theme) => theme.palette.primary.main, 
+              flex: 1, 
+              textAlign: 'center'
+            }}
+          >
+            {document.title}
+          </Typography>
 
-        <Button 
-          startIcon={<DownloadIcon />}
-          onClick={handleDownload}
-          variant="outlined"
-        >
-          Download
-        </Button>
-      </Box>
+          <Button 
+            startIcon={<DownloadIcon />}
+            onClick={handleDownload}
+            variant="outlined"
+          >
+            Download
+          </Button>
+        </Box>
+      )}
 
       <Box sx={{ width: '100%', height: 'calc(100vh - 200px)', border: '1px solid #ccc', borderRadius: 2 }}>
         <iframe
