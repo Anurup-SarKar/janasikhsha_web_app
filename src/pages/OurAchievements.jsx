@@ -9,6 +9,13 @@ const AwardCard = styled(Card)(({ theme }) => ({
   border: `2px solid ${theme.palette.primary.main}`,
   borderRadius: '16px',
   transition: 'all 0.3s ease-in-out',
+  width: '100%',
+  maxWidth: '100%',
+  minWidth: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  boxSizing: 'border-box',
+  overflow: 'hidden',
   '&:hover': {
     transform: 'translateY(-8px)',
     boxShadow: '0 12px 24px rgba(0, 91, 150, 0.15)',
@@ -85,12 +92,13 @@ export default function OurAchievements() {
       {/* Header Section */}
       <Box sx={{ textAlign: 'center', mb: 6 }}>
         <Typography 
-          variant="h3" 
+          variant="h2" 
           sx={{ 
             color: (theme) => theme.palette.primary.main, 
             fontFamily: 'Raleway, sans-serif', 
-            fontWeight: 700, 
-            mb: 2,
+            fontWeight: 800, 
+            mb: 3,
+            fontSize: { xs: '2.5rem', md: '3.5rem' },
             textShadow: '0 2px 8px rgba(0, 91, 150, 0.12)' 
           }}
         >
@@ -101,7 +109,7 @@ export default function OurAchievements() {
           sx={{ 
             color: (theme) => theme.palette.text.secondary, 
             fontFamily: 'Raleway, sans-serif', 
-            fontWeight: 400, 
+            fontWeight: 600, 
             mb: 4,
             maxWidth: 800,
             mx: 'auto',
@@ -116,11 +124,32 @@ export default function OurAchievements() {
       {/* Achievements Grid */}
       <Grid container spacing={4}>
         {achievements.map((achievement, index) => (
-          <Grid item xs={12} md={6} key={index}>
+          <Grid 
+            item 
+            xs={12} 
+            md={6} 
+            key={index}
+            sx={{
+              display: 'flex',
+              width: '100%',
+              maxWidth: '100%',
+            }}
+          >
             <AwardCard>
-              <CardContent sx={{ p: 4, display: 'flex', flexDirection: 'column' }}>
-                {/* Icon, Title and Year on same line */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+              <CardContent sx={{ 
+                p: 2.5, 
+                display: 'flex', 
+                flexDirection: 'column', 
+                width: '100%',
+                maxWidth: '100%',
+                overflow: 'hidden',
+                boxSizing: 'border-box'
+              }}>
+                {/* Icon, Title and Year */}
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 2 }}>
+                  <Typography variant="h3" sx={{ fontSize: '2.5rem' }}>
+                    {achievement.icon}
+                  </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1, flex: 1 }}>
                     <Typography 
                       variant="h5" 
@@ -145,9 +174,6 @@ export default function OurAchievements() {
                       }}
                     />
                   </Box>
-                  <Typography variant="h3" sx={{ fontSize: '2.5rem', ml: 1 }}>
-                    {achievement.icon}
-                  </Typography>
                 </Box>
 
                 {/* Subtitle */}
@@ -178,20 +204,34 @@ export default function OurAchievements() {
                 />
 
                 {/* Description */}
-                <Typography 
-                  variant="body1" 
+                <Box 
                   sx={{ 
-                    fontFamily: 'Raleway, sans-serif', 
-                    color: (theme) => theme.palette.text.primary, 
-                    fontSize: '1rem', 
-                    textAlign: 'justify', 
-                    lineHeight: 1.6,
-                    mb: 1,
-                    flex: 1
+                    width: '100%',
+                    maxWidth: '100%',
+                    overflow: 'hidden',
+                    pr: 2,
+                    boxSizing: 'border-box'
                   }}
                 >
-                  {achievement.description}
-                </Typography>
+                  <Typography 
+                    variant="body1" 
+                    sx={{ 
+                      fontFamily: 'Raleway, sans-serif', 
+                      color: (theme) => theme.palette.text.primary, 
+                      fontSize: '0.9rem', 
+                      textAlign: 'justify', 
+                      lineHeight: 1.4,
+                      mb: 1,
+                      width: '100%',
+                      maxWidth: '100%',
+                      wordBreak: 'break-word',
+                      overflowWrap: 'break-word',
+                      flex: 1
+                    }}
+                  >
+                    {achievement.description}
+                  </Typography>
+                </Box>
 
                 {/* Award Details */}
                 <Box sx={{ mt: 0, mb: 2 }}>
@@ -224,33 +264,6 @@ export default function OurAchievements() {
           </Grid>
         ))}
       </Grid>
-
-      {/* Footer Message */}
-      <Box sx={{ textAlign: 'center', mt: 6, p: 4, bgcolor: 'primary.main', color: 'white', borderRadius: 3 }}>
-        <Typography 
-          variant="h6" 
-          sx={{ 
-            fontFamily: 'Raleway, sans-serif', 
-            fontWeight: 600, 
-            mb: 2 
-          }}
-        >
-          Continuing Our Legacy of Service
-        </Typography>
-        <Typography 
-          variant="body1" 
-          sx={{ 
-            fontFamily: 'Raleway, sans-serif', 
-            fontSize: '1.1rem',
-            maxWidth: 800,
-            mx: 'auto',
-            opacity: 0.95
-          }}
-        >
-          These awards represent decades of dedicated service to the most vulnerable members of our society. 
-          They inspire us to continue our mission of empowerment, education, and social transformation.
-        </Typography>
-      </Box>
     </Container>
   );
 }

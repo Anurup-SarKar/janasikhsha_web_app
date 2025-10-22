@@ -3,10 +3,20 @@
 // Using local banner images for hero carousel.
 
 // Import banner images
-import Banner1 from './images/Banner1.jpg';
-import Banner2 from './images/Banner2.jpg';
-import Banner3 from './images/Banner3.jpg';
-import Banner4 from './images/Banner4.jpg';
+import Banner1 from './images/Banner/Banner1.jpg';
+import Banner2 from './images/Banner/Banner2.jpg';
+import Banner3 from './images/Banner/Banner3.jpg';
+import Banner4 from './images/Banner/Banner4.jpg';
+import Banner5 from './images/Banner/Banner5.jpg';
+import Banner6 from './images/Banner/Banner6.jpg';
+import Banner7 from './images/Banner/Banner7.jpg';
+import Banner8 from './images/Banner/Banner8.jpg';
+import Banner9 from './images/Banner/Banner9.jpg';
+import Banner10 from './images/Banner/Banner10.jpg';
+import Banner11 from './images/Banner/Banner11.jpg';
+import Banner12 from './images/Banner/Banner12.jpg';
+import Banner13 from './images/Banner/Banner13.jpg';
+import Banner14 from './images/Banner/Banner14.jpg';
 
 /**
  * Array of hero banner image URLs - using local banner images
@@ -17,6 +27,16 @@ const ngoImages = [
   Banner2,
   Banner3,
   Banner4,
+  Banner5,
+  Banner6,
+  Banner7,
+  Banner8,
+  Banner9,
+  Banner10,
+  Banner11,
+  Banner12,
+  Banner13,
+  Banner14,
 ];
 
 /**

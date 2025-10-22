@@ -16,7 +16,7 @@ export default function Contact() {
   return (
     <Box sx={{ bgcolor: (theme) => theme.palette.background.paper, borderRadius: 3, boxShadow: 2, p: { xs: 2, md: 4 }, mb: 3 }}>
       {/* Contact header */}
-      <Typography variant="h4" mb={2} sx={{ color: (theme) => theme.palette.primary.main, fontWeight: 700, fontFamily: 'Raleway, sans-serif' }}>
+      <Typography variant="h2" mb={3} sx={{ fontSize: { xs: '2.5rem', md: '3.5rem' }, color: (theme) => theme.palette.primary.main, fontWeight: 800, fontFamily: 'Raleway, sans-serif',textAlign: 'center' }}>
         Contact Us
       </Typography>
       {/* Key Contact Persons & Email */}
@@ -141,8 +141,7 @@ export default function Contact() {
 
       {/* Footer note */}
       <Typography variant="body2" color="text.secondary" sx={{ fontFamily: 'Raleway, sans-serif' }}>
-        {/* TODO: Replace with official social links */}
-        Follow us on <Link href="#" target="_blank" rel="noopener" underline="hover">Facebook</Link><br />
+        Follow us on <Link href="https://www.facebook.com/share/19tNrUoq1o/" target="_blank" rel="noopener noreferrer" underline="hover">Facebook</Link><br />
         Copyright © 2020 Janasiksha Prochar Kendra - All Rights Reserved.
       </Typography>
     </Box>
