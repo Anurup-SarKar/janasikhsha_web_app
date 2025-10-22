@@ -6,7 +6,15 @@ import { Box, Typography } from '@mui/material';
 export default function Location() {
   return (
     <Box sx={{ p: { xs: 2, md: 4 } }}>
-      <Typography variant="h3" sx={{ color: 'primary.main', fontFamily: 'Raleway, sans-serif', mb: 2 }}>
+      <Typography 
+        variant="h2" 
+        sx={{ 
+          color: 'primary.main', 
+          fontFamily: 'Raleway, sans-serif', 
+          mb: 2,
+          fontSize: { xs: '2.5rem', md: '3.5rem' }
+        }}
+      >
         Location
       </Typography>
       <Typography variant="body1" sx={{ fontFamily: 'Raleway, sans-serif' }}>

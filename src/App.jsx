@@ -21,6 +21,7 @@ import LatestProjects from './pages/LatestProjects';
 import History from './pages/History';
 import WhoWeAre from './pages/WhoWeAre';
 import OurTeam from './pages/OurTeam';
+import StaffList from './pages/StaffList';
 import PDFViewer from './pages/PDFViewer';
 import OurAchievements from './pages/OurAchievements';
 import ProposedScheme from './pages/ProposedScheme';
@@ -83,6 +84,7 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
           <Route path="/reset_password" element={<ResetPassword />} />
           <Route path="/pdf/:documentId" element={<PDFViewer />} />
           <Route path="/ourteam" element={<OurTeam />} />
+          <Route path="/staff" element={<StaffList />} />
           <Route path="/ourachievements" element={<OurAchievements />} />
           <Route path="/beneficiarydetails" element={<BeneficiaryDetails />} />
 
@@ -120,7 +122,8 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
               <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
                 <li><RouterLink to="/whoweare" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Who We Are</RouterLink></li>
                 <li><RouterLink to="/memorandum" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Memorandum of Association</RouterLink></li>
-                <li><RouterLink to="/ourteam" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Authority of Organization & Staff Structure</RouterLink></li>
+                <li><RouterLink to="/ourteam" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Authority of Organization</RouterLink></li>
+                <li><RouterLink to="/staff" style={{ color: '#fff', textDecoration: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>&gt;&nbsp;Staff Structure</RouterLink></li>
               </Box>
             </Box>
             {/* Quick Links */}
@@ -151,7 +154,7 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
               </Box>
               <Box sx={{ mb: 1 }}><a href="tel:+913322413324" style={{ color: '#fff', textDecoration: 'none' }}>+91-(033) 2241-3324</a></Box>
               <Box sx={{ mb: 1 }}><a href="mailto:jpk.kolkata@gmail.com" style={{ color: '#fff', textDecoration: 'none' }}>jpk.kolkata@gmail.com</a></Box>
-              <Box sx={{ mb: 1 }}><a href="https://www.facebook.com/ABWUIndia" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none' }}>Follow us on Facebook</a></Box>
+              <Box sx={{ mb: 1 }}><a href="https://www.facebook.com/share/19tNrUoq1o/" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none' }}>Follow us on Facebook</a></Box>
             </Box>
           </Box>
           <Box sx={{ borderTop: '1px solid #fff', pt: 2, textAlign: 'center', fontWeight: 600, fontSize: '1rem', letterSpacing: 0.5 }}>
