@@ -70,7 +70,7 @@ export default function Contact() {
         </Typography>
         <Typography sx={{ fontFamily: 'Raleway, sans-serif', mb: 2 }}>
           <strong>Mob : </strong> <Link href="tel:+917980320462" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>+91-7980320462</Link><br />
-          <strong>Email : </strong> <Link href="mailto:jpk.saltlake91@gmail.com" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>jpk.saltlake91@gmail.com</Link>
+          <strong>Email : </strong> <Link href="mailto:jpksaltlake91@gmail.com" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>jpk.saltlake91@gmail.com</Link>
         </Typography>
         {/* Map for City Office */}
         <Box sx={{ mt: 2 }}>
@@ -98,7 +98,7 @@ export default function Contact() {
         </Typography>
         <Typography sx={{ fontFamily: 'Raleway, sans-serif', mb: 2 }}>
           <strong>Mob : </strong> <Link href="tel:+919883014760" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>+91-9883014760</Link><br />
-        <strong>Email : </strong> <Link href="mailto:jpk.baganda2019@gmail.com" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>jpk.baganda2019@gmail.com</Link>
+        <strong>Email : </strong> <Link href="mailto:jpkbaganda2019@gmail.com" underline="hover" sx={{ color: (theme) => theme.palette.primary.main, fontFamily: 'Raleway, sans-serif', fontWeight: 500 }}>jpk.baganda2019@gmail.com</Link>
         </Typography>
         {/* Map for Rural Field Office */}
         <Box sx={{ mt: 2 }}>
