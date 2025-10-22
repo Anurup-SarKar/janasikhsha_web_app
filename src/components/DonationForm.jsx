@@ -20,7 +20,7 @@ function loadRazorpayScript() {
 }
 
 // Store Razorpay API Key as constant (replace with your actual key)
-const API_KEY = 'rzp_test_RT3flTWZYGNAci';
+const API_KEY = 'rzp_live_RWZfu1GQT2OiIu';
 
 // Optional org info to display on 80G receipt (fill real values when available)
 const ORG_INFO = {
