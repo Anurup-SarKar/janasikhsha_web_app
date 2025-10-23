@@ -136,33 +136,87 @@ export default function DonationForm() {
   function generatePDF() {
     const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
     const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 14;
 
-    // Header (org name and contact)
-    doc.setTextColor('#111827');
+    // Add header image (letterhead)
+    const headerImg = new Image();
+    headerImg.src = '/src/assets/images/Logo-1.jpg';
+
+    // Draw header background
+    doc.setFillColor(255, 255, 255);
+    doc.rect(0, 0, pageWidth, 50, 'F');
+
+    // Organization name in maroon/red color
+    doc.setTextColor(139, 0, 0); // Maroon color
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(18);
-    doc.text('Janasiksha Prochar Kendra', margin, 18);
-    doc.setFontSize(11);
+    doc.setFontSize(22);
+    doc.text('JANASIKSHA PROCHAR KENDRA', pageWidth / 2, 15, { align: 'center' });
+
+    // Certificate info in orange
+    doc.setTextColor(255, 100, 0);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Certificate of Registration of Societies West Bengal Act XXVI of 1961', pageWidth / 2, 22, { align: 'center' });
+    doc.setFontSize(9);
+    doc.text('Registration No. : S/12026 of 1972-1973 dt. 09.08.1972', pageWidth / 2, 27, { align: 'center' });
+
+    // Service info in purple
+    doc.setTextColor(128, 0, 128);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Four Decades of dedicated service to the deprived', pageWidth / 2, 32, { align: 'center' });
+
+    // Awards info in dark blue
+    doc.setTextColor(0, 0, 139);
+    doc.setFontSize(7.5);
     doc.setFont('helvetica', 'normal');
-    doc.text('89, Elliot Road, Kolkata - 700016, West Bengal, India', margin, 26);
-    doc.text('Email: info@jpk.org • Phone: +91 33 2229 3292', margin, 32);
+    const awards1 = 'Honoured with National Award, Rusi B. Gimi Award (State Award) and Nehru Childrens\' Award';
+    const awards2 = 'for Outstanding Service in Child Welfare, Women Empowerment and Welfare of Senior Citizens\' and';
+    const awards3 = 'Certificate of Honour of Service of Rural India (Confederation of NGOs of Rural India)';
+    doc.text(awards1, pageWidth / 2, 36, { align: 'center' });
+    doc.text(awards2, pageWidth / 2, 40, { align: 'center' });
+    doc.text(awards3, pageWidth / 2, 44, { align: 'center' });
+
+    // Website in green
+    doc.setTextColor(0, 128, 0);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Website : www.jpkindia.org', pageWidth / 2, 50, { align: 'center' });
+
+    // Head Office Address (centered)
+    doc.setTextColor(0, 0, 139); // Dark blue
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Head Office :', pageWidth / 2, 57, { align: 'center' });
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.text('CK - 6, Sector -II, Salt Lake City, Kolkata - 700 091, W.B., India', pageWidth / 2, 62, { align: 'center' });
+    doc.text('Mob. : 7980320462', pageWidth / 2, 67, { align: 'center' });
+    doc.text('E-mail : jpksaltlake91@gmail.com', pageWidth / 2, 72, { align: 'center' });
+
+    // Horizontal line separator
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.5);
+    doc.line(margin, 76, pageWidth - margin, 76);
 
     // Title
     const title = 'RECEIPT U/S 80G OF INCOME TAX ACT, 1961';
+    doc.setTextColor(139, 0, 0); // Maroon
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(13);
-    doc.text(title, pageWidth / 2, 44, { align: 'center' });
+    doc.text(title, pageWidth / 2, 85, { align: 'center' });
 
     // Org compliance quick facts row under title
+    doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    const compY = 52;
+    doc.setFontSize(9);
+    const compY = 92;
     const infoLine = `Trust PAN: ${ORG_INFO.PAN || '-'}    80G Regn No: ${ORG_INFO.EIGHTYG_NO || '-'}    12A Regn No: ${ORG_INFO.REG_12A || '-'}`;
-    doc.text(infoLine, margin, compY);
+    doc.text(infoLine, pageWidth / 2, compY, { align: 'center' });
 
     // Info card box
-    const boxTop = compY + 6;
+    const boxTop = compY + 4;
     const boxLeft = margin;
     const boxWidth = pageWidth - margin * 2;
     const boxHeight = 142;
