@@ -6,6 +6,8 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, TextField, Button, CircularProgress } from '@mui/material';
 import jsPDF from 'jspdf';
 import { useNavigate } from 'react-router-dom';
+import Logo1 from '../assets/images/Logo-1.jpg';
+import Logo2 from '../assets/images/Logo-2.png';
 
 // Dynamically load Razorpay script
 function loadRazorpayScript() {
@@ -139,13 +141,19 @@ export default function DonationForm() {
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 14;
 
-    // Add header image (letterhead)
-    const headerImg = new Image();
-    headerImg.src = '/src/assets/images/Logo-1.jpg';
-
     // Draw header background
     doc.setFillColor(255, 255, 255);
     doc.rect(0, 0, pageWidth, 50, 'F');
+
+    // Add logos on either side (letterhead style)
+    try {
+      // Left logo
+      doc.addImage(Logo1, 'JPEG', 15, 8, 25, 25);
+      // Right logo  
+      doc.addImage(Logo2, 'PNG', pageWidth - 40, 8, 25, 25);
+    } catch (err) {
+      console.error('Error adding logos to PDF:', err);
+    }
 
     // Organization name in maroon/red color
     doc.setTextColor(139, 0, 0); // Maroon color
@@ -279,7 +287,7 @@ export default function DonationForm() {
 
     // Amount & payment info
     label(col1, y, 'Amount (INR)');
-    value(col1, y + 8, `₹ ${formatAmountINR(rupees)}`);
+    value(col1, y + 8, `Rs. ${formatAmountINR(rupees)}`);
     label(col2, y, 'Amount (in words)');
     value(col2, y + 8, `Rupees ${words} only`);
     y += 20;
