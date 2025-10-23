@@ -9,6 +9,8 @@ import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlin
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import { request } from '../api/client';
 import jsPDF from 'jspdf';
+import Logo1 from '../../assets/images/Logo-1.jpg';
+import Logo2 from '../../assets/images/Logo-2.png';
 
 // Organization info for 80G receipt
 const ORG_INFO = {
@@ -293,6 +295,16 @@ export default function AdminTransactions({ transactions = [] }) {
         doc.setFillColor(255, 255, 255);
         doc.rect(0, 0, pageWidth, 50, 'F');
 
+        // Add logos on either side (letterhead style)
+        try {
+            // Left logo
+            doc.addImage(Logo1, 'JPEG', 15, 8, 25, 25);
+            // Right logo  
+            doc.addImage(Logo2, 'PNG', pageWidth - 40, 8, 25, 25);
+        } catch (err) {
+            console.error('Error adding logos to PDF:', err);
+        }
+
         // Organization name in maroon/red color
         doc.setTextColor(139, 0, 0); // Maroon color
         doc.setFont('helvetica', 'bold');
@@ -426,7 +438,7 @@ export default function AdminTransactions({ transactions = [] }) {
 
         // Amount & payment info
         label(col1, y, 'Amount (INR)');
-        value(col1, y + 8, `₹ ${formatAmountINR(rupees)}`);
+        value(col1, y + 8, `Rs. ${formatAmountINR(rupees)}`);
         label(col2, y, 'Amount (in words)');
         value(col2, y + 8, `Rupees ${words} only`);
         y += 20;
