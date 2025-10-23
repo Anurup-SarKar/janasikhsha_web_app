@@ -6,7 +6,56 @@ import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 import PaymentRoundedIcon from '@mui/icons-material/PaymentRounded';
 import ReceiptLongRoundedIcon from '@mui/icons-material/ReceiptLongRounded';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
+import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import { request } from '../api/client';
+import jsPDF from 'jspdf';
+
+// Organization info for 80G receipt
+const ORG_INFO = {
+    PAN: 'AAATK7667F',
+    EIGHTYG_NO: 'AAATK7667FE1985001',
+    REG_12A: 'AAATK7667FE19850',
+    PLACE: 'Kolkata',
+};
+
+// Convert amount to words (Indian numbering system)
+function numberToWordsIndian(num) {
+    num = Math.floor(Number(num) || 0);
+    if (num === 0) return 'Zero';
+
+    const a = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+    const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+    const inWordsUptoHundred = (n) => {
+        if (n < 20) return a[n];
+        const tens = Math.floor(n / 10);
+        const ones = n % 10;
+        return b[tens] + (ones ? ' ' + a[ones] : '');
+    };
+
+    let words = '';
+    const crore = Math.floor(num / 10000000);
+    num %= 10000000;
+    const lakh = Math.floor(num / 100000);
+    num %= 100000;
+    const thousand = Math.floor(num / 1000);
+    num %= 1000;
+    const hundred = Math.floor(num / 100);
+    const rest = num % 100;
+
+    if (crore) words += inWordsUptoHundred(crore) + ' Crore ';
+    if (lakh) words += inWordsUptoHundred(lakh) + ' Lakh ';
+    if (thousand) words += inWordsUptoHundred(thousand) + ' Thousand ';
+    if (hundred) words += a[hundred] + ' Hundred ';
+    if (rest) words += (words ? 'and ' : '') + inWordsUptoHundred(rest) + ' ';
+
+    return words.trim();
+}
+
+function formatAmountINR(val) {
+    const n = Number(val || 0);
+    return n.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+}
 
 export default function AdminTransactions({ transactions = [] }) {
     const [dateFrom, setDateFrom] = React.useState('');
@@ -40,7 +89,7 @@ export default function AdminTransactions({ transactions = [] }) {
 
         try {
             const response = await fetch(
-                `http://localhost:3000/api/admin/razorpay/payments/${paymentId}/capture`,
+                `/api/admin/razorpay/payments/${paymentId}/capture`,
                 {
                     method: 'POST',
                     headers: {
@@ -57,16 +106,16 @@ export default function AdminTransactions({ transactions = [] }) {
             }
 
             setCaptureSuccess(prev => ({ ...prev, [paymentId]: true }));
-            
+
             // Refresh transactions after successful capture
             setTimeout(() => {
                 fetchPayments(skip);
             }, 2000);
         } catch (error) {
             console.error('Capture payment error:', error);
-            setCaptureError(prev => ({ 
-                ...prev, 
-                [paymentId]: error.message || 'Failed to capture payment' 
+            setCaptureError(prev => ({
+                ...prev,
+                [paymentId]: error.message || 'Failed to capture payment'
             }));
         } finally {
             setCapturing(prev => ({ ...prev, [paymentId]: false }));
@@ -233,6 +282,196 @@ export default function AdminTransactions({ transactions = [] }) {
         return s || 'Unknown';
     };
 
+    // Generate PDF receipt for a transaction
+    const generatePDF = (transaction) => {
+        const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const margin = 14;
+
+        // Draw header background
+        doc.setFillColor(255, 255, 255);
+        doc.rect(0, 0, pageWidth, 50, 'F');
+
+        // Organization name in maroon/red color
+        doc.setTextColor(139, 0, 0); // Maroon color
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(22);
+        doc.text('JANASIKSHA PROCHAR KENDRA', pageWidth / 2, 15, { align: 'center' });
+
+        // Certificate info in orange
+        doc.setTextColor(255, 100, 0);
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Certificate of Registration of Societies West Bengal Act XXVI of 1961', pageWidth / 2, 22, { align: 'center' });
+        doc.setFontSize(9);
+        doc.text('Registration No. : S/12026 of 1972-1973 dt. 09.08.1972', pageWidth / 2, 27, { align: 'center' });
+
+        // Service info in purple
+        doc.setTextColor(128, 0, 128);
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Four Decades of dedicated service to the deprived', pageWidth / 2, 32, { align: 'center' });
+
+        // Awards info in dark blue
+        doc.setTextColor(0, 0, 139);
+        doc.setFontSize(7.5);
+        doc.setFont('helvetica', 'normal');
+        const awards1 = 'Honoured with National Award, Rusi B. Gimi Award (State Award) and Nehru Childrens\' Award';
+        const awards2 = 'for Outstanding Service in Child Welfare, Women Empowerment and Welfare of Senior Citizens\' and';
+        const awards3 = 'Certificate of Honour of Service of Rural India (Confederation of NGOs of Rural India)';
+        doc.text(awards1, pageWidth / 2, 36, { align: 'center' });
+        doc.text(awards2, pageWidth / 2, 40, { align: 'center' });
+        doc.text(awards3, pageWidth / 2, 44, { align: 'center' });
+
+        // Website in green
+        doc.setTextColor(0, 128, 0);
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Website : www.jpkindia.org', pageWidth / 2, 50, { align: 'center' });
+
+        // Head Office Address (centered)
+        doc.setTextColor(0, 0, 139); // Dark blue
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Head Office :', pageWidth / 2, 57, { align: 'center' });
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8.5);
+        doc.text('CK - 6, Sector -II, Salt Lake City, Kolkata - 700 091, W.B., India', pageWidth / 2, 62, { align: 'center' });
+        doc.text('Mob. : 7980320462', pageWidth / 2, 67, { align: 'center' });
+        doc.text('E-mail : jpksaltlake91@gmail.com', pageWidth / 2, 72, { align: 'center' });
+
+        // Horizontal line separator
+        doc.setDrawColor(200, 200, 200);
+        doc.setLineWidth(0.5);
+        doc.line(margin, 76, pageWidth - margin, 76);
+
+        // Title
+        const title = 'RECEIPT U/S 80G OF INCOME TAX ACT, 1961';
+        doc.setTextColor(139, 0, 0); // Maroon
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(13);
+        doc.text(title, pageWidth / 2, 85, { align: 'center' });
+
+        // Org compliance quick facts row under title
+        doc.setTextColor(0, 0, 0);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        const compY = 92;
+        const infoLine = `Trust PAN: ${ORG_INFO.PAN || '-'}    80G Regn No: ${ORG_INFO.EIGHTYG_NO || '-'}    12A Regn No: ${ORG_INFO.REG_12A || '-'}`;
+        doc.text(infoLine, pageWidth / 2, compY, { align: 'center' });
+
+        // Info card box
+        const boxTop = compY + 4;
+        const boxLeft = margin;
+        const boxWidth = pageWidth - margin * 2;
+        const boxHeight = 142;
+        doc.setDrawColor(200, 200, 200);
+        doc.setLineWidth(0.4);
+        doc.roundedRect(boxLeft, boxTop, boxWidth, boxHeight, 2, 2, 'S');
+
+        // Helpers
+        const label = (x, y, text) => {
+            doc.setTextColor('#4b5563');
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(10);
+            doc.text(text, x, y);
+        };
+        const value = (x, y, text) => {
+            doc.setTextColor('#111827');
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(11.5);
+            doc.text(text, x, y);
+        };
+
+        const rupees = Math.round((transaction.amount || 0) / 100);
+        const words = numberToWordsIndian(rupees);
+
+        let y = boxTop + 12;
+        const col1 = boxLeft + 8;
+        const col2 = boxLeft + boxWidth / 2 + 2;
+
+        // Top meta
+        label(col1, y, 'Receipt No');
+        value(col1, y + 6, transaction?.notes?.local_order_id || transaction.id || 'N/A');
+        label(col2, y, 'Date');
+        value(col2, y + 6, transaction.created_at ? new Date(transaction.created_at * 1000).toLocaleDateString() : new Date().toLocaleDateString());
+        y += 18;
+
+        // Donor details
+        label(col1, y, 'Name of Donor');
+        value(col1, y + 6, transaction?.notes?.donor_name || '-');
+        label(col2, y, 'PAN of Donor');
+        value(col2, y + 6, transaction?.notes?.donor_pan || '-');
+        y += 18;
+
+        label(col1, y, 'Email');
+        value(col1, y + 6, transaction?.notes?.donor_email || transaction?.email || '-');
+        label(col2, y, 'Phone');
+        value(col2, y + 6, transaction?.contact || '-');
+        y += 18;
+
+        label(col1, y, 'Address');
+        doc.setTextColor('#111827');
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(11.5);
+        const address = '-';
+        const addrLines = doc.splitTextToSize(address, boxWidth - 16);
+        doc.text(addrLines, col1, y + 6);
+        y += Math.max(18, 6 + (addrLines.length - 1) * 6 + 12);
+
+        // Separator
+        doc.setDrawColor(230, 230, 230);
+        doc.line(boxLeft + 4, y - 4, boxLeft + boxWidth - 4, y - 4);
+
+        // Amount & payment info
+        label(col1, y, 'Amount (INR)');
+        value(col1, y + 8, `₹ ${formatAmountINR(rupees)}`);
+        label(col2, y, 'Amount (in words)');
+        value(col2, y + 8, `Rupees ${words} only`);
+        y += 20;
+
+        label(col1, y, 'Purpose');
+        value(col1, y + 6, transaction?.description || 'Donation');
+        label(col2, y, 'Mode of Payment');
+        value(col2, y + 6, `Online (${(transaction?.method || 'Razorpay').toUpperCase()})`);
+        y += 18;
+
+        label(col1, y, 'Transaction Ref');
+        value(col1, y + 6, transaction?.id || '—');
+        label(col2, y, 'Place');
+        value(col2, y + 6, ORG_INFO.PLACE || '-');
+        y += 18;
+
+        // 80G exemption and electronic receipt note (styled box below details)
+        const notesTop = boxTop + boxHeight + 10;
+        const note1 = "The Donation is exempted u/s 80G of the Income Tax Act 1961 as per the Central Board of Direct Tax's notification No. SO 1337 dt. 15.04.1965.";
+        const note2 = 'This is an electronically generated receipt, no signature is required.';
+        const wrapped1 = doc.splitTextToSize(note1, boxWidth - 12);
+        const wrapped2 = doc.splitTextToSize(note2, boxWidth - 12);
+        const notesHeight = 18 + (wrapped1.length + wrapped2.length) * 6 + 4;
+
+        doc.setFillColor(248, 250, 252);
+        doc.setDrawColor(230, 230, 230);
+        doc.roundedRect(boxLeft, notesTop, boxWidth, notesHeight, 3, 3, 'FD');
+
+        doc.setTextColor('#111827');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.text('Important Notes', boxLeft + 6, notesTop + 8);
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9.5);
+        doc.setTextColor('#374151');
+        let ny = notesTop + 14;
+        doc.text(wrapped1, boxLeft + 6, ny);
+        ny += wrapped1.length * 6 + 3;
+        doc.text(wrapped2, boxLeft + 6, ny);
+
+        const fileName = `JPK_Donation_Receipt_${transaction?.notes?.local_order_id || transaction.id || Date.now()}.pdf`;
+        doc.save(fileName);
+    };
+
     return (
         <Stack spacing={2}>
             {/* Filters header */}
@@ -285,6 +524,7 @@ export default function AdminTransactions({ transactions = [] }) {
                                     <TableCell align="right">Amount (₹)</TableCell>
                                     <TableCell>Method</TableCell>
                                     <TableCell>Status</TableCell>
+                                    <TableCell>Receipt</TableCell>
                                     <TableCell>Actions</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -297,6 +537,20 @@ export default function AdminTransactions({ transactions = [] }) {
                                         <TableCell onClick={() => handleOpenDetail(t)} sx={{ cursor: 'pointer' }} align="right">{Number(t.amount || 0).toLocaleString()}</TableCell>
                                         <TableCell onClick={() => handleOpenDetail(t)} sx={{ cursor: 'pointer' }}>{t.method}</TableCell>
                                         <TableCell onClick={() => handleOpenDetail(t)} sx={{ cursor: 'pointer' }}>{statusChip(t.status)}</TableCell>
+                                        <TableCell>
+                                            <Tooltip title="Download Receipt">
+                                                <IconButton
+                                                    size="small"
+                                                    color="primary"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        generatePDF(t.raw);
+                                                    }}
+                                                >
+                                                    <DownloadRoundedIcon fontSize="small" />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </TableCell>
                                         <TableCell>
                                             {t.status === 'Pending' && (
                                                 <Box>
@@ -330,12 +584,12 @@ export default function AdminTransactions({ transactions = [] }) {
                                 ))}
                                 {!loading && baseTx.length === 0 && (
                                     <TableRow>
-                                        <TableCell colSpan={7} align="center">No transactions for selected range.</TableCell>
+                                        <TableCell colSpan={8} align="center">No transactions for selected range.</TableCell>
                                     </TableRow>
                                 )}
                                 {loading && (
                                     <TableRow>
-                                        <TableCell colSpan={7} align="center"><CircularProgress size={20} /></TableCell>
+                                        <TableCell colSpan={8} align="center"><CircularProgress size={20} /></TableCell>
                                     </TableRow>
                                 )}
                             </TableBody>
@@ -373,33 +627,48 @@ export default function AdminTransactions({ transactions = [] }) {
                                             <Typography variant="body2" color="text.secondary">{t.method}</Typography>
                                         </Stack>
                                     </Stack>
-                                    {t.status === 'Pending' && (
-                                        <Box sx={{ mt: 1 }}>
-                                            <Button
-                                                fullWidth
-                                                size="small"
-                                                variant="contained"
-                                                color="primary"
-                                                disabled={capturing[t.id]}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleCapturePayment(t.id, t.amount);
-                                                }}
-                                            >
-                                                {capturing[t.id] ? <CircularProgress size={16} color="inherit" /> : 'Capture Payment'}
-                                            </Button>
-                                            {captureSuccess[t.id] && (
-                                                <Typography variant="caption" color="success.main" sx={{ display: 'block', mt: 0.5, textAlign: 'center' }}>
-                                                    Payment captured successfully!
-                                                </Typography>
-                                            )}
-                                            {captureError[t.id] && (
-                                                <Typography variant="caption" color="error.main" sx={{ display: 'block', mt: 0.5, textAlign: 'center' }}>
-                                                    {captureError[t.id]}
-                                                </Typography>
-                                            )}
-                                        </Box>
-                                    )}
+                                    {/* Action buttons */}
+                                    <Box sx={{ mt: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                        <Button
+                                            fullWidth
+                                            size="small"
+                                            variant="outlined"
+                                            startIcon={<DownloadRoundedIcon />}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                generatePDF(t.raw);
+                                            }}
+                                        >
+                                            Download Receipt
+                                        </Button>
+                                        {t.status === 'Pending' && (
+                                            <>
+                                                <Button
+                                                    fullWidth
+                                                    size="small"
+                                                    variant="contained"
+                                                    color="primary"
+                                                    disabled={capturing[t.id]}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleCapturePayment(t.id, t.amount);
+                                                    }}
+                                                >
+                                                    {capturing[t.id] ? <CircularProgress size={16} color="inherit" /> : 'Capture Payment'}
+                                                </Button>
+                                                {captureSuccess[t.id] && (
+                                                    <Typography variant="caption" color="success.main" sx={{ display: 'block', textAlign: 'center' }}>
+                                                        Payment captured successfully!
+                                                    </Typography>
+                                                )}
+                                                {captureError[t.id] && (
+                                                    <Typography variant="caption" color="error.main" sx={{ display: 'block', textAlign: 'center' }}>
+                                                        {captureError[t.id]}
+                                                    </Typography>
+                                                )}
+                                            </>
+                                        )}
+                                    </Box>
                                 </Stack>
                             </CardContent>
                         </Card>
@@ -582,6 +851,14 @@ export default function AdminTransactions({ transactions = [] }) {
                     )}
                 </DialogContent>
                 <DialogActions>
+                    <Button
+                        startIcon={<DownloadRoundedIcon />}
+                        onClick={() => generatePDF(detailItem)}
+                        variant="contained"
+                        color="primary"
+                    >
+                        Download Receipt
+                    </Button>
                     <Button onClick={handleCloseDetail}>Close</Button>
                 </DialogActions>
             </Dialog>
