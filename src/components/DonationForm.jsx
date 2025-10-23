@@ -39,6 +39,7 @@ export default function DonationForm() {
   const [orderId, setOrderId] = useState('');
   const [failureMessage, setFailureMessage] = useState('');
   const [paymentId, setPaymentId] = useState('');
+  const [captureError, setCaptureError] = useState('');
 
   // Reset state when component mounts (page navigation or refresh)
   useEffect(() => {
@@ -47,8 +48,38 @@ export default function DonationForm() {
     setFailureMessage('');
     setOrderId('');
     setPaymentId('');
+    setCaptureError('');
     setForm({ name: '', address: '', phone: '', email: '', pan: '', amount: '' });
   }, []);
+
+  // Capture payment after successful authorization - No authentication needed!
+  const capturePayment = async (paymentId, amount, currency = 'INR') => {
+    try {
+      const response = await fetch(
+        `/api/admin/razorpay/payments/${paymentId}/capture`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ amount, currency })
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.statusCode === 200) {
+        console.log('Payment captured successfully:', result.data);
+        return result.data; // Captured payment details
+      } else {
+        throw new Error(result.statusMessage || 'Payment capture failed');
+      }
+    } catch (error) {
+      console.error('Error capturing payment:', error);
+      setCaptureError(error.message);
+      throw error;
+    }
+  };
 
   // Handle input changes
   function handleChange(e) {
@@ -268,16 +299,37 @@ export default function DonationForm() {
       name: 'Janasiksha Prochar Kendra',
       description: 'Donation',
       // Use handler to show success UI (client-side)
-      handler: function (response) {
+      handler: async function (response) {
         // Capture Razorpay payment id if available
         if (response && response.razorpay_payment_id) {
           setPaymentId(response.razorpay_payment_id);
+
+          // Call capture API
+          try {
+            const amountInPaise = parseInt(form.amount) * 100;
+            await capturePayment(response.razorpay_payment_id, amountInPaise, 'INR');
+
+            // Success
+            setPaymentSuccess(true);
+            setSubmitted(true);
+            setFailureMessage('');
+            setCaptureError('');
+          } catch (captureErr) {
+            // Even if capture fails, show success (payment was authorized)
+            // but log the error for admin review
+            console.error('Payment capture error:', captureErr);
+            setPaymentSuccess(true);
+            setSubmitted(true);
+            setFailureMessage('');
+            // Store capture error but still show success to user
+            setCaptureError('Payment authorized but capture pending. Our team will process it.');
+          }
         } else {
           setPaymentId('');
+          setPaymentSuccess(true);
+          setSubmitted(true);
+          setFailureMessage('');
         }
-        setPaymentSuccess(true);
-        setSubmitted(true);
-        setFailureMessage('');
         setLoading(false);
       },
       prefill: {
@@ -313,6 +365,8 @@ export default function DonationForm() {
     setPaymentSuccess(false);
     setFailureMessage('');
     setOrderId('');
+    setPaymentId('');
+    setCaptureError('');
     setForm({ name: '', address: '', phone: '', email: '', pan: '', amount: '' });
   };
 
@@ -414,6 +468,11 @@ export default function DonationForm() {
               {paymentId && (
                 <Typography sx={{ mt: 0.5, fontSize: '0.9rem', fontFamily: 'monospace' }} color="text.secondary">
                   Payment ID: {paymentId}
+                </Typography>
+              )}
+              {captureError && (
+                <Typography sx={{ mt: 1.5, fontSize: '0.85rem', color: '#f59e0b', fontStyle: 'italic' }}>
+                  ℹ️ {captureError}
                 </Typography>
               )}
             </Box>

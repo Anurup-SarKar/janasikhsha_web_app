@@ -1,10 +1,11 @@
 import React from 'react';
-import { Paper, Stack, Typography, Button, TextField, Table, TableHead, TableRow, TableCell, TableBody, Chip, TableContainer, Box, Card, CardContent, Divider, IconButton, Tooltip, Alert, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Paper, Stack, Typography, Button, TextField, Table, TableHead, TableRow, TableCell, TableBody, Chip, TableContainer, Box, Card, CardContent, Divider, IconButton, Tooltip, Alert, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar } from '@mui/material';
 import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 import PaymentRoundedIcon from '@mui/icons-material/PaymentRounded';
 import ReceiptLongRoundedIcon from '@mui/icons-material/ReceiptLongRounded';
+import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import { request } from '../api/client';
 
 export default function AdminTransactions({ transactions = [] }) {
@@ -24,7 +25,53 @@ export default function AdminTransactions({ transactions = [] }) {
     const [detailOpen, setDetailOpen] = React.useState(false);
     const [detailItem, setDetailItem] = React.useState(null);
 
+    // Capture payment state
+    const [capturing, setCapturing] = React.useState({});
+    const [captureSuccess, setCaptureSuccess] = React.useState({});
+    const [captureError, setCaptureError] = React.useState({});
+
     const closeFiltersIfMobile = () => setMobileFiltersOpen(false);
+
+    // Capture payment handler
+    const handleCapturePayment = async (paymentId, amount) => {
+        setCapturing(prev => ({ ...prev, [paymentId]: true }));
+        setCaptureError(prev => ({ ...prev, [paymentId]: null }));
+        setCaptureSuccess(prev => ({ ...prev, [paymentId]: false }));
+
+        try {
+            const response = await fetch(
+                `http://localhost:3000/api/admin/razorpay/payments/${paymentId}/capture`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ amount: amount * 100 }), // Convert to paise
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to capture payment');
+            }
+
+            setCaptureSuccess(prev => ({ ...prev, [paymentId]: true }));
+            
+            // Refresh transactions after successful capture
+            setTimeout(() => {
+                fetchPayments(skip);
+            }, 2000);
+        } catch (error) {
+            console.error('Capture payment error:', error);
+            setCaptureError(prev => ({ 
+                ...prev, 
+                [paymentId]: error.message || 'Failed to capture payment' 
+            }));
+        } finally {
+            setCapturing(prev => ({ ...prev, [paymentId]: false }));
+        }
+    };
 
     const setRelativeRange = (days) => {
         const to = new Date();
@@ -238,27 +285,57 @@ export default function AdminTransactions({ transactions = [] }) {
                                     <TableCell align="right">Amount (₹)</TableCell>
                                     <TableCell>Method</TableCell>
                                     <TableCell>Status</TableCell>
+                                    <TableCell>Actions</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {baseTx.map((t) => (
-                                    <TableRow key={t.id} hover onClick={() => handleOpenDetail(t)} sx={{ cursor: 'pointer' }}>
-                                        <TableCell>{t.date}</TableCell>
-                                        <TableCell>{t.id}</TableCell>
-                                        <TableCell>{t.particular}</TableCell>
-                                        <TableCell align="right">{Number(t.amount || 0).toLocaleString()}</TableCell>
-                                        <TableCell>{t.method}</TableCell>
-                                        <TableCell>{statusChip(t.status)}</TableCell>
+                                    <TableRow key={t.id} hover>
+                                        <TableCell onClick={() => handleOpenDetail(t)} sx={{ cursor: 'pointer' }}>{t.date}</TableCell>
+                                        <TableCell onClick={() => handleOpenDetail(t)} sx={{ cursor: 'pointer' }}>{t.id}</TableCell>
+                                        <TableCell onClick={() => handleOpenDetail(t)} sx={{ cursor: 'pointer' }}>{t.particular}</TableCell>
+                                        <TableCell onClick={() => handleOpenDetail(t)} sx={{ cursor: 'pointer' }} align="right">{Number(t.amount || 0).toLocaleString()}</TableCell>
+                                        <TableCell onClick={() => handleOpenDetail(t)} sx={{ cursor: 'pointer' }}>{t.method}</TableCell>
+                                        <TableCell onClick={() => handleOpenDetail(t)} sx={{ cursor: 'pointer' }}>{statusChip(t.status)}</TableCell>
+                                        <TableCell>
+                                            {t.status === 'Pending' && (
+                                                <Box>
+                                                    <Button
+                                                        size="small"
+                                                        variant="contained"
+                                                        color="primary"
+                                                        disabled={capturing[t.id]}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleCapturePayment(t.id, t.amount);
+                                                        }}
+                                                        sx={{ minWidth: 100 }}
+                                                    >
+                                                        {capturing[t.id] ? <CircularProgress size={16} color="inherit" /> : 'Capture'}
+                                                    </Button>
+                                                    {captureSuccess[t.id] && (
+                                                        <Typography variant="caption" color="success.main" sx={{ display: 'block', mt: 0.5 }}>
+                                                            Success!
+                                                        </Typography>
+                                                    )}
+                                                    {captureError[t.id] && (
+                                                        <Typography variant="caption" color="error.main" sx={{ display: 'block', mt: 0.5 }}>
+                                                            {captureError[t.id]}
+                                                        </Typography>
+                                                    )}
+                                                </Box>
+                                            )}
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                                 {!loading && baseTx.length === 0 && (
                                     <TableRow>
-                                        <TableCell colSpan={6} align="center">No transactions for selected range.</TableCell>
+                                        <TableCell colSpan={7} align="center">No transactions for selected range.</TableCell>
                                     </TableRow>
                                 )}
                                 {loading && (
                                     <TableRow>
-                                        <TableCell colSpan={6} align="center"><CircularProgress size={20} /></TableCell>
+                                        <TableCell colSpan={7} align="center"><CircularProgress size={20} /></TableCell>
                                     </TableRow>
                                 )}
                             </TableBody>
@@ -271,18 +348,18 @@ export default function AdminTransactions({ transactions = [] }) {
             <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
                 <Stack spacing={1.5}>
                     {baseTx.map((t) => (
-                        <Card key={t.id} variant="outlined" onClick={() => handleOpenDetail(t)} sx={{ borderRadius: 3, position: 'relative', overflow: 'hidden', cursor: 'pointer' }}>
+                        <Card key={t.id} variant="outlined" sx={{ borderRadius: 3, position: 'relative', overflow: 'hidden' }}>
                             {/* Status accent bar */}
                             <Box sx={(theme) => ({ position: 'absolute', top: 0, left: 0, right: 0, height: 4, bgcolor: statusColor(t.status, theme) })} />
                             <CardContent sx={{ pt: 1.25 }}>
                                 <Stack spacing={1}>
-                                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                                    <Stack direction="row" alignItems="center" justifyContent="space-between" onClick={() => handleOpenDetail(t)} sx={{ cursor: 'pointer' }}>
                                         <Typography variant="h6" sx={{ fontWeight: 800 }}>₹ {Number(t.amount || 0).toLocaleString()}</Typography>
                                         {statusChip(t.status)}
                                     </Stack>
-                                    <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>{t.particular}</Typography>
+                                    <Typography variant="subtitle2" sx={{ fontWeight: 700, cursor: 'pointer' }} onClick={() => handleOpenDetail(t)}>{t.particular}</Typography>
                                     <Divider sx={{ my: 0.5 }} />
-                                    <Stack spacing={0.75}>
+                                    <Stack spacing={0.75} onClick={() => handleOpenDetail(t)} sx={{ cursor: 'pointer' }}>
                                         <Stack direction="row" spacing={1} alignItems="center">
                                             <ReceiptLongRoundedIcon fontSize="small" color="action" />
                                             <Typography variant="body2" sx={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace' }} color="text.secondary">{t.id}</Typography>
@@ -296,6 +373,33 @@ export default function AdminTransactions({ transactions = [] }) {
                                             <Typography variant="body2" color="text.secondary">{t.method}</Typography>
                                         </Stack>
                                     </Stack>
+                                    {t.status === 'Pending' && (
+                                        <Box sx={{ mt: 1 }}>
+                                            <Button
+                                                fullWidth
+                                                size="small"
+                                                variant="contained"
+                                                color="primary"
+                                                disabled={capturing[t.id]}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleCapturePayment(t.id, t.amount);
+                                                }}
+                                            >
+                                                {capturing[t.id] ? <CircularProgress size={16} color="inherit" /> : 'Capture Payment'}
+                                            </Button>
+                                            {captureSuccess[t.id] && (
+                                                <Typography variant="caption" color="success.main" sx={{ display: 'block', mt: 0.5, textAlign: 'center' }}>
+                                                    Payment captured successfully!
+                                                </Typography>
+                                            )}
+                                            {captureError[t.id] && (
+                                                <Typography variant="caption" color="error.main" sx={{ display: 'block', mt: 0.5, textAlign: 'center' }}>
+                                                    {captureError[t.id]}
+                                                </Typography>
+                                            )}
+                                        </Box>
+                                    )}
                                 </Stack>
                             </CardContent>
                         </Card>
